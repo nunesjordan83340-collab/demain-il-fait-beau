@@ -334,10 +334,80 @@ footer .fbrand{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.4rem
   .quote-banner::before,.quote-banner::after{display:none;}
   .nl-inner{gap:32px;}
 }
+
+    /* ── ADMIN EDITOR ──────────────────────────────────── */
+    .write-btn{display:none;} /* caché par défaut */
+    body.admin-mode .write-btn{display:inline-flex;align-items:center;gap:8px;font-family:"Archivo",sans-serif;font-weight:700;font-size:.85rem;padding:13px 22px;border-radius:100px;border:2px solid var(--purple);color:var(--purple);background:transparent;cursor:pointer;transition:all .2s;margin-left:12px;}
+    body.admin-mode .write-btn:hover{background:var(--purple);color:#fff;}
+
+    /* MOT DE PASSE ADMIN */
+    .pw-overlay{position:fixed;inset:0;z-index:4000;background:rgba(10,5,20,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;}
+    .pw-overlay.open{opacity:1;pointer-events:auto;}
+    .pw-box{background:#fff;border-radius:var(--radius);padding:36px 32px;width:100%;max-width:380px;text-align:center;box-shadow:0 32px 64px -20px rgba(0,0,0,.5);transform:scale(.95);transition:transform .3s cubic-bezier(.2,.8,.25,1);}
+    .pw-overlay.open .pw-box{transform:scale(1);}
+    .pw-icon{font-size:2.5rem;margin-bottom:14px;}
+    .pw-title{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.3rem;margin-bottom:6px;}
+    .pw-sub{font-size:.82rem;color:var(--ink-soft);margin-bottom:20px;}
+    .pw-input{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:13px 16px;font-family:"Sora",sans-serif;font-size:1rem;outline:none;text-align:center;letter-spacing:.1em;transition:border-color .2s;}
+    .pw-input:focus{border-color:var(--purple);}
+    .pw-input.err{border-color:var(--coral);animation:shake .3s;}
+    @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+    .pw-btn{width:100%;margin-top:14px;font-family:"Archivo",sans-serif;font-weight:800;font-size:.95rem;padding:14px;border-radius:12px;border:none;background:var(--purple);color:#fff;cursor:pointer;transition:transform .2s;}
+    .pw-btn:hover{transform:scale(1.02);}
+    .pw-error{font-size:.78rem;color:var(--coral);margin-top:8px;min-height:16px;font-weight:600;}
+
+    /* ÉDITEUR MODAL */
+    .editor-overlay{position:fixed;inset:0;z-index:3000;background:rgba(10,5,20,.65);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:flex-start;justify-content:center;padding:30px 20px;opacity:0;pointer-events:none;transition:opacity .25s;overflow-y:auto;}
+    .editor-overlay.open{opacity:1;pointer-events:auto;}
+    .editor-panel{background:#fff;width:100%;max-width:680px;border-radius:var(--radius);overflow:hidden;box-shadow:0 40px 80px -20px rgba(0,0,0,.55);transform:translateY(20px) scale(.97);transition:transform .3s cubic-bezier(.2,.8,.25,1);margin:auto;}
+    .editor-overlay.open .editor-panel{transform:translateY(0) scale(1);}
+    .editor-header{background:var(--ink);color:#fff;padding:22px 28px;display:flex;align-items:center;justify-content:space-between;}
+    .editor-title{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.15rem;}
+    .editor-close{background:rgba(255,255,255,.15);border:none;color:#fff;width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:1rem;transition:background .2s;}
+    .editor-close:hover{background:rgba(255,255,255,.3);}
+    .editor-body{padding:28px 28px 32px;display:flex;flex-direction:column;gap:18px;}
+    .editor-field{display:flex;flex-direction:column;gap:7px;}
+    .editor-label{font-family:"Archivo",sans-serif;font-weight:800;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);}
+    .req{color:var(--coral);margin-left:3px;}
+    .hint{font-weight:400;font-size:.72rem;text-transform:none;letter-spacing:0;color:var(--ink-soft);}
+    .editor-input,.editor-textarea{border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;font-family:"Sora",sans-serif;font-size:.92rem;outline:none;transition:border-color .2s;resize:vertical;color:var(--ink);width:100%;}
+    .editor-input:focus,.editor-textarea:focus{border-color:var(--purple);}
+    .editor-input.err,.editor-textarea.err{border-color:var(--coral);}
+    .rubric-picker{display:flex;flex-wrap:wrap;gap:8px;}
+    .rpill{font-family:"Sora",sans-serif;font-size:.78rem;font-weight:600;padding:7px 14px;border-radius:100px;border:2px solid var(--line);cursor:pointer;transition:all .18s;background:#fff;color:var(--ink);}
+    .rpill.active.c-ecology{background:var(--green);color:#04210f;border-color:var(--green);}
+    .rpill.active.c-climate{background:var(--blue);color:#fff;border-color:var(--blue);}
+    .rpill.active.c-health{background:var(--pink);color:#2b0014;border-color:var(--pink);}
+    .rpill.active.c-economy{background:var(--orange);color:#2b1400;border-color:var(--orange);}
+    .rpill.active.c-tech{background:var(--purple);color:#fff;border-color:var(--purple);}
+    .rpill.active.c-science{background:var(--teal);color:#022;border-color:var(--teal);}
+    .rpill.active.c-society{background:var(--yellow);color:#1a1500;border-color:var(--yellow);}
+    .editor-error{font-size:.82rem;color:var(--coral);font-weight:600;min-height:18px;}
+    .editor-actions{display:flex;gap:12px;justify-content:flex-end;margin-top:4px;}
+    .editor-cancel{font-family:"Sora",sans-serif;font-weight:600;font-size:.88rem;padding:12px 22px;border-radius:100px;border:1.5px solid var(--line);background:transparent;color:var(--ink-soft);cursor:pointer;}
+    .editor-cancel:hover{border-color:var(--ink);}
+    .editor-publish{font-family:"Archivo",sans-serif;font-weight:800;font-size:.92rem;padding:13px 28px;border-radius:100px;border:none;background:linear-gradient(100deg,var(--coral),var(--pink));color:#fff;cursor:pointer;transition:transform .2s,box-shadow .2s;box-shadow:0 8px 20px -8px rgba(255,77,77,.5);}
+    .editor-publish:hover{transform:translateY(-2px);}
+    .toast-msg{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-family:"Archivo",sans-serif;font-weight:700;font-size:.9rem;padding:14px 28px;border-radius:100px;box-shadow:0 12px 30px rgba(0,0,0,.3);opacity:0;transition:all .35s;pointer-events:none;z-index:9999;white-space:nowrap;}
+    .toast-msg.show{opacity:1;transform:translateX(-50%) translateY(0);}
+    @media(max-width:560px){.editor-overlay{padding:0;align-items:flex-start;}.editor-panel{border-radius:0;min-height:100vh;}.editor-body{padding:20px 18px 40px;}}
 </style>
 </head>
 <body>
 <!-- TOPBAR -->
+
+<!-- MOT DE PASSE ADMIN -->
+<div class="pw-overlay" id="pw-overlay">
+  <div class="pw-box">
+    <div class="pw-icon">🔐</div>
+    <div class="pw-title">Espace rédaction</div>
+    <p class="pw-sub">Entrez le mot de passe administrateur</p>
+    <input class="pw-input" id="pw-input" type="password" placeholder="••••••••" autocomplete="current-password"/>
+    <button class="pw-btn" id="pw-btn">Accéder →</button>
+    <div class="pw-error" id="pw-error"></div>
+  </div>
+</div>
+
 <div class="topbar">
 <div class="topbar-inner">
 <div class="brand">Demain,&thinsp;<em>il fait beau</em><span class="dot"></span></div>
@@ -1495,8 +1565,168 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
 <!-- ÉDITEUR JS -->
 <script>
 (function(){
+  /* ── MOT DE PASSE ADMIN ─────────────────────────────────────────────
+     Pour changer le mot de passe : modifiez la valeur ci-dessous.
+     Pour accéder à l'éditeur : allez sur votre-site.netlify.app#admin
+  ─────────────────────────────────────────────────────────────────── */
+  var ADMIN_PASS = 'difb2026';
+
+  var adminUnlocked = sessionStorage.getItem('difb_admin') === '1';
   var selectedRubric = null;
-  var customArticles = [];
+
+  // Activer le mode admin si URL = #admin
+  function checkAdminMode(){
+    if(window.location.hash === '#admin'){
+      if(adminUnlocked){ activateAdmin(); }
+      else { openPwModal(); }
+    }
+  }
+
+  function activateAdmin(){
+    document.body.classList.add('admin-mode');
+    adminUnlocked = true;
+    sessionStorage.setItem('difb_admin','1');
+    // Nettoyer le hash de l'URL sans recharger
+    history.replaceState(null,'',window.location.pathname);
+  }
+
+  // ── Mot de passe ──
+  function openPwModal(){
+    var o = document.getElementById('pw-overlay');
+    o.classList.add('open');
+    setTimeout(function(){ document.getElementById('pw-input').focus(); }, 300);
+  }
+  function closePwModal(){
+    document.getElementById('pw-overlay').classList.remove('open');
+    document.getElementById('pw-input').value='';
+    document.getElementById('pw-error').textContent='';
+  }
+  function checkPassword(){
+    var val = document.getElementById('pw-input').value;
+    if(val === ADMIN_PASS){
+      closePwModal();
+      activateAdmin();
+      setTimeout(openEditor, 200);
+    } else {
+      var inp = document.getElementById('pw-input');
+      inp.classList.add('err');
+      document.getElementById('pw-error').textContent = 'Mot de passe incorrect.';
+      setTimeout(function(){ inp.classList.remove('err'); inp.value=''; inp.focus(); }, 600);
+    }
+  }
+  document.getElementById('pw-btn').addEventListener('click', checkPassword);
+  document.getElementById('pw-input').addEventListener('keydown', function(e){ if(e.key==='Enter') checkPassword(); });
+  document.getElementById('pw-overlay').addEventListener('click', function(e){ if(e.target.id==='pw-overlay') closePwModal(); });
+
+  // ── Bouton Écrire ──
+  document.getElementById('write-btn').addEventListener('click', function(){
+    if(adminUnlocked){ openEditor(); }
+    else { openPwModal(); }
+  });
+
+  checkAdminMode();
+  window.addEventListener('hashchange', checkAdminMode);
+
+  // ── Éditeur ──
+  function openEditor(){
+    var o = document.getElementById('editor-overlay');
+    o.classList.add('open');
+    o.setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden';
+    setTimeout(function(){ document.getElementById('ed-headline').focus(); }, 300);
+    document.getElementById('ed-date').value = new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
+  }
+  function closeEditor(){
+    document.getElementById('editor-overlay').classList.remove('open');
+    document.getElementById('editor-overlay').setAttribute('aria-hidden','true');
+    document.body.style.overflow='';
+    document.getElementById('editor-error').textContent='';
+  }
+  document.getElementById('editor-close').addEventListener('click', closeEditor);
+  document.getElementById('editor-cancel').addEventListener('click', closeEditor);
+  document.getElementById('editor-overlay').addEventListener('click', function(e){ if(e.target.id==='editor-overlay') closeEditor(); });
+  document.addEventListener('keydown', function(e){
+    if(e.key==='Escape'){
+      if(document.getElementById('editor-overlay').classList.contains('open')) closeEditor();
+      if(document.getElementById('pw-overlay').classList.contains('open')) closePwModal();
+    }
+  });
+
+  // Sélection rubrique
+  document.querySelectorAll('.rpill').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.rpill').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      selectedRubric = btn.dataset.r;
+      document.getElementById('editor-error').textContent='';
+    });
+  });
+
+  // Publication
+  document.getElementById('editor-publish').addEventListener('click', function(){
+    var headline   = document.getElementById('ed-headline').value.trim();
+    var summary    = document.getElementById('ed-summary').value.trim();
+    var chapo      = document.getElementById('ed-chapo').value.trim();
+    var bodyRaw    = document.getElementById('ed-body').value.trim();
+    var factsRaw   = document.getElementById('ed-facts').value.trim();
+    var sourcesRaw = document.getElementById('ed-sources').value.trim();
+    var date       = document.getElementById('ed-date').value.trim();
+    var errEl      = document.getElementById('editor-error');
+
+    if(!selectedRubric){ errEl.textContent='Choisissez une rubrique.'; return; }
+    if(!headline){ errEl.textContent='Le titre est obligatoire.'; document.getElementById('ed-headline').classList.add('err'); return; }
+    if(!summary){ errEl.textContent='Le résumé est obligatoire.'; document.getElementById('ed-summary').classList.add('err'); return; }
+    if(!bodyRaw){ errEl.textContent="Le corps de l'article est obligatoire."; document.getElementById('ed-body').classList.add('err'); return; }
+
+    var body    = bodyRaw.split(/\n\s*\n/).map(function(p){ return p.trim(); }).filter(Boolean);
+    var facts   = factsRaw ? factsRaw.split('\n').map(function(f){ return f.trim(); }).filter(Boolean) : [];
+    var sources = sourcesRaw ? sourcesRaw.split(',').map(function(s){ return s.trim(); }).filter(Boolean) : ['Rédaction'];
+
+    var article = {
+      rubric:   selectedRubric,
+      source:   sources.join(' · '),
+      date:     date || new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'}),
+      headline: headline,
+      summary:  summary,
+      chapo:    chapo || summary,
+      body:     body,
+      facts:    facts,
+      sources:  sources
+    };
+
+    if(window._fallback) window._fallback.unshift(article);
+    if(typeof load === 'function') load('all');
+
+    closeEditor();
+    resetForm();
+    showToast('Article publié dans le journal ✓');
+  });
+
+  function resetForm(){
+    selectedRubric = null;
+    document.querySelectorAll('.rpill').forEach(function(b){ b.classList.remove('active'); });
+    ['ed-headline','ed-summary','ed-chapo','ed-body','ed-facts','ed-sources'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el){ el.value=''; el.classList.remove('err'); }
+    });
+    document.getElementById('editor-error').textContent='';
+  }
+
+  function showToast(msg){
+    var t = document.getElementById('site-toast');
+    if(!t){ t=document.createElement('div'); t.id='site-toast'; t.className='toast-msg'; document.body.appendChild(t); }
+    t.textContent=msg; t.classList.add('show');
+    setTimeout(function(){ t.classList.remove('show'); }, 3500);
+  }
+
+  ['ed-headline','ed-summary','ed-body'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.addEventListener('input', function(){ el.classList.remove('err'); });
+  });
+
+})();
+</script>
+</body>
 
   // Ouvrir/fermer
   function openEditor(){
