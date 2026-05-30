@@ -24,19 +24,7 @@ body{background:#f5f5f5!important;color:#0a0a0a;font-family:"Sora",-apple-system
   .container,.counters-wrap,.filters,.refresh-wrap,.date-nav-bar,.optimism-bar,.chiffre-wrap{background:#f5f5f5!important;}
 }
 /* CARD PHOTOS */
-.card.has-photo{padding:0;overflow:hidden;}
-.card-photo{overflow:hidden;flex-shrink:0;height:140px;background:#e8e8e8;position:relative;}
-.span-feature .card-photo{height:200px;}.span-tall .card-photo{height:180px;}
-.card-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s cubic-bezier(.2,.7,.3,1);}
-.card:hover .card-photo img{transform:scale(1.06);}
-.card-photo .photo-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:3rem;opacity:.18;}
-.card-content{padding:22px;flex:1;display:flex;flex-direction:column;}
-.card.has-photo .tag{margin-bottom:auto;}.card.has-photo .headline{margin-top:12px;}
 /* MODAL PHOTO */
-.modal-photo-bar{display:none;overflow:hidden;max-height:300px;background:#111;flex-shrink:0;}
-.modal-photo-bar.show{display:block;}
-.modal-photo-bar img{width:100%;max-height:300px;object-fit:cover;display:block;}
-.photo-credit{font-size:.65rem;color:rgba(255,255,255,.45);padding:5px 12px;background:rgba(0,0,0,.5);text-align:right;position:relative;margin-top:-22px;}
 /* TOPBAR */
 .topbar{position:sticky;top:0;z-index:100;backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);background:rgba(245,245,245,.85);border-bottom:1px solid var(--line);}
 .topbar-inner{max-width:1280px;margin:0 auto;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;}
@@ -445,6 +433,69 @@ footer .fbrand{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.4rem
 </div>
 <div class="refresh-wrap">
 <button class="refresh" id="refresh">↻ Rafraîchir</button>
+<button class="write-btn" id="write-btn">✏️ Écrire un article</button>
+</div>
+
+<!-- ÉDITEUR D'ARTICLE -->
+<div class="editor-overlay" id="editor-overlay" aria-hidden="true">
+<div class="editor-panel" role="dialog" aria-modal="true">
+<div class="editor-header">
+<div class="editor-title">✏️ Rédiger un article</div>
+<button class="editor-close" id="editor-close">✕</button>
+</div>
+<div class="editor-body">
+<div class="editor-field">
+<label class="editor-label">Rubrique <span class="req">*</span></label>
+<div class="rubric-picker" id="rubric-picker">
+<button type="button" class="rpill c-ecology" data-r="ecology">🌿 Écologie</button>
+<button type="button" class="rpill c-climate" data-r="climate">🌍 Climat</button>
+<button type="button" class="rpill c-health" data-r="health">💚 Santé</button>
+<button type="button" class="rpill c-economy" data-r="economy">📈 Économie</button>
+<button type="button" class="rpill c-tech" data-r="tech">⚡ Tech</button>
+<button type="button" class="rpill c-science" data-r="science">🔬 Science</button>
+<button type="button" class="rpill c-society" data-r="society">🤝 Société</button>
+</div>
+</div>
+<div class="editor-field">
+<label class="editor-label">Titre <span class="req">*</span></label>
+<input class="editor-input" id="ed-headline" type="text" placeholder="Ex : Une forêt de 10 000 ha replantée au Brésil" maxlength="120"/>
+</div>
+<div class="editor-field">
+<label class="editor-label">Résumé (1 phrase) <span class="req">*</span></label>
+<input class="editor-input" id="ed-summary" type="text" placeholder="Ex : Un programme communautaire restaure..."/>
+</div>
+<div class="editor-field">
+<label class="editor-label">Chapô (accroche journalistique)</label>
+<input class="editor-input" id="ed-chapo" type="text" placeholder="Ex : Là où la forêt semblait perdue..."/>
+</div>
+<div class="editor-field">
+<label class="editor-label">Corps de l'article <span class="req">*</span><span class="hint"> — sépare les paragraphes par une ligne vide</span></label>
+<textarea class="editor-textarea" id="ed-body" rows="7" placeholder="Premier paragraphe...
+
+Deuxième paragraphe...
+
+Troisième paragraphe..."></textarea>
+</div>
+<div class="editor-field">
+<label class="editor-label">Faits vérifiés <span class="hint">— un fait par ligne, avec chiffre si possible</span></label>
+<textarea class="editor-textarea" id="ed-facts" rows="3" placeholder="+50 % de surface replantée depuis 2020 (WWF).
+15 000 habitants impliqués dans le programme."></textarea>
+</div>
+<div class="editor-field">
+<label class="editor-label">Source(s) <span class="hint">— séparées par une virgule</span></label>
+<input class="editor-input" id="ed-sources" type="text" placeholder="Ex : Le Monde, WWF, ONU"/>
+</div>
+<div class="editor-field">
+<label class="editor-label">Date</label>
+<input class="editor-input" id="ed-date" type="text" placeholder="Ex : 30 mai 2026"/>
+</div>
+<div class="editor-error" id="editor-error"></div>
+<div class="editor-actions">
+<button class="editor-cancel" id="editor-cancel">Annuler</button>
+<button class="editor-publish" id="editor-publish">Publier l'article →</button>
+</div>
+</div>
+</div>
 </div>
 </main>
 
@@ -834,52 +885,6 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
 
   window._quotes=QUOTES; window._fallback=FALLBACK;
 
-  /* ── PHOTOS PAR MOT-CLÉ (Creative Commons via LoremFlickr) ── */
-  var PHOTO_MAP=[
-    ['forêt amazonienne',   'amazon,forest,jungle,trees'],
-    ['récifs coralliens',   'coral,reef,underwater,ocean'],
-    ['espèces sauvées',     'whale,wildlife,ocean,nature'],
-    ["couche d'ozone",      'sky,atmosphere,clouds,nature'],
-    ['renouvelables couvrent','solar,panels,wind,energy'],
-    ['300 GW',              'solar,farm,energy,panels'],
-    ['charbon',             'wind,turbines,energy,green'],
-    ['Medellín',            'green,city,urban,trees,park'],
-    ['vaccination',         'vaccine,syringe,medical,health'],
-    ['tuberculose',         'laboratory,medical,research,science'],
-    ['cancer',              'medicine,hospital,doctor,research'],
-    ['maternelle',          'mother,baby,hospital,health'],
-    ['espérance de vie',    'healthy,elderly,fitness,wellbeing'],
-    ['pauvreté',            'community,people,hope,village'],
-    ['classe moyenne',      'city,asia,urban,buildings'],
-    ['argent mobile',       'mobile,phone,technology,africa'],
-    ['entreprise',          'startup,office,business,meeting'],
-    ['Nobel',               'laboratory,chemistry,science,award'],
-    ['voiture électrique',  'electric,car,charging,vehicle'],
-    ['internet',            'wifi,technology,computer,network'],
-    ['plastiques',          'ocean,plastic,pollution,cleanup'],
-    ['cerveau',             'brain,neuroscience,scan,science'],
-    ['méduse',              'jellyfish,ocean,underwater,sea'],
-    ['fusion',              'energy,science,nuclear,laboratory'],
-    ['espace',              'space,stars,galaxy,cosmos'],
-    ['James Webb',          'telescope,space,galaxy,stars'],
-    ['alphabétisation',     'books,reading,education,school'],
-    ['Islande',             'iceland,landscape,waterfall,nature'],
-    ['4 jours',             'work,office,balance,wellbeing'],
-    ['bénévolat',           'volunteer,community,help,people'],
-    ['peine de mort',       'justice,law,peace,rights'],
-  ];
-
-  function getImg(headline){
-    var hl=(headline||'').toLowerCase();
-    var m=PHOTO_MAP.find(function(e){return hl.includes(e[0].toLowerCase());});
-    if(!m) return null;
-    // Seed déterministe = toujours la même photo pour le même article
-    var seed=headline.split('').reduce(function(s,c){return s+c.charCodeAt(0);},0)%99+1;
-    return {
-      url:'https://loremflickr.com/900/450/'+m[1]+'?lock='+seed,
-      credit:'Photo : Creative Commons / LoremFlickr'
-    };
-  }
 
   function fallbackFor(rubric){
     var pool;
@@ -908,23 +913,18 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
       var tl=TAG_LABEL[a.rubric]||'Société';
       var sp=mosaic?(SPAN[i]||'span-third'):'span-half';
       var ghost=(mosaic&&i===0)?'<div class="ghost-num">1</div>':'';
-      var img=getImg(a.headline);
-      var photo=img?'<div class="card-photo"><img src="'+img.url+'" alt="" loading="lazy" class="card-img"></div>':'';
-      var cO=img?'<div class="card-content">':'';
-      var cC=img?'</div>':'';
-      h+='<article class="card '+cc+' '+sp+(img?' has-photo':'')+'" data-idx="'+i+'" role="button" tabindex="0">'
-        +photo+cO
+      h+='<article class="card '+cc+' '+sp+'" data-idx="'+i+'" role="button" tabindex="0">'
+        +
         +'<span class="tag">'+tl+'</span>'
         +'<h2 class="headline">'+esc(a.headline)+'</h2>'
         +'<p class="summary">'+esc(a.summary)+'</p>'
         +'<div class="meta"><span>'+esc(a.source)+'</span><span>\u00b7</span><span>'+esc(a.date)+'</span></div>'
         +'<span class="read-hint">Lire l\'article \u2192</span>'
-        +ghost+cC+'</article>';
+        +ghost+'</article>';
     });
     h+='</div>';
     if(quote){h+='<div class="quote"><div class="quote-mark">"</div><p class="quote-text">'+esc(quote.text)+'</p><p class="quote-author">\u2014 '+esc(quote.author)+'</p></div>';}
     document.getElementById('content').innerHTML=h;
-    document.querySelectorAll('.card-img').forEach(function(im){im.addEventListener('error',function(){im.parentElement.style.display='none';});});
     document.querySelectorAll('.card').forEach(function(card){
       var open=function(){openDetail(parseInt(card.dataset.idx,10));};
       card.addEventListener('click',open);
@@ -1490,6 +1490,124 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
   }
   window._buildTrendsExtras=buildExtras;
   window.addEventListener('resize',function(){var c=document.getElementById('fw-canvas');if(c&&c.style.display!=='none'){c.width=window.innerWidth;c.height=window.innerHeight;}});
+})();
+</script>
+<!-- ÉDITEUR JS -->
+<script>
+(function(){
+  var selectedRubric = null;
+  var customArticles = [];
+
+  // Ouvrir/fermer
+  function openEditor(){
+    document.getElementById('editor-overlay').classList.add('open');
+    document.getElementById('editor-overlay').setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden';
+    document.getElementById('ed-headline').focus();
+    // Pré-remplir la date
+    var d = new Date();
+    document.getElementById('ed-date').value = d.toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
+  }
+  function closeEditor(){
+    document.getElementById('editor-overlay').classList.remove('open');
+    document.getElementById('editor-overlay').setAttribute('aria-hidden','true');
+    document.body.style.overflow='';
+    document.getElementById('editor-error').textContent='';
+  }
+
+  document.getElementById('write-btn').addEventListener('click', openEditor);
+  document.getElementById('editor-close').addEventListener('click', closeEditor);
+  document.getElementById('editor-cancel').addEventListener('click', closeEditor);
+  document.getElementById('editor-overlay').addEventListener('click', function(e){ if(e.target.id==='editor-overlay') closeEditor(); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape' && document.getElementById('editor-overlay').classList.contains('open')) closeEditor(); });
+
+  // Sélection rubrique
+  document.querySelectorAll('.rpill').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.rpill').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      selectedRubric = btn.dataset.r;
+      document.getElementById('editor-error').textContent='';
+    });
+  });
+
+  // Publication
+  document.getElementById('editor-publish').addEventListener('click', function(){
+    var headline = document.getElementById('ed-headline').value.trim();
+    var summary  = document.getElementById('ed-summary').value.trim();
+    var chapo    = document.getElementById('ed-chapo').value.trim();
+    var bodyRaw  = document.getElementById('ed-body').value.trim();
+    var factsRaw = document.getElementById('ed-facts').value.trim();
+    var sourcesRaw = document.getElementById('ed-sources').value.trim();
+    var date     = document.getElementById('ed-date').value.trim();
+    var errEl    = document.getElementById('editor-error');
+
+    // Validation
+    if(!selectedRubric){ errEl.textContent='Choisissez une rubrique.'; return; }
+    if(!headline){ errEl.textContent='Le titre est obligatoire.'; document.getElementById('ed-headline').classList.add('err'); return; }
+    if(!summary){ errEl.textContent='Le résumé est obligatoire.'; document.getElementById('ed-summary').classList.add('err'); return; }
+    if(!bodyRaw){ errEl.textContent='Le corps de l\'article est obligatoire.'; document.getElementById('ed-body').classList.add('err'); return; }
+
+    // Construire l'article
+    var body    = bodyRaw.split(/\n\s*\n/).map(function(p){ return p.trim(); }).filter(Boolean);
+    var facts   = factsRaw ? factsRaw.split('\n').map(function(f){ return f.trim(); }).filter(Boolean) : [];
+    var sources = sourcesRaw ? sourcesRaw.split(',').map(function(s){ return s.trim(); }).filter(Boolean) : ['Rédaction'];
+
+    var article = {
+      rubric: selectedRubric,
+      source: sources.join(' · '),
+      date:   date || new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'}),
+      headline: headline,
+      summary:  summary,
+      chapo:    chapo || summary,
+      body:     body,
+      facts:    facts,
+      sources:  sources,
+      _custom:  true  // marqueur = article de la rédaction
+    };
+
+    customArticles.unshift(article);
+
+    // Ajouter au début de FALLBACK (visible immédiatement)
+    if(window._fallback) window._fallback.unshift(article);
+
+    // Recharger le journal pour afficher le nouvel article
+    if(typeof load === 'function') load('all');
+
+    closeEditor();
+    resetForm();
+    showToast('Article publié ! Il apparaît maintenant dans le journal. ✓');
+  });
+
+  function resetForm(){
+    selectedRubric = null;
+    document.querySelectorAll('.rpill').forEach(function(b){ b.classList.remove('active'); });
+    ['ed-headline','ed-summary','ed-chapo','ed-body','ed-facts','ed-sources'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el){ el.value=''; el.classList.remove('err'); }
+    });
+    document.getElementById('editor-error').textContent='';
+  }
+
+  function showToast(msg){
+    var t = document.getElementById('editor-toast');
+    if(!t){
+      t = document.createElement('div');
+      t.id='editor-toast';
+      t.className='editor-success-toast';
+      document.body.appendChild(t);
+    }
+    t.textContent=msg;
+    t.classList.add('show');
+    setTimeout(function(){ t.classList.remove('show'); }, 3500);
+  }
+
+  // Retirer la classe err au focus
+  ['ed-headline','ed-summary','ed-body'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.addEventListener('input', function(){ el.classList.remove('err'); });
+  });
+
 })();
 </script>
 </body>
