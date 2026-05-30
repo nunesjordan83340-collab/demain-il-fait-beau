@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="color-scheme" content="light"/>
+<title>Demain, il fait beau — Les bonnes nouvelles du monde</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Archivo:wght@400;500;600;700;800;900&family=Lora:ital@0;1&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+:root{
+  --bg:#f5f5f5;--ink:#0a0a0a;--ink-soft:#5a5a5a;--line:#ededed;
+  --yellow:#ffd400;--coral:#ff4d4d;--pink:#ff5da2;--green:#00c46a;
+  --blue:#1a6dff;--purple:#7b3ff2;--teal:#00c9c9;--orange:#ff7a00;
+  --radius:28px;--radius-sm:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;background:#f5f5f5!important;color-scheme:light only;}
+body{background:#f5f5f5!important;color:#0a0a0a;font-family:"Sora",-apple-system,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh;}
+@media(prefers-color-scheme:dark){
+  html,body{background:#f5f5f5!important;color:#0a0a0a!important;}
+  .topbar{background:rgba(245,245,245,.92)!important;}
+  .container,.counters-wrap,.filters,.refresh-wrap,.date-nav-bar,.optimism-bar,.chiffre-wrap{background:#f5f5f5!important;}
+}
+/* CARD PHOTOS */
+.card.has-photo{padding:0;overflow:hidden;}
+.card-photo{overflow:hidden;flex-shrink:0;height:140px;background:#e8e8e8;position:relative;}
+.span-feature .card-photo{height:200px;}.span-tall .card-photo{height:180px;}
+.card-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s cubic-bezier(.2,.7,.3,1);}
+.card:hover .card-photo img{transform:scale(1.06);}
+.card-photo .photo-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:3rem;opacity:.18;}
+.card-content{padding:22px;flex:1;display:flex;flex-direction:column;}
+.card.has-photo .tag{margin-bottom:auto;}.card.has-photo .headline{margin-top:12px;}
+/* MODAL PHOTO */
+.modal-photo-bar{display:none;overflow:hidden;max-height:300px;background:#111;flex-shrink:0;}
+.modal-photo-bar.show{display:block;}
+.modal-photo-bar img{width:100%;max-height:300px;object-fit:cover;display:block;}
+.photo-credit{font-size:.65rem;color:rgba(255,255,255,.45);padding:5px 12px;background:rgba(0,0,0,.5);text-align:right;position:relative;margin-top:-22px;}
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:100;backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);background:rgba(245,245,245,.85);border-bottom:1px solid var(--line);}
+.topbar-inner{max-width:1280px;margin:0 auto;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;}
+.brand{font-family:"Archivo",sans-serif;font-weight:900;font-size:.95rem;letter-spacing:-.01em;display:flex;align-items:center;white-space:nowrap;}
+.brand em{font-style:italic;font-weight:700;opacity:.85;}
+.brand .dot{width:8px;height:8px;border-radius:50%;background:var(--yellow);margin-left:4px;flex-shrink:0;animation:pulse 2.4s infinite;}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,212,0,.6)}70%{box-shadow:0 0 0 10px rgba(255,212,0,0)}100%{box-shadow:0 0 0 0 rgba(255,212,0,0)}}
+.page-nav{display:flex;gap:4px;background:#f0f0f0;border-radius:100px;padding:4px;}
+.page-btn{font-family:"Sora",sans-serif;font-size:.75rem;font-weight:600;padding:6px 14px;border:none;border-radius:100px;cursor:pointer;background:transparent;color:var(--ink-soft);transition:all .2s;white-space:nowrap;}
+.page-btn.active{background:#fff;color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.12);}
+.topbar-date{font-size:.75rem;color:var(--ink-soft);font-weight:500;}
+/* VIEW SWITCHING */
+.journal-only{display:block;}
+body.map-active .journal-only{display:none!important;}
+body.trends-active .journal-only{display:none!important;}
+#view-map{display:none;}
+body.map-active #view-map{display:grid;grid-template-columns:1fr 400px;height:calc(100vh - 52px);position:fixed;top:52px;left:0;right:0;bottom:0;z-index:50;}
+body.map-active footer{display:none;}
+#view-trends{display:none;max-width:1280px;margin:0 auto;padding:48px 24px 80px;}
+body.trends-active #view-trends{display:block;}
+body.trends-active footer{display:block;}
+/* SCORE */
+.optimism-bar{background:#fff;border-bottom:1px solid var(--line);padding:8px 24px;display:flex;align-items:center;justify-content:center;gap:16px;font-size:.78rem;}
+.opt-label{font-family:"Archivo",sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);}
+.opt-icon-btn{background:none;border:none;cursor:pointer;font-size:1.5rem;line-height:1;padding:4px;border-radius:50%;transition:background .2s;position:relative;}
+.opt-icon-btn:hover{background:#fff9e0;}
+.opt-icon-btn.spinning{animation:sunSpin .9s cubic-bezier(.2,.7,.3,1);}
+@keyframes sunSpin{0%{transform:scale(1) rotate(0)}35%{transform:scale(1.8) rotate(180deg)}70%{transform:scale(1.3) rotate(300deg)}100%{transform:scale(1) rotate(360deg)}}
+.opt-state{font-family:"Archivo",sans-serif;font-weight:800;font-size:.9rem;color:var(--ink);}
+.opt-track{width:120px;height:6px;background:#f0f0f0;border-radius:100px;overflow:hidden;}
+.opt-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--yellow),var(--green));transition:width 1.2s cubic-bezier(.2,.7,.3,1);}
+.opt-score{font-family:"Archivo",sans-serif;font-weight:900;font-size:.82rem;color:var(--green);}
+/* OPT PANEL */
+.opt-panel{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.2,.8,.25,1);background:#fff;border-bottom:1px solid var(--line);}
+.opt-panel.open{max-height:1100px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.opt-panel-inner{max-width:960px;margin:0 auto;padding:28px 24px 32px;}
+.opt-panel-head{margin-bottom:20px;text-align:center;}
+.opt-panel-title{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.3rem;letter-spacing:-.02em;margin-bottom:6px;}
+.opt-panel-title span{background:linear-gradient(90deg,var(--green),var(--blue));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.opt-panel-sub{font-size:.8rem;color:var(--ink-soft);}
+.opt-panel-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;}
+.opt-col-head{font-family:"Archivo",sans-serif;font-weight:800;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px;}
+.opt-col-pos .opt-col-head{color:var(--green);}
+.opt-col-neg .opt-col-head{color:var(--coral);}
+.opt-factor{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:12px;margin-bottom:8px;}
+.opt-factor:last-child{margin-bottom:0;}
+.opt-factor-pos{background:#f0faf4;border:1px solid #c8f0d8;}
+.opt-factor-neg{background:#fff4f3;border:1px solid #ffd4d0;}
+.opt-factor-icon{font-size:1.2rem;flex-shrink:0;margin-top:1px;}
+.opt-factor-body{flex:1;min-width:0;}
+.opt-factor-name{font-family:"Archivo",sans-serif;font-weight:800;font-size:.82rem;margin-bottom:3px;}
+.opt-factor-pos .opt-factor-name{color:#1a6a3a;}
+.opt-factor-neg .opt-factor-name{color:#c0392b;}
+.opt-factor-desc{font-size:.74rem;color:var(--ink-soft);line-height:1.45;}
+.opt-factor-pts{font-family:"Archivo",sans-serif;font-weight:900;font-size:.78rem;flex-shrink:0;padding:3px 8px;border-radius:100px;margin-top:1px;}
+.opt-factor-pos .opt-factor-pts{background:#d4f4e2;color:#1a6a3a;}
+.opt-factor-neg .opt-factor-pts{background:#fde0de;color:#c0392b;}
+/* Balance bar */
+.opt-balance-wrap{margin-top:4px;}
+.opt-balance-label{font-size:.72rem;font-weight:600;color:var(--ink-soft);margin-bottom:8px;text-align:center;}
+.opt-balance-bar{height:10px;border-radius:100px;overflow:hidden;display:flex;}
+.opt-balance-pos{background:linear-gradient(90deg,var(--yellow),var(--green));transition:width 1.2s cubic-bezier(.2,.8,.25,1);}
+.opt-balance-neg{background:linear-gradient(90deg,var(--coral),#c0392b);transition:width 1.2s cubic-bezier(.2,.8,.25,1);}
+.opt-balance-legend{display:flex;justify-content:space-between;margin-top:6px;font-size:.68rem;color:var(--ink-soft);font-weight:600;}
+.opt-balance-legend span:first-child{color:var(--green);}
+.opt-balance-legend span:last-child{color:var(--coral);}
+@media(max-width:600px){.opt-panel-cols{grid-template-columns:1fr;}.opt-track{width:80px;}.opt-panel.open{max-height:75vh;}}
+/* CHIFFRE */
+.chiffre-wrap{max-width:1280px;margin:0 auto;padding:32px 24px 0;}
+.chiffre-card{background:#0a0a0a;color:#fff;border-radius:var(--radius);padding:36px 48px;display:grid;grid-template-columns:auto 1fr;gap:32px;align-items:center;position:relative;overflow:hidden;}
+.chiffre-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 10% 50%,rgba(255,212,0,.2),transparent 50%),radial-gradient(circle at 90% 30%,rgba(255,93,162,.2),transparent 45%);}
+.chiffre-num{font-family:"Archivo",sans-serif;font-weight:900;font-size:clamp(3rem,8vw,5.5rem);line-height:.9;letter-spacing:-.04em;color:var(--yellow);position:relative;white-space:nowrap;}
+.chiffre-body{position:relative;}.chiffre-eyelet{font-size:.72rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;opacity:.55;margin-bottom:8px;}
+.chiffre-text{font-family:"Archivo",sans-serif;font-weight:700;font-size:clamp(1rem,2.2vw,1.5rem);line-height:1.25;margin-bottom:8px;}
+.chiffre-source{font-size:.75rem;opacity:.5;font-weight:500;}
+/* HERO */
+.hero{max-width:1100px;margin:0 auto;padding:80px 24px 40px;text-align:center;}
+.hero-kicker{display:inline-block;font-family:"Archivo",sans-serif;font-weight:700;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:#0a0a0a;background:var(--yellow);padding:7px 16px;border-radius:100px;margin-bottom:28px;}
+.hero h1{font-family:"Archivo",sans-serif;font-weight:900;font-size:clamp(2.8rem,8vw,6rem);line-height:.98;letter-spacing:-.035em;margin-bottom:24px;}
+.hero h1 .grad{background:linear-gradient(100deg,var(--coral),var(--pink) 40%,var(--purple) 80%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.hero p{font-size:clamp(1.05rem,2.2vw,1.4rem);color:var(--ink-soft);max-width:640px;margin:0 auto;line-height:1.5;}
+/* COUNTERS */
+.counters-wrap{max-width:1100px;margin:48px auto 0;padding:0 24px;text-align:center;}
+.counters-title{font-family:"Archivo",sans-serif;font-weight:800;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:20px;}
+.counters{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;}
+.counter{border:none;cursor:pointer;border-radius:var(--radius-sm);padding:16px 20px;min-width:120px;flex:0 0 auto;text-align:left;transition:transform .25s,box-shadow .25s;}
+.counter:hover{transform:translateY(-4px);box-shadow:0 16px 32px -16px rgba(0,0,0,.35);}
+.counter .c-num{font-family:"Archivo",sans-serif;font-weight:900;font-size:2.1rem;line-height:1;letter-spacing:-.03em;}
+.counter .c-lbl{font-family:"Sora",sans-serif;font-weight:600;font-size:.78rem;margin-top:6px;opacity:.9;}
+/* FILTERS */
+.filters{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;max-width:900px;margin:44px auto 0;padding:0 24px;}
+.pill{font-family:"Sora",sans-serif;font-size:.86rem;font-weight:600;padding:9px 18px;border-radius:100px;border:1.5px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;transition:all .22s;white-space:nowrap;}
+.pill:hover{transform:translateY(-2px);border-color:var(--purple);}
+.pill.active{background:var(--purple);color:#fff;border-color:var(--purple);}
+/* CONTAINER */
+.container{max-width:1280px;margin:0 auto;padding:56px 24px 40px;}
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(6,1fr);gap:20px;}
+.card{border-radius:var(--radius);padding:32px;display:flex;flex-direction:column;position:relative;overflow:hidden;min-height:240px;cursor:pointer;transition:transform .35s cubic-bezier(.2,.7,.3,1),box-shadow .35s;animation:rise .6s cubic-bezier(.2,.7,.3,1) both;}
+.card:hover{transform:translateY(-6px);box-shadow:0 24px 50px -20px rgba(0,0,0,.28);}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.card:nth-child(1){animation-delay:.04s}.card:nth-child(2){animation-delay:.1s}.card:nth-child(3){animation-delay:.16s}
+.card:nth-child(4){animation-delay:.22s}.card:nth-child(5){animation-delay:.28s}.card:nth-child(6){animation-delay:.34s}.card:nth-child(7){animation-delay:.4s}
+.span-feature{grid-column:span 4;grid-row:span 2;min-height:420px;}.span-tall{grid-column:span 2;grid-row:span 2;min-height:420px;}
+.span-half{grid-column:span 3;}.span-third{grid-column:span 2;}
+.c-ecology{background:var(--green);color:#04210f;}.c-climate{background:var(--blue);color:#fff;}
+.c-health{background:var(--pink);color:#2b0014;}.c-economy{background:var(--orange);color:#2b1400;}
+.c-tech{background:var(--purple);color:#fff;}.c-science{background:var(--teal);color:#022;}.c-society{background:var(--yellow);color:#1a1500;}
+.card .tag{font-family:"Archivo",sans-serif;font-weight:800;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;opacity:.85;margin-bottom:auto;}
+.card .headline{font-family:"Archivo",sans-serif;font-weight:800;font-size:1.35rem;line-height:1.12;letter-spacing:-.02em;margin:18px 0 12px;}
+.span-feature .headline{font-size:clamp(1.8rem,3.4vw,2.8rem);}.span-tall .headline{font-size:1.7rem;}
+.card .summary{font-size:.92rem;line-height:1.55;opacity:.92;margin-bottom:18px;}
+.span-feature .summary{font-size:1.05rem;}
+.card .meta{font-size:.74rem;font-weight:600;opacity:.7;display:flex;gap:7px;align-items:center;margin-top:auto;}
+.card .ghost-num{position:absolute;right:-10px;bottom:-30px;font-family:"Archivo",sans-serif;font-weight:900;font-size:11rem;line-height:1;opacity:.08;pointer-events:none;}
+.read-hint{font-family:"Archivo",sans-serif;font-weight:700;font-size:.78rem;margin-top:14px;opacity:0;transform:translateY(4px);transition:opacity .25s,transform .25s;}
+.card:hover .read-hint{opacity:.95;transform:translateY(0);}
+/* QUOTE */
+.quote{margin:64px auto 0;max-width:1280px;background:linear-gradient(120deg,var(--coral),var(--pink) 45%,var(--purple));color:#fff;border-radius:var(--radius);padding:64px 48px;text-align:center;position:relative;overflow:hidden;}
+.quote::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 18% 22%,rgba(255,255,255,.28),transparent 42%),radial-gradient(circle at 82% 78%,rgba(255,212,0,.3),transparent 46%);}
+.quote-mark{font-family:"Archivo",sans-serif;font-weight:900;font-size:4rem;line-height:.5;color:var(--yellow);position:relative;}
+.quote-text{font-family:"Archivo",sans-serif;font-weight:700;font-size:clamp(1.3rem,3vw,2.2rem);line-height:1.25;letter-spacing:-.02em;max-width:820px;margin:20px auto 18px;position:relative;}
+.quote-author{font-size:.82rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#fff;position:relative;}
+/* DATE NAV */
+.date-nav-bar{display:flex;align-items:center;justify-content:space-between;max-width:1280px;margin:32px auto 0;padding:0 24px;}
+.current-date-pill{font-family:"Archivo",sans-serif;font-weight:700;font-size:.85rem;color:var(--ink-soft);}
+.archives-btn{font-family:"Sora",sans-serif;font-weight:600;font-size:.82rem;border:1.5px solid var(--purple);color:var(--purple);background:transparent;padding:8px 18px;border-radius:100px;cursor:pointer;transition:all .2s;}
+.archives-btn:hover{background:var(--purple);color:#fff;}
+/* REFRESH */
+.refresh-wrap{text-align:center;padding:28px 0 0;}
+.refresh{font-family:"Sora",sans-serif;font-weight:700;font-size:.95rem;padding:15px 34px;border-radius:100px;border:none;background:var(--blue);color:#fff;cursor:pointer;transition:transform .25s,box-shadow .25s;box-shadow:0 8px 22px -8px rgba(26,109,255,.6);}
+.refresh:hover{transform:scale(1.04);}
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;z-index:1000;background:rgba(20,10,30,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:flex-start;justify-content:center;padding:40px 20px;opacity:0;pointer-events:none;transition:opacity .28s ease;overflow-y:auto;}
+.modal-overlay.open{opacity:1;pointer-events:auto;}
+.modal{background:#fff;width:100%;max-width:680px;max-height:90vh;display:flex;flex-direction:column;border-radius:var(--radius);overflow:hidden;position:relative;box-shadow:0 40px 90px -30px rgba(0,0,0,.55);transform:translateY(30px) scale(.97);transition:transform .34s cubic-bezier(.2,.8,.25,1);}
+.modal-overlay.open .modal{transform:translateY(0) scale(1);}
+.modal-close{position:absolute;top:18px;right:18px;width:38px;height:38px;border-radius:50%;border:none;background:rgba(255,255,255,.9);color:#111;font-size:1rem;cursor:pointer;z-index:2;transition:transform .2s;}
+.modal-close:hover{transform:rotate(90deg);}
+.modal-head{padding:42px 40px 32px;color:#fff;flex-shrink:0;}
+.modal-head.c-ecology{background:var(--green);color:#04210f;}.modal-head.c-climate{background:var(--blue);color:#fff;}
+.modal-head.c-health{background:var(--pink);color:#2b0014;}.modal-head.c-economy{background:var(--orange);color:#2b1400;}
+.modal-head.c-tech{background:var(--purple);color:#fff;}.modal-head.c-science{background:var(--teal);color:#022;}.modal-head.c-society{background:var(--yellow);color:#1a1500;}
+.modal-tag{font-family:"Archivo",sans-serif;font-weight:800;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;opacity:.85;}
+.modal-title{font-family:"Archivo",sans-serif;font-weight:900;font-size:clamp(1.6rem,4vw,2.3rem);line-height:1.07;letter-spacing:-.02em;margin:14px 0 14px;}
+.modal-byline{font-size:.8rem;font-weight:600;opacity:.85;display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.modal-body{padding:32px 40px 44px;overflow-y:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto;min-height:0;}
+.chapo{font-family:"Lora",Georgia,serif;font-style:italic;font-size:1.12rem;line-height:1.55;color:#1a1a1a;padding-bottom:22px;margin-bottom:26px;border-bottom:1px solid var(--line);}
+.article-body p{font-family:"Lora",Georgia,serif;font-size:1.04rem;line-height:1.72;color:#222;margin-bottom:18px;}
+.article-body p:first-child::first-letter{font-family:"Archivo",sans-serif;font-weight:900;font-size:3.1rem;float:left;line-height:.82;padding:6px 10px 0 0;color:var(--purple);}
+.factbox{background:#f6f8ff;border:1.5px solid #e3e9ff;border-left:5px solid var(--blue);border-radius:var(--radius-sm);padding:22px 24px;margin:30px 0;}
+.factbox-title{font-family:"Archivo",sans-serif;font-weight:800;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--blue);margin-bottom:14px;}
+.factbox ul{list-style:none;padding:0;}.factbox li{position:relative;padding-left:26px;margin-bottom:12px;font-size:.96rem;line-height:1.5;color:#1f1f1f;}
+.factbox li:last-child{margin-bottom:0;}.factbox li::before{content:"\2713";position:absolute;left:0;top:0;font-weight:800;color:var(--green);}
+.sources{margin-top:28px;padding-top:22px;border-top:1px solid var(--line);}
+.sources-title{font-family:"Archivo",sans-serif;font-weight:800;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:12px;}
+.source-chip{display:inline-block;font-size:.8rem;font-weight:600;color:#333;background:#f2f2f2;border:1px solid var(--line);padding:6px 12px;border-radius:100px;margin:0 6px 8px 0;}
+.sources-note{font-size:.74rem;color:var(--ink-soft);line-height:1.5;margin-top:8px;font-style:italic;}
+body.modal-open{overflow:hidden;}
+/* TRENDS */
+.trends-header{text-align:center;margin-bottom:52px;}
+.trends-kicker{display:inline-block;font-size:.75rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;background:var(--purple);color:#fff;padding:6px 16px;border-radius:100px;margin-bottom:18px;}
+.trends-title{font-family:"Archivo",sans-serif;font-weight:900;font-size:clamp(2rem,5vw,3.6rem);line-height:1;letter-spacing:-.03em;margin-bottom:14px;}
+.trends-sub{font-size:1rem;color:var(--ink-soft);max-width:520px;margin:0 auto;}
+.charts-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:28px;}
+.chart-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:28px 28px 20px;position:relative;overflow:hidden;}
+.chart-card:first-child{grid-column:span 2;}
+.chart-card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;border-radius:var(--radius) var(--radius) 0 0;}
+.chart-card.cc-green::before{background:var(--green);}.chart-card.cc-pink::before{background:var(--pink);}
+.chart-card.cc-blue::before{background:var(--blue);}.chart-card.cc-orange::before{background:var(--orange);}.chart-card.cc-purple::before{background:var(--purple);}
+.chart-label{font-family:"Archivo",sans-serif;font-weight:800;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;}
+.chart-title{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.2rem;margin-bottom:4px;}
+.chart-desc{font-size:.82rem;color:var(--ink-soft);margin-bottom:20px;line-height:1.45;}
+.chart-svg{width:100%;display:block;}.chart-annotation{font-size:.68rem;fill:var(--ink-soft);}
+.trend-stat{position:absolute;top:28px;right:28px;text-align:right;}
+.trend-stat-num{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.6rem;line-height:1;}
+.trend-stat-lbl{font-size:.68rem;color:var(--ink-soft);}
+/* DYN STATS */
+.dyn-stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:48px;}
+.dyn-stat{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:28px 24px;text-align:center;position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s;}
+.dyn-stat:hover{transform:translateY(-4px);box-shadow:0 20px 40px -16px rgba(0,0,0,.18);}
+.dyn-stat::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;border-radius:var(--radius) var(--radius) 0 0;background:var(--c);}
+.dyn-stat-icon{font-size:2rem;margin-bottom:10px;}
+.dyn-stat-num{font-family:"Archivo",sans-serif;font-weight:900;font-size:clamp(1.8rem,4vw,3rem);line-height:1;letter-spacing:-.03em;color:var(--c);}
+.dyn-stat-label{font-family:"Archivo",sans-serif;font-weight:700;font-size:.9rem;color:var(--ink);margin:8px 0 4px;line-height:1.25;}
+.dyn-stat-sub{font-size:.72rem;color:var(--ink-soft);}
+/* SECRETS */
+.secrets-wrap{margin-top:64px;}
+.secrets-hd{text-align:center;margin-bottom:36px;}
+.secrets-emoji{font-size:2.8rem;margin-bottom:12px;}
+.secrets-title{font-family:"Archivo",sans-serif;font-weight:900;font-size:clamp(1.5rem,3vw,2.2rem);letter-spacing:-.02em;margin-bottom:8px;}
+.secrets-sub{font-size:.9rem;color:var(--ink-soft);}
+.secrets-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.secret-card{border-radius:var(--radius);min-height:180px;cursor:pointer;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center;transition:transform .3s;}
+.secret-card:hover{transform:scale(1.03);}
+.secret-front,.secret-back{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;transition:opacity .4s,transform .4s;}
+.secret-back{opacity:0;transform:scale(.85);}
+.secret-card.revealed .secret-front{opacity:0;transform:scale(1.12);}
+.secret-card.revealed .secret-back{opacity:1;transform:scale(1);}
+.secret-qmark{font-size:3rem;margin-bottom:10px;}
+.secret-question{font-family:"Archivo",sans-serif;font-weight:700;font-size:.88rem;line-height:1.35;opacity:.9;}
+.secret-answer-emoji{font-size:2.2rem;margin-bottom:8px;}
+.secret-answer-num{font-family:"Archivo",sans-serif;font-weight:900;font-size:clamp(1.6rem,3vw,2.4rem);line-height:1;letter-spacing:-.03em;margin-bottom:6px;}
+.secret-answer-detail{font-size:.74rem;line-height:1.5;opacity:.9;}
+.secret-tap-hint{position:absolute;bottom:14px;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.55;}
+/* FIREWORKS */
+#fw-canvas{position:fixed;inset:0;pointer-events:none;z-index:9999;display:none;}
+/* CALENDAR */
+.cal-overlay{position:fixed;inset:0;z-index:2000;background:rgba(10,5,20,.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s;}
+.cal-overlay.open{opacity:1;pointer-events:auto;}
+.cal-panel{background:#fff;border-radius:var(--radius);width:100%;max-width:380px;overflow:hidden;box-shadow:0 32px 80px -20px rgba(0,0,0,.5);transform:scale(.94) translateY(12px);transition:transform .3s cubic-bezier(.2,.8,.25,1);}
+.cal-overlay.open .cal-panel{transform:scale(1) translateY(0);}
+.cal-header{background:var(--ink);color:#fff;padding:20px;display:flex;align-items:center;justify-content:space-between;}
+.cal-month-label{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.1rem;text-transform:capitalize;}
+.cal-nav{background:rgba(255,255,255,.15);border:none;color:#fff;width:34px;height:34px;border-radius:50%;font-size:1rem;cursor:pointer;transition:background .2s;}
+.cal-nav:hover{background:rgba(255,255,255,.3);}
+.cal-close{background:transparent;border:none;color:rgba(255,255,255,.6);font-size:1.1rem;cursor:pointer;margin-left:8px;}
+.cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);padding:14px 16px 8px;gap:2px;}
+.cal-weekdays span{text-align:center;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);padding:4px 16px 16px;gap:4px;}
+.cal-day{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:50%;font-size:.88rem;font-weight:600;color:var(--ink-soft);cursor:default;position:relative;transition:all .18s;}
+.cal-day.has-news{color:var(--ink);cursor:pointer;font-weight:800;}
+.cal-day.has-news:hover,.cal-day.selected{background:var(--purple);color:#fff;}
+.cal-day.has-news:hover .cal-dot,.cal-day.selected .cal-dot{background:#fff!important;}
+.cal-day.is-today{box-shadow:0 0 0 2px var(--yellow);}
+.cal-day.empty{opacity:0;}
+.cal-day-num{font-size:.85rem;line-height:1;}
+.cal-dot{width:5px;height:5px;border-radius:50%;background:var(--purple);margin-top:3px;opacity:0;}
+.cal-day.has-news .cal-dot{opacity:1;}
+.cal-legend{padding:12px 20px 20px;font-size:.72rem;color:var(--ink-soft);display:flex;align-items:center;gap:8px;border-top:1px solid var(--line);}
+.cal-legend-dot{width:8px;height:8px;border-radius:50%;background:var(--purple);flex-shrink:0;}
+/* MAP */
+.map-stage{position:relative;background:radial-gradient(ellipse at center,#0d1b3e 0%,#040a1a 70%);overflow:hidden;}
+#globe-canvas{width:100%!important;height:100%!important;display:block;}
+.map-hint{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);pointer-events:none;white-space:nowrap;}
+.map-list{background:#0a0f24;border-left:1px solid rgba(255,255,255,.07);display:flex;flex-direction:column;overflow:hidden;}
+.map-list-head{padding:28px 28px 16px;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.07);}
+.map-list-title{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.3rem;color:#fff;margin-bottom:4px;}
+.map-list-title span{background:linear-gradient(90deg,var(--coral),var(--pink));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.map-list-sub{font-size:.73rem;color:rgba(255,255,255,.35);letter-spacing:.06em;}
+.news-list{list-style:none;overflow-y:auto;-webkit-overflow-scrolling:touch;flex:1;padding:8px 0;}
+.news-list::-webkit-scrollbar{width:4px;}.news-list::-webkit-scrollbar-track{background:transparent;}.news-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px;}
+.nl-item{display:flex;align-items:flex-start;gap:14px;padding:14px 24px;cursor:pointer;border-left:3px solid transparent;transition:background .2s,border-color .2s;}
+.nl-item:hover,.nl-item.focused{background:rgba(255,255,255,.04);border-left-color:currentColor;}
+.nl-num{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.3rem;line-height:1;color:rgba(255,255,255,.15);flex-shrink:0;width:28px;text-align:right;}
+.nl-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;margin-top:5px;box-shadow:0 0 8px currentColor;}
+.nl-body{flex:1;min-width:0;}
+.nl-place{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.55;color:#fff;margin-bottom:4px;}
+.nl-title{font-family:"Archivo",sans-serif;font-weight:700;font-size:.92rem;color:#fff;line-height:1.25;}
+.nl-rubric{display:inline-block;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:100px;margin-top:6px;opacity:.85;}
+/* NEWSLETTER */
+.newsletter{background:#0a0a0a;color:#fff;padding:80px 24px;margin-top:64px;}
+.nl-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+.nl-kicker{display:inline-block;font-family:"Archivo",sans-serif;font-weight:700;font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;background:var(--yellow);color:#0a0a0a;padding:6px 14px;border-radius:100px;margin-bottom:22px;}
+.nl-title{font-family:"Archivo",sans-serif;font-weight:900;font-size:clamp(2rem,4vw,3rem);line-height:1.05;letter-spacing:-.03em;margin-bottom:16px;}
+.nl-title span{background:linear-gradient(100deg,var(--yellow),var(--coral));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.nl-desc{font-size:1rem;line-height:1.6;color:rgba(255,255,255,.7);margin-bottom:24px;}
+.nl-perks{list-style:none;display:flex;flex-direction:column;gap:10px;}
+.nl-perks li{font-size:.88rem;color:rgba(255,255,255,.6);display:flex;align-items:center;gap:10px;}
+.nl-check{color:#00c46a;font-weight:800;}
+.nl-right{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius);padding:36px 32px;}
+.nl-form{display:flex;flex-direction:column;gap:20px;}
+.nl-field-group{display:flex;flex-direction:column;gap:7px;}
+.nl-label{font-family:"Archivo",sans-serif;font-weight:700;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.6);}
+.nl-required{color:#ff4d4d;}.nl-opt{font-weight:400;font-size:.72rem;text-transform:none;letter-spacing:0;opacity:.7;}
+.nl-input{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);border-radius:12px;padding:14px 16px;color:#fff;font-family:"Sora",sans-serif;font-size:.95rem;outline:none;transition:border-color .2s;-webkit-appearance:none;}
+.nl-input::placeholder{color:rgba(255,255,255,.3);}.nl-input:focus{border-color:var(--yellow);background:rgba(255,255,255,.12);}
+.nl-input.has-error{border-color:#ff4d4d;}.nl-error{font-size:.75rem;color:#ff4d4d;min-height:14px;}
+.nl-topics{display:flex;flex-wrap:wrap;gap:8px;}
+.nl-topic{font-family:"Sora",sans-serif;font-size:.78rem;font-weight:600;padding:7px 13px;border-radius:100px;border:1.5px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.6);cursor:pointer;transition:all .18s;}
+.nl-topic:hover{border-color:rgba(255,255,255,.5);color:#fff;}
+.nl-topic.active{background:var(--yellow);border-color:var(--yellow);color:#0a0a0a;}
+.nl-submit{background:linear-gradient(100deg,#ff4d4d,#ff5da2);border:none;border-radius:12px;padding:16px 28px;color:#fff;font-family:"Archivo",sans-serif;font-weight:800;font-size:1rem;cursor:pointer;transition:transform .22s,box-shadow .22s;box-shadow:0 8px 24px -8px rgba(255,77,77,.5);margin-top:4px;}
+.nl-submit:hover{transform:translateY(-2px);}.nl-submit:disabled{opacity:.6;cursor:not-allowed;}
+.nl-legal{font-size:.7rem;color:rgba(255,255,255,.3);line-height:1.5;text-align:center;}
+.nl-success{display:none;text-align:center;padding:20px 0;}
+.nl-success.show{display:flex;flex-direction:column;align-items:center;gap:12px;animation:fadeUp .5s ease both;}
+.nl-success-icon{font-size:3rem;}
+.nl-success-title{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.8rem;color:var(--yellow);}
+.nl-success-msg{font-size:.92rem;color:rgba(255,255,255,.7);line-height:1.6;}
+/* FOOTER */
+footer{max-width:1280px;margin:80px auto 0;padding:40px 24px;border-top:1px solid var(--line);text-align:center;color:var(--ink-soft);font-size:.82rem;}
+footer .fbrand{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.4rem;color:var(--ink);margin-bottom:8px;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:900px){
+  .grid{grid-template-columns:repeat(4,1fr);}
+  .span-feature{grid-column:span 4;grid-row:span 1;min-height:320px;}
+  .span-tall{grid-column:span 2;grid-row:span 1;min-height:260px;}
+  .span-half{grid-column:span 2;}.span-third{grid-column:span 2;}
+}
+@media(max-width:768px){
+  .nl-inner{grid-template-columns:1fr;gap:40px;}.nl-right{padding:28px 22px;}
+  .dyn-stats-grid{grid-template-columns:repeat(2,1fr);}
+  .secrets-grid{grid-template-columns:repeat(2,1fr);}
+  body.map-active #view-map{grid-template-columns:1fr;grid-template-rows:55vh 1fr;overflow:hidden;}
+  .map-list{border-left:none;border-top:1px solid rgba(255,255,255,.07);}
+  .modal-overlay{padding:0;align-items:stretch;}
+  .modal{max-width:100%;max-height:100vh;height:100vh;border-radius:0;}
+  .modal-head{padding:56px 24px 28px;}.modal-body{padding:26px 24px 48px;}
+}
+@media(max-width:560px){
+  .grid{grid-template-columns:1fr;}
+  .span-feature,.span-tall,.span-half,.span-third{grid-column:span 1;grid-row:span 1;min-height:220px;}
+  .hero{padding-top:52px;}
+  .dyn-stats-grid{grid-template-columns:1fr;}.secrets-grid{grid-template-columns:1fr;}
+  .chiffre-card{grid-template-columns:1fr;gap:12px;padding:28px 24px;}.chiffre-num{font-size:3.5rem;}
+  .quote-banner::before,.quote-banner::after{display:none;}
+  .nl-inner{gap:32px;}
+}
+</style>
+</head>
+<body>
+<!-- TOPBAR -->
+<div class="topbar">
+<div class="topbar-inner">
+<div class="brand">Demain,&thinsp;<em>il fait beau</em><span class="dot"></span></div>
+<nav class="page-nav">
+<button class="page-btn active" id="btn-journal">Le journal</button>
+<button class="page-btn" id="btn-map">🌍 Carte</button>
+<button class="page-btn" id="btn-trends">📈 Tendances</button>
+</nav>
+<div class="topbar-date" id="topbar-date">—</div>
+</div>
+</div>
+
+<!-- SCORE -->
+<div class="optimism-bar journal-only" id="optimism-bar">
+<span class="opt-label">Indice du jour</span>
+<button class="opt-icon-btn" id="opt-icon-btn" title="Voir le détail de l'indice" aria-expanded="false">
+<span id="opt-weather">☀️</span>
+</button>
+<span class="opt-state" id="opt-state">Beau fixe</span>
+<div class="opt-track"><div class="opt-fill" id="opt-fill" style="width:0%"></div></div>
+<span class="opt-score" id="opt-score">—</span>
+</div>
+<div class="opt-panel journal-only" id="opt-panel" aria-hidden="true">
+<div class="opt-panel-inner">
+<div class="opt-panel-head">
+<div class="opt-panel-title">Pourquoi <span id="opt-panel-score">—</span> aujourd'hui ?</div>
+<p class="opt-panel-sub">L'indice combine des tendances longues positives et les facteurs aggravants actuels du monde.</p>
+</div>
+<div class="opt-panel-cols">
+<div class="opt-col opt-col-pos">
+<div class="opt-col-head">✅ Ce qui hausse l'indice</div>
+<div id="opt-pos-list"></div>
+</div>
+<div class="opt-col opt-col-neg">
+<div class="opt-col-head">⚠️ Ce qui le baisse</div>
+<div id="opt-neg-list"></div>
+</div>
+</div>
+<div class="opt-balance-wrap">
+<div class="opt-balance-label">Balance des forces</div>
+<div class="opt-balance-bar">
+<div class="opt-balance-pos" id="opt-balance-pos" style="width:0%"></div>
+<div class="opt-balance-neg" id="opt-balance-neg" style="width:0%"></div>
+</div>
+<div class="opt-balance-legend"><span>Facteurs positifs</span><span>Facteurs aggravants</span></div>
+</div>
+</div>
+</div>
+
+<!-- CHIFFRE DU JOUR -->
+<div class="chiffre-wrap journal-only">
+<div class="chiffre-card" id="chiffre-card">
+<div class="chiffre-num" id="chiffre-num">—</div>
+<div class="chiffre-body">
+<div class="chiffre-eyelet">Le chiffre du jour</div>
+<div class="chiffre-text" id="chiffre-text">—</div>
+<div class="chiffre-source" id="chiffre-source">—</div>
+</div>
+</div>
+</div>
+
+<!-- HERO -->
+<section class="hero journal-only">
+<span class="hero-kicker">✦ 100 % bonnes nouvelles</span>
+<h1>Demain,<br><span class="grad">il fait beau.</span></h1>
+<p>Chaque jour, nous parcourons le monde pour ne garder que les progrès, les avancées et les vraies raisons d'être optimiste.</p>
+</section>
+
+<!-- COMPTEURS -->
+<section class="counters-wrap journal-only">
+<div class="counters-title">Les bonnes nouvelles répertoriées</div>
+<div class="counters" id="counters"></div>
+</section>
+
+<!-- FILTRES -->
+<div class="filters journal-only" id="filters">
+<button class="pill active" data-rubric="all">Tout</button>
+<button class="pill" data-rubric="ecology">🌿 Écologie</button>
+<button class="pill" data-rubric="climate">🌍 Climat</button>
+<button class="pill" data-rubric="health">💚 Santé</button>
+<button class="pill" data-rubric="economy">📈 Économie</button>
+<button class="pill" data-rubric="tech">⚡ Tech</button>
+<button class="pill" data-rubric="science">🔬 Science</button>
+<button class="pill" data-rubric="society">🤝 Société</button>
+</div>
+
+<!-- MAIN JOURNAL -->
+<main class="container journal-only">
+<div id="content"></div>
+<div class="date-nav-bar">
+<div class="current-date-pill" id="current-date-pill">📅 Aujourd'hui</div>
+<button class="archives-btn" id="archives-btn">Parcourir les archives →</button>
+</div>
+<div class="refresh-wrap">
+<button class="refresh" id="refresh">↻ Rafraîchir</button>
+</div>
+</main>
+
+<!-- TENDANCES -->
+<section id="view-trends" aria-hidden="true">
+<div class="trends-header">
+<div class="trends-kicker">📈 Un siècle de progrès</div>
+<h2 class="trends-title">Le monde va<br>mieux qu'on ne le croit.</h2>
+<p class="trends-sub">Des données réelles sur le long terme. La preuve visuelle que l'humanité avance.</p>
+</div>
+<div class="dyn-stats-grid" id="dyn-stats-grid"></div>
+<div class="charts-grid" id="charts-grid"></div>
+<div class="secrets-wrap">
+<div class="secrets-hd">
+<div class="secrets-emoji">🔮</div>
+<h3 class="secrets-title">Les cases secrètes</h3>
+<p class="secrets-sub">Cliquez pour révéler la meilleure stat du moment</p>
+</div>
+<div class="secrets-grid" id="secrets-grid"></div>
+</div>
+</section>
+
+<!-- CALENDRIER -->
+<div class="cal-overlay" id="cal-modal" aria-hidden="true">
+<div class="cal-panel" role="dialog" aria-modal="true">
+<div class="cal-header">
+<button class="cal-nav" id="cal-prev">←</button>
+<span class="cal-month-label" id="cal-month-label"></span>
+<button class="cal-nav" id="cal-next">→</button>
+<button class="cal-close" id="cal-close">✕</button>
+</div>
+<div class="cal-weekdays"><span>Lu</span><span>Ma</span><span>Me</span><span>Je</span><span>Ve</span><span>Sa</span><span>Di</span></div>
+<div class="cal-grid" id="cal-grid"></div>
+<div class="cal-legend"><span class="cal-legend-dot"></span> Bonnes nouvelles disponibles</div>
+</div>
+</div>
+
+<!-- CARTE MONDE -->
+<section id="view-map" aria-hidden="true">
+<div class="map-stage"><canvas id="globe-canvas"></canvas>
+<div class="map-hint">Faites glisser · Molette pour zoomer</div></div>
+<aside class="map-list">
+<div class="map-list-head">
+<div class="map-list-title">Les avancées <span>autour du monde</span></div>
+<div class="map-list-sub">Cliquez sur un lieu pour le mettre en avant</div>
+</div>
+<ol class="news-list" id="news-list"></ol>
+</aside>
+</section>
+
+<!-- MODAL ARTICLE -->
+<div class="modal-overlay" id="modal" aria-hidden="true">
+<div class="modal" role="dialog" aria-modal="true">
+<button class="modal-close" id="modal-close" aria-label="Fermer">✕</button>
+<div class="modal-head" id="modal-head">
+<span class="modal-tag" id="modal-tag"></span>
+<h2 class="modal-title" id="modal-title"></h2>
+<div class="modal-byline" id="modal-byline"></div>
+</div>
+<div class="modal-body">
+<p class="chapo" id="modal-chapo"></p>
+<div class="article-body" id="modal-article"></div>
+<div class="factbox">
+<div class="factbox-title">📊 Les faits, vérifiés</div>
+<ul id="modal-facts"></ul>
+</div>
+<div class="sources">
+<div class="sources-title">🔎 Sources &amp; références</div>
+<div id="modal-sources"></div>
+<p class="sources-note" id="modal-sourcenote"></p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- NEWSLETTER -->
+<section class="newsletter journal-only" id="newsletter">
+<div class="nl-inner">
+<div class="nl-left">
+<div class="nl-kicker">✉️ La newsletter</div>
+<h2 class="nl-title">Les bonnes nouvelles<br><span>directement chez vous.</span></h2>
+<p class="nl-desc">Chaque matin, une sélection de progrès du monde. Pas de catastrophisme — juste ce qui avance.</p>
+<ul class="nl-perks">
+<li><span class="nl-check">✓</span> Un email par jour, pas plus</li>
+<li><span class="nl-check">✓</span> Zéro publicité, zéro spam</li>
+<li><span class="nl-check">✓</span> Désabonnement en un clic</li>
+</ul>
+</div>
+<div class="nl-right">
+<form class="nl-form" id="nl-form" novalidate>
+<div class="nl-field-group">
+<label class="nl-label" for="nl-name">Prénom</label>
+<input class="nl-input" type="text" id="nl-name" placeholder="Votre prénom" autocomplete="given-name"/>
+</div>
+<div class="nl-field-group">
+<label class="nl-label" for="nl-email">Email <span class="nl-required">*</span></label>
+<input class="nl-input" type="email" id="nl-email" placeholder="vous@exemple.com" required/>
+<span class="nl-error" id="nl-error"></span>
+</div>
+<div class="nl-field-group">
+<label class="nl-label">Thèmes <span class="nl-opt">(optionnel)</span></label>
+<div class="nl-topics">
+<button type="button" class="nl-topic" data-topic="ecology">🌿 Écologie</button>
+<button type="button" class="nl-topic" data-topic="climate">🌍 Climat</button>
+<button type="button" class="nl-topic" data-topic="health">💚 Santé</button>
+<button type="button" class="nl-topic" data-topic="economy">📈 Économie</button>
+<button type="button" class="nl-topic" data-topic="tech">⚡ Tech</button>
+<button type="button" class="nl-topic" data-topic="science">🔬 Science</button>
+<button type="button" class="nl-topic" data-topic="society">🤝 Société</button>
+</div>
+</div>
+<button type="submit" class="nl-submit" id="nl-submit">
+<span id="nl-btn-text">Rejoindre la newsletter →</span>
+</button>
+<p class="nl-legal">Vos données ne seront jamais transmises à des tiers.</p>
+</form>
+<div class="nl-success" id="nl-success" aria-hidden="true">
+<div class="nl-success-icon">🎉</div>
+<div class="nl-success-title">Bienvenue !</div>
+<div class="nl-success-msg">Votre première bonne nouvelle arrive demain matin.</div>
+</div>
+</div>
+</div>
+</section>
+
+<footer>
+<div class="fbrand">Demain, il fait beau</div>
+<div>Journal positif · Maquette de démonstration · © 2026</div>
+</footer>
+
+<canvas id="fw-canvas" aria-hidden="true"></canvas>
+
+<script>
+// ── SCRIPT 0 : Données & Journal ──────────────────────────────────────────
+var TAG_CLASS={ecology:'c-ecology',climate:'c-climate',health:'c-health',economy:'c-economy',tech:'c-tech',science:'c-science',society:'c-society'};
+var TAG_LABEL={ecology:'🌿 Écologie',climate:'🌍 Climat',health:'💚 Santé',economy:'📈 Économie',tech:'⚡ Tech',science:'🔬 Science',society:'🤝 Société'};
+var SPAN=['span-feature','span-tall','span-half','span-third','span-third','span-third','span-third'];
+var RUBRIC_ORDER=['tech','health','society','ecology','climate','science','economy'];
+var currentRubric='all',currentArticles=[];
+var now=new Date();
+document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+  var FALLBACK=[
+{
+    rubric:"ecology",source:"INPE \u00b7 Fonds amazonien",date:"Donn\u00e9es 2024",headline:"En Amazonie, la d\u00e9forestation chute de moiti\u00e9",
+    summary:"La destruction de la for\u00eat br\u00e9silienne a recul\u00e9 d'environ 50 % en 2023, son meilleur r\u00e9sultat depuis des ann\u00e9es.",
+    chapo:"Apr\u00e8s une d\u00e9cennie d'acc\u00e9l\u00e9ration, la d\u00e9forestation de l'Amazonie br\u00e9silienne conna\u00eet un retournement spectaculaire.",
+    body:["Selon les donn\u00e9es du syst\u00e8me PRODES de l'INPE, la d\u00e9forestation a chut\u00e9 d'environ 50 % en 2023 par rapport \u00e0 2022, puis a continu\u00e9 de baisser en 2024.", "Ce revirement co\u00efncide avec le retour au pouvoir de Lula da Silva en janvier 2023, qui a r\u00e9activ\u00e9 l'agence IBAMA et le Fonds amazonien, abond\u00e9 par la Norv\u00e8ge et l'Allemagne.", "L'enjeu est plan\u00e9taire : l'Amazonie recycle l'humidit\u00e9 qui alimente les pluies d'une grande partie du continent et stocke des dizaines de milliards de tonnes de carbone."],
+    facts:["\u221250 % de d\u00e9forestation en Amazonie br\u00e9silienne en 2023 vs 2022 (INPE/PRODES).", "Le Fonds amazonien a \u00e9t\u00e9 r\u00e9activ\u00e9 en 2023 avec le soutien de la Norv\u00e8ge et de l'Allemagne.", "Les terres autochtones enregistrent les taux de d\u00e9forestation les plus bas."],
+    sources:["INPE", "Fonds amazonien", "Mongabay"]
+  },
+{
+    rubric:"climate",source:"AIE \u00b7 IRENA \u00b7 Ember",date:"Rapport 2024",headline:"Les renouvelables, d\u00e9sormais l'\u00e9lectricit\u00e9 la moins ch\u00e8re",
+    summary:"Solaire et \u00e9olien fournissent plus de 30 % de l'\u00e9lectricit\u00e9 mondiale et battent les fossiles sur les prix.",
+    chapo:"Le solaire et l'\u00e9olien ne sont plus seulement les \u00e9nergies les plus propres : ils sont devenus les moins ch\u00e8res.",
+    body:["Selon l'IRENA, le co\u00fbt du solaire photovolta\u00efque a chut\u00e9 d'environ 90 % entre 2010 et 2023, et celui de l'\u00e9olien terrestre de plus de 70 %.", "Les renouvelables ont fourni plus de 30 % de l'\u00e9lectricit\u00e9 mondiale en 2023, un record historique (Ember).", "Pour les m\u00e9nages comme pour les industries, cela annonce une \u00e9lectricit\u00e9 dont le carburant \u2014 soleil et vent \u2014 est gratuit et local."],
+    facts:["\u221290 % : effondrement du co\u00fbt du solaire PV entre 2010 et 2023 (IRENA).", "Plus de 30 % de l'\u00e9lectricit\u00e9 mondiale d'origine renouvelable en 2023 (Ember).", "Le co\u00fbt des batteries de stockage a \u00e9t\u00e9 divis\u00e9 par plus de six depuis 2010."],
+    sources:["AIE", "IRENA", "Ember"]
+  },
+{
+    rubric:"health",source:"OMS \u00b7 The Lancet",date:"\u00c9tude 2024",headline:"La vaccination a sauv\u00e9 154 millions de vies en 50 ans",
+    summary:"Une \u00e9tude publi\u00e9e dans The Lancet chiffre l'effet du Programme \u00e9largi de vaccination depuis 1974.",
+    chapo:"C'est l'un des plus grands succ\u00e8s de sant\u00e9 publique de l'histoire : six vies sauv\u00e9es par minute pendant cinquante ans.",
+    body:["\u00c0 l'occasion des 50 ans du PEV, une \u00e9tude publi\u00e9e dans The Lancet en 2024 a estim\u00e9 que la vaccination a sauv\u00e9 environ 154 millions de vies depuis 1974.", "La mortalit\u00e9 des enfants de moins de cinq ans a \u00e9t\u00e9 plus que divis\u00e9e par deux depuis 1990 (ONU/IGME).", "Les plateformes \u00e0 ARN messager laissent esp\u00e9rer des r\u00e9ponses plus rapides face aux futures \u00e9pid\u00e9mies."],
+    facts:["154 millions de vies sauv\u00e9es par la vaccination depuis 1974 (The Lancet, 2024).", "Mortalit\u00e9 des moins de 5 ans divis\u00e9e par plus de deux depuis 1990 (ONU, IGME).", "Premier vaccin antipaludique recommand\u00e9 par l'OMS depuis 2021."],
+    sources:["OMS", "The Lancet (2024)", "UN IGME"]
+  },
+{
+    rubric:"economy",source:"Banque mondiale",date:"S\u00e9ries longues",headline:"Plus d'un milliard de personnes sorties de l'extr\u00eame pauvret\u00e9",
+    summary:"La part de l'humanit\u00e9 sous le seuil d'extr\u00eame pauvret\u00e9 est pass\u00e9e de 36 % en 1990 \u00e0 moins de 10 %.",
+    chapo:"En une g\u00e9n\u00e9ration, l'humanit\u00e9 a accompli ce que beaucoup jugeaient hors de port\u00e9e.",
+    body:["La part de la population mondiale en extr\u00eame pauvret\u00e9 est pass\u00e9e de 36 % en 1990 \u00e0 moins de 10 % (Banque mondiale).", "Le service k\u00e9nyan M-Pesa, lanc\u00e9 en 2007, a bancaris\u00e9 des millions de personnes via le mobile.", "La tendance de fond d\u00e9montre qu'une pauvret\u00e9 de masse n'est pas une fatalit\u00e9."],
+    facts:["Extr\u00eame pauvret\u00e9 : de 36 % (1990) \u00e0 moins de 10 % de l'humanit\u00e9 (Banque mondiale).", "Plus d'un milliard de personnes sorties en une g\u00e9n\u00e9ration.", "M-Pesa (Kenya, 2007) : mod\u00e8le de bancarisation mobile mondiale."],
+    sources:["Banque mondiale", "Our World in Data", "ONU"]
+  },
+{
+    rubric:"tech",source:"Comit\u00e9 Nobel \u00b7 Nature",date:"Nobel 2024",headline:"Un Nobel pour l'IA qui r\u00e9volutionne la biologie",
+    summary:"AlphaFold a pr\u00e9dit la structure de 200 millions de prot\u00e9ines et acc\u00e9l\u00e8re la recherche de m\u00e9dicaments.",
+    chapo:"En r\u00e9compensant AlphaFold, le Nobel de chimie 2024 a consacr\u00e9 une rupture pour la m\u00e9decine de demain.",
+    body:["En octobre 2024, le prix Nobel de chimie a r\u00e9compens\u00e9 Demis Hassabis et John Jumper (DeepMind) ainsi que David Baker.", "En 2022, la base AlphaFold a \u00e9t\u00e9 rendue publique avec plus de 200 millions de prot\u00e9ines cartographi\u00e9es \u2014 gratuitement.", "La m\u00eame technologie s'applique \u00e0 la conception d'enzymes capables de d\u00e9composer le plastique ou de capter du CO\u2082."],
+    facts:["Prix Nobel de chimie 2024 pour la pr\u00e9diction des prot\u00e9ines par IA.", "Plus de 200 millions de structures de prot\u00e9ines publi\u00e9es gratuitement (2022).", "Des m\u00e9dicaments con\u00e7us par IA sont d\u00e9j\u00e0 en essais cliniques."],
+    sources:["Comit\u00e9 Nobel", "Nature", "Google DeepMind"]
+  },
+{
+    rubric:"science",source:"Science \u00b7 Harvard/Google",date:"Mai 2024",headline:"La carte la plus d\u00e9taill\u00e9e d'un cerveau humain",
+    summary:"Un millim\u00e8tre cube de cortex a r\u00e9v\u00e9l\u00e9 57 000 cellules et 150 millions de connexions.",
+    chapo:"Microscopie et IA ont permis de reconstituer, neurone par neurone, un fragment de cerveau d'une complexit\u00e9 vertigineuse.",
+    body:["En mai 2024, une \u00e9quipe Harvard/Google a publi\u00e9 dans Science la carte la plus d\u00e9taill\u00e9e d'un fragment de cerveau humain.", "Sur un volume d'\u00e0 peine un millim\u00e8tre cube : 57 000 cellules et 150 millions de connexions (synapses).", "Des interfaces cerveau-machine (Synchron, Neuralink) ont \u00e9t\u00e9 test\u00e9es chez des patients paralys\u00e9s."],
+    facts:["1 mm\u00b3 de cortex : 57 000 cellules, 150 millions de synapses (Science, 2024).", "Plus d'un p\u00e9taoctet de donn\u00e9es g\u00e9n\u00e9r\u00e9es pour cette reconstruction.", "Des interfaces cerveau-machine test\u00e9es chez des patients paralys\u00e9s."],
+    sources:["Science (2024)", "Harvard / Google Research"]
+  },
+{
+    rubric:"society",source:"UNESCO",date:"S\u00e9ries longues",headline:"L'alphab\u00e9tisation mondiale atteint son plus haut niveau",
+    summary:"Plus de 86 % des adultes et environ 92 % des jeunes savent aujourd'hui lire et \u00e9crire.",
+    chapo:"Il y a deux si\u00e8cles, \u00e0 peine 12 % de l'humanit\u00e9 savait lire. Aujourd'hui, c'est l'immense majorit\u00e9.",
+    body:["Le taux d'alphab\u00e9tisation des adultes d\u00e9passe 86 % dans le monde, et 92 % chez les 15-24 ans (UNESCO).", "L'\u00e9cart filles-gar\u00e7ons, encore b\u00e9ant au si\u00e8cle dernier, s'est fortement r\u00e9duit.", "L'alphab\u00e9tisation est le socle de tout le reste : sant\u00e9, emploi, d\u00e9mocratie."],
+    facts:["Alphab\u00e9tisation : plus de 86 % des adultes, 92 % des jeunes (UNESCO).", "Vers 1820, seulement 12 % de l'humanit\u00e9 savait lire (Our World in Data).", "La parit\u00e9 filles-gar\u00e7ons est atteinte chez les jeunes dans de nombreuses r\u00e9gions."],
+    sources:["UNESCO", "Our World in Data", "Banque mondiale"]
+  },
+{
+    rubric:"ecology",source:"UICN \u00b7 Royal Society",date:"\u00c9tudes r\u00e9centes",headline:"Ces esp\u00e8ces sauv\u00e9es de l'extinction",
+    summary:"Baleines \u00e0 bosse, pygargues, bouquetins : plusieurs esp\u00e8ces se r\u00e9tablissent gr\u00e2ce aux protections.",
+    chapo:"Quand on lui en laisse la chance, la nature revient.",
+    body:["La baleine \u00e0 bosse de l'Atlantique sud est remont\u00e9e \u00e0 environ 93 % de sa population d'avant la chasse (Royal Society Open Science).", "Le moratoire sur la chasse commerciale a \u00e9t\u00e9 adopt\u00e9 par la CBI en 1982, entr\u00e9 en vigueur en 1986.", "Le pygargue \u00e0 t\u00eate blanche a \u00e9t\u00e9 retir\u00e9 de la liste des esp\u00e8ces menac\u00e9es aux \u00c9tats-Unis en 2007."],
+    facts:["Baleine \u00e0 bosse Atlantique sud : ~93 % de sa population d'avant la chasse (Royal Society).", "Moratoire sur la chasse commerciale : adopt\u00e9 1982, en vigueur 1986.", "Pygargue \u00e0 t\u00eate blanche retir\u00e9 de la liste des esp\u00e8ces menac\u00e9es en 2007."],
+    sources:["UICN", "Commission baleini\u00e8re internationale", "WWF"]
+  },
+{
+    rubric:"health",source:"OMS \u00b7 UNICEF",date:"S\u00e9ries longues",headline:"La mortalit\u00e9 maternelle a fortement chut\u00e9",
+    summary:"Le nombre de femmes mortes en couches a recul\u00e9 d'environ un tiers depuis 2000.",
+    chapo:"Accoucher n'a jamais \u00e9t\u00e9 aussi s\u00fbr.",
+    body:["La mortalit\u00e9 maternelle a recul\u00e9 d'environ un tiers depuis 2000, selon l'OMS.", "La pr\u00e9sence de personnel qualifi\u00e9 \u00e0 l'accouchement est le facteur le plus d\u00e9terminant.", "La tr\u00e8s grande majorit\u00e9 des d\u00e9c\u00e8s maternels sont \u00e9vitables avec des soins de base."],
+    facts:["Mortalit\u00e9 maternelle : baisse d'environ un tiers depuis 2000 (OMS).", "Personnel qualifi\u00e9 \u00e0 l'accouchement = facteur le plus d\u00e9terminant.", "La plupart des d\u00e9c\u00e8s maternels sont \u00e9vitables."],
+    sources:["OMS", "UNICEF", "UNFPA"]
+  },
+{
+    rubric:"tech",source:"UIT",date:"Donn\u00e9es 2023",headline:"La majorit\u00e9 de l'humanit\u00e9 est d\u00e9sormais connect\u00e9e",
+    summary:"Environ 67 % de la population mondiale utilise internet.",
+    chapo:"Pour la premi\u00e8re fois, plus de la moiti\u00e9 de l'humanit\u00e9 est en ligne.",
+    body:["Environ 67 % de la population mondiale utilisait internet en 2023, soit pr\u00e8s de 5,4 milliards de personnes (UIT).", "Les constellations de satellites en orbite basse apportent le haut d\u00e9bit dans des zones sans infrastructure terrestre.", "Pour des centaines de millions, c'est l'occasion de sauter une \u00e9tape enti\u00e8re de d\u00e9veloppement."],
+    facts:["67 % de l'humanit\u00e9 connect\u00e9e en 2023 (~5,4 milliards de personnes) (UIT).", "Les satellites en orbite basse couvrent des zones sans r\u00e9seau terrestre.", "Le co\u00fbt d'un smartphone d'entr\u00e9e de gamme a fortement chut\u00e9."],
+    sources:["UIT", "Banque mondiale", "GSMA"]
+  },
+{
+    rubric:"climate",source:"Ville de Medell\u00edn \u00b7 C40",date:"Depuis 2016",headline:"\u00c0 Medell\u00edn, des corridors verts rafra\u00eechissent la ville",
+    summary:"La m\u00e9tropole colombienne a fait baisser la temp\u00e9rature de plusieurs degr\u00e9s en plantant ses rues.",
+    chapo:"Face aux canicules, des villes se r\u00e9inventent en vert.",
+    body:["Depuis 2016, Medell\u00edn a am\u00e9nag\u00e9 des dizaines de corridors verts, plantant des centaines de milliers d'arbres.", "La municipalit\u00e9 fait \u00e9tat d'une baisse de la temp\u00e9rature de plusieurs degr\u00e9s dans les zones v\u00e9g\u00e9talis\u00e9es.", "Paris, Milan et des dizaines de m\u00e9tropoles du r\u00e9seau C40 s'engagent sur la m\u00eame voie."],
+    facts:["Medell\u00edn : corridors verts depuis 2016, baisse de plusieurs degr\u00e9s mesur\u00e9e.", "Le r\u00e9seau C40 r\u00e9unit des dizaines de m\u00e9tropoles mondiales.", "Paris et Milan multiplient for\u00eats urbaines et fa\u00e7ades v\u00e9g\u00e9talis\u00e9es."],
+    sources:["Ville de Medell\u00edn", "C40 Cities", "PNUE"]
+  },
+{
+    rubric:"economy",source:"Loi PACTE \u00b7 B Lab",date:"Depuis 2019",headline:"L'entreprise \u00e0 mission s'installe dans le paysage",
+    summary:"Statut d'entreprise \u00e0 mission, label B Corp : l'\u00e9conomie int\u00e8gre son utilit\u00e9 sociale.",
+    chapo:"Et si l'entreprise ne servait pas qu'\u00e0 faire du profit ?",
+    body:["La loi PACTE de 2019 a cr\u00e9\u00e9 le statut d'entreprise \u00e0 mission en France.", "Le label B Corp certifie plusieurs milliers d'entreprises dans le monde.", "L'\u00e9conomie sociale et solidaire repr\u00e9sente environ 10 % du PIB et de l'emploi en France."],
+    facts:["Loi PACTE (France, 2019) : cr\u00e9ation du statut d'entreprise \u00e0 mission.", "Le label B Corp certifie plusieurs milliers d'entreprises.", "L'ESS \u2248 10 % du PIB et de l'emploi en France."],
+    sources:["L\u00e9gifrance", "B Lab", "ESS France"]
+  },
+{
+    rubric:"science",source:"NASA \u00b7 ESA",date:"Depuis 2022",headline:"L'espace vit un \u00e2ge d'or de la coop\u00e9ration",
+    summary:"T\u00e9lescope James Webb, fus\u00e9es r\u00e9utilisables, d\u00e9viation d'ast\u00e9ro\u00efde : la science spatiale acc\u00e9l\u00e8re.",
+    chapo:"De l'observation des premi\u00e8res galaxies \u00e0 la d\u00e9fense plan\u00e9taire, l'exploration spatiale encha\u00eene les premi\u00e8res.",
+    body:["Le t\u00e9lescope James Webb, lanc\u00e9 en d\u00e9cembre 2021, observe des galaxies form\u00e9es quelques centaines de millions d'ann\u00e9es apr\u00e8s le Big Bang.", "La mission DART de la NASA a d\u00e9lib\u00e9r\u00e9ment percut\u00e9 un ast\u00e9ro\u00efde en septembre 2022 \u2014 premi\u00e8re d\u00e9monstration de d\u00e9fense plan\u00e9taire.", "Envoyer un kilo en orbite co\u00fbte plus de dix fois moins cher qu'au temps de la navette."],
+    facts:["T\u00e9lescope James Webb : lanc\u00e9 d\u00e9c. 2021, premi\u00e8res images juillet 2022.", "Mission DART (sept. 2022) : premier d\u00e9tournement r\u00e9ussi d'un ast\u00e9ro\u00efde.", "Co\u00fbt orbital divis\u00e9 par plus de 10 gr\u00e2ce aux fus\u00e9es r\u00e9utilisables."],
+    sources:["NASA", "ESA"]
+  },
+{
+    rubric:"society",source:"VNU \u00b7 Croix-Rouge",date:"Tendance de fond",headline:"Le b\u00e9n\u00e9volat se r\u00e9invente et gagne du terrain",
+    summary:"Des centaines de millions de personnes s'engagent, aid\u00e9es par les plateformes num\u00e9riques.",
+    chapo:"Loin de d\u00e9cliner, l'engagement citoyen se transforme.",
+    body:["Des centaines de millions de personnes donnent de leur temps b\u00e9n\u00e9volement chaque ann\u00e9e dans le monde.", "Les plateformes num\u00e9riques permettent de trouver une mission en quelques clics.", "Pendant la pand\u00e9mie, des r\u00e9seaux d'entraide de quartier se sont mont\u00e9s en quelques jours."],
+    facts:["Des centaines de millions de b\u00e9n\u00e9voles actifs chaque ann\u00e9e (VNU).", "Les plateformes num\u00e9riques ont transform\u00e9 l'engagement citoyen.", "Les communaut\u00e9s engag\u00e9es sont les plus r\u00e9silientes face aux crises."],
+    sources:["Volontaires des Nations unies", "Croix-Rouge"]
+  },
+{
+    rubric:"ecology",source:"PNUE \u00b7 OMM",date:"Bilan ONU 2023",headline:"La couche d'ozone est en voie de gu\u00e9rison",
+    summary:"Le trou au-dessus de l'Antarctique se referme, succ\u00e8s direct du Protocole de Montr\u00e9al.",
+    chapo:"C'est l'un des plus beaux exemples de coop\u00e9ration mondiale.",
+    body:["La couche d'ozone devrait retrouver ses niveaux de 1980 vers 2040 pour la majeure partie du globe (ONU, 2023).", "Le Protocole de Montr\u00e9al (1987) est le seul trait\u00e9 environnemental ratifi\u00e9 par tous les pays du monde.", "L'\u00e9limination des CFC a aussi \u00e9vit\u00e9 plusieurs dixi\u00e8mes de degr\u00e9 de r\u00e9chauffement."],
+    facts:["Couche d'ozone attendue \u00e0 ses niveaux de 1980 vers 2040 (ONU, 2023).", "Protocole de Montr\u00e9al (1987) : seul trait\u00e9 environnemental ratifi\u00e9 par tous.", "\u00c9limination des CFC = plusieurs dixi\u00e8mes de degr\u00e9 de r\u00e9chauffement \u00e9vit\u00e9s."],
+    sources:["PNUE", "OMM", "\u00c9valuation scientifique de l'ozone ONU"]
+  },
+{
+    rubric:"climate",source:"Ember \u00b7 AIE",date:"Donn\u00e9es 2023-2024",headline:"En Europe, le charbon et les \u00e9missions reculent",
+    summary:"La production d'\u00e9lectricit\u00e9 au charbon de l'UE est tomb\u00e9e \u00e0 un niveau historiquement bas.",
+    chapo:"L'Union europ\u00e9enne tourne la page des \u00e9nergies les plus polluantes.",
+    body:["La production \u00e9lectrique au charbon dans l'UE est tomb\u00e9e \u00e0 un niveau historiquement bas en 2023 (Ember).", "Le Royaume-Uni a ferm\u00e9 sa derni\u00e8re centrale \u00e0 charbon en 2024.", "\u00c9olien + solaire ont d\u00e9pass\u00e9 l'ensemble des fossiles dans l'\u00e9lectricit\u00e9 de l'UE."],
+    facts:["Production \u00e9lectrique au charbon UE au plus bas historique en 2023.", "Royaume-Uni : derni\u00e8re centrale \u00e0 charbon ferm\u00e9e en 2024.", "\u00c9olien + solaire > fossiles dans l'\u00e9lectricit\u00e9 europ\u00e9enne."],
+    sources:["Ember", "AIE", "Commission europ\u00e9enne"]
+  },
+{
+    rubric:"health",source:"CIRC \u00b7 INCa",date:"Tendances r\u00e9centes",headline:"On survit de plus en plus au cancer",
+    summary:"D\u00e9pistage pr\u00e9coce et immunoth\u00e9rapie font bondir les chances de gu\u00e9rison.",
+    chapo:"Le cancer reste un fl\u00e9au, mais les chances d'en gu\u00e9rir n'ont jamais \u00e9t\u00e9 aussi \u00e9lev\u00e9es.",
+    body:["La survie \u00e0 cinq ans a fortement progress\u00e9 pour de nombreux cancers en quelques d\u00e9cennies.", "L'immunoth\u00e9rapie a valu le prix Nobel de m\u00e9decine 2018 \u00e0 James Allison et Tasuku Honjo.", "Les vaccins th\u00e9rapeutiques \u00e0 ARN messager, \u00e0 l'essai, laissent esp\u00e9rer des traitements personnalis\u00e9s."],
+    facts:["Survie \u00e0 cinq ans en forte hausse pour de nombreux cancers.", "Certaines leuc\u00e9mies de l'enfant gu\u00e9rissent dans plus de 80 % des cas.", "Prix Nobel de m\u00e9decine 2018 pour l'immunoth\u00e9rapie."],
+    sources:["CIRC (OMS)", "INCa", "The Lancet Oncology"]
+  },
+{
+    rubric:"economy",source:"Banque mondiale \u00b7 OIT",date:"S\u00e9ries longues",headline:"Une classe moyenne mondiale en pleine expansion",
+    summary:"Des centaines de millions de personnes acc\u00e8dent \u00e0 la classe moyenne, surtout en Asie.",
+    chapo:"\u00c0 mesure que la pauvret\u00e9 recule, une classe moyenne mondiale \u00e9merge.",
+    body:["La classe moyenne repr\u00e9sente aujourd'hui environ la moiti\u00e9 de la population mondiale.", "La Chine et l'Inde ont vu \u00e9merger des classes moyennes massives.", "\u00c9ducation, emploi salari\u00e9 et acc\u00e8s au cr\u00e9dit en sont les principaux moteurs."],
+    facts:["La classe moyenne \u2248 moiti\u00e9 de la population mondiale (estimations).", "L'Asie concentre l'essentiel de cette expansion.", "\u00c9ducation, emploi et cr\u00e9dit : les trois leviers cl\u00e9s."],
+    sources:["Banque mondiale", "OIT", "Brookings Institution"]
+  },
+{
+    rubric:"tech",source:"AIE",date:"Donn\u00e9es 2024",headline:"La voiture \u00e9lectrique passe \u00e0 la vitesse sup\u00e9rieure",
+    summary:"Environ une voiture neuve sur cinq vendue dans le monde est d\u00e9sormais \u00e9lectrique.",
+    chapo:"Longtemps confidentielle, la voiture \u00e9lectrique s'impose.",
+    body:["Environ une voiture neuve sur cinq vendue dans le monde en 2024 \u00e9tait \u00e9lectrique (AIE).", "Le co\u00fbt des batteries a \u00e9t\u00e9 divis\u00e9 par plus de six depuis 2010.", "L'\u00e9lectrification am\u00e9liore la qualit\u00e9 de l'air des villes et r\u00e9duit la d\u00e9pendance au p\u00e9trole."],
+    facts:["~1 voiture neuve sur 5 vendue \u00e9lectrique en 2024 (AIE).", "Co\u00fbt des batteries divis\u00e9 par plus de 6 depuis 2010.", "La Chine et l'Europe tirent la croissance du march\u00e9."],
+    sources:["AIE (Global EV Outlook)", "BloombergNEF"]
+  },
+{
+    rubric:"science",source:"Lawrence Livermore \u00b7 ITER",date:"D\u00e9cembre 2022",headline:"La fusion nucl\u00e9aire franchit un cap historique",
+    summary:"Pour la premi\u00e8re fois, une exp\u00e9rience a produit plus d'\u00e9nergie qu'elle n'en a consomm\u00e9.",
+    chapo:"Le Graal de l'\u00e9nergie propre se rapproche.",
+    body:["En d\u00e9cembre 2022, le National Ignition Facility a annonc\u00e9 un gain net d'\u00e9nergie par fusion \u2014 une premi\u00e8re mondiale.", "La fusion promet une \u00e9nergie abondante, sans d\u00e9chets \u00e0 vie longue ni risque d'emballement.", "Le projet international ITER est en construction dans le sud de la France."],
+    facts:["D\u00e9cembre 2022 : premier gain net d'\u00e9nergie par fusion (NIF, \u00c9tats-Unis).", "La fusion ne produit pas de d\u00e9chets nucl\u00e9aires \u00e0 vie longue.", "ITER en construction dans le sud de la France."],
+    sources:["Lawrence Livermore National Laboratory", "ITER", "Nature"]
+  },
+{
+    rubric:"society",source:"Amnesty International",date:"Tendance longue",headline:"La peine de mort recule \u00e0 travers le monde",
+    summary:"Plus des deux tiers des pays ont aboli la peine capitale en droit ou en pratique.",
+    chapo:"En un demi-si\u00e8cle, le monde a largement tourn\u00e9 le dos \u00e0 la peine de mort.",
+    body:["Plus des deux tiers des \u00c9tats ont aboli la peine de mort en droit ou ne l'appliquent plus (Amnesty International).", "Le mouvement s'est acc\u00e9l\u00e9r\u00e9 avec les vagues de d\u00e9mocratisation.", "De nouveaux pays franchissent le pas presque chaque ann\u00e9e."],
+    facts:["Plus des deux tiers des pays : peine de mort abolie en droit ou en pratique.", "Dans les ann\u00e9es 1970, seule une poign\u00e9e de pays l'avaient abolie.", "De nouveaux pays franchissent le pas presque chaque ann\u00e9e."],
+    sources:["Amnesty International", "ONU"]
+  },
+{
+    rubric:"health",source:"ONU \u00b7 OMS",date:"S\u00e9ries longues",headline:"L'esp\u00e9rance de vie a gagn\u00e9 plus de 25 ans depuis 1950",
+    summary:"De 46 ans en 1950 \u00e0 plus de 73 ans aujourd'hui \u2014 un gain consid\u00e9rable.",
+    chapo:"En trois g\u00e9n\u00e9rations, l'humanit\u00e9 a ajout\u00e9 plus d'un quart de si\u00e8cle \u00e0 sa vie.",
+    body:["En 1950, l'esp\u00e9rance de vie mondiale avoisinait 46 ans. Elle d\u00e9passe aujourd'hui 73 ans (ONU).", "Ce progr\u00e8s tient \u00e0 l'effondrement de la mortalit\u00e9 infantile et au recul des grandes causes de d\u00e9c\u00e8s.", "L'objectif n'est plus seulement d'ajouter des ann\u00e9es \u00e0 la vie, mais de la vie aux ann\u00e9es."],
+    facts:["Esp\u00e9rance de vie : de 46 ans (1950) \u00e0 plus de 73 ans (ONU).", "Forte baisse de la mortalit\u00e9 cardiovasculaire o\u00f9 la pr\u00e9vention a \u00e9t\u00e9 men\u00e9e.", "Objectif : ajouter des ann\u00e9es 'en bonne sant\u00e9', pas seulement des ann\u00e9es."],
+    sources:["ONU (World Population Prospects)", "OMS", "The Lancet"]
+  }
+  ];
+
+  var TODAY_ARTICLES=[
+{
+    rubric:"ecology",source:"Nature Climate Change \u00b7 CTI",date:"30 mai 2026",headline:"Les r\u00e9cifs coralliens renaissent aux Philippines",
+    summary:"Des communaut\u00e9s locales restaurent des milliers de m\u00b2 de coraux gr\u00e2ce \u00e0 la technique du biorock.",
+    chapo:"Aux Philippines, des p\u00eacheurs et des chercheurs reconstruisent les coraux pi\u00e8ce par pi\u00e8ce \u2014 avec des r\u00e9sultats surprenants.",
+    body:["Sur l'\u00eele d'Apo, des projets pilotes ont permis de reconstituer plus de 3 000 m\u00b2 de r\u00e9cif en quelques ann\u00e9es gr\u00e2ce au biorock.", "La technique, qui fait passer un faible courant \u00e9lectrique dans des structures m\u00e9talliques, acc\u00e9l\u00e8re la min\u00e9ralisation du corail de 2 \u00e0 3 fois.", "Les Philippines abritent une grande partie du Coral Triangle \u2014 75 % des esp\u00e8ces de coraux connues."],
+    facts:["Plus de 3 000 m\u00b2 de r\u00e9cif restaur\u00e9 aux Philippines via biorock.", "R\u00e9g\u00e9n\u00e9ration 2 \u00e0 3 fois plus rapide que la r\u00e9cup\u00e9ration naturelle.", "Le Coral Triangle : 75 % des esp\u00e8ces de coraux connues."],
+    sources:["Nature Climate Change", "Coral Triangle Initiative", "PNUE"]
+  },
+{
+    rubric:"climate",source:"MNRE \u00b7 AIE",date:"30 mai 2026",headline:"L'Inde franchit 300 GW de renouvelables install\u00e9s",
+    summary:"Le deuxi\u00e8me pays le plus peupl\u00e9 du monde atteint un cap symbolique dans sa transition.",
+    chapo:"En quelques ann\u00e9es, l'Inde est devenue l'un des march\u00e9s solaires les plus dynamiques.",
+    body:["Le MNRE a annonc\u00e9 que la capacit\u00e9 install\u00e9e en solaire et \u00e9olien a d\u00e9pass\u00e9 les 300 GW en Inde.", "Des ench\u00e8res r\u00e9guli\u00e8res et une fili\u00e8re locale de fabrication de panneaux r\u00e9duisent les co\u00fbts.", "L'objectif national est de 500 GW de renouvelables d'ici 2030."],
+    facts:["L'Inde a franchi les 300 GW de capacit\u00e9 renouvelable install\u00e9e.", "Objectif national : 500 GW de renouvelables d'ici 2030 (MNRE).", "L'Inde est le 3\u00e8me march\u00e9 solaire au monde."],
+    sources:["MNRE (Inde)", "AIE", "BloombergNEF"]
+  },
+{
+    rubric:"health",source:"NEJM \u00b7 OMS \u00b7 IAVI",date:"30 mai 2026",headline:"Un vaccin candidat contre la tuberculose, premier espoir en cent ans",
+    summary:"Le M72/AS01E montre environ 50 % d'efficacit\u00e9 dans un essai de phase 2b.",
+    chapo:"La tuberculose tue encore plus d'un million de personnes par an. Un vaccin efficace pour les adultes est en vue.",
+    body:["Le vaccin M72/AS01E confirme une efficacit\u00e9 d'environ 50 % pour pr\u00e9venir la tuberculose pulmonaire chez l'adulte (NEJM).", "L'enjeu est immense : le BCG, seul vaccin actuel, date de 1921 et est peu efficace chez les adultes.", "Des essais de phase 3 seront lanc\u00e9s en Afrique et en Asie du Sud."],
+    facts:["Vaccin M72/AS01E : efficacit\u00e9 ~50 % dans l'essai de phase 2b (NEJM).", "La TB tue plus d'un million de personnes par an (OMS).", "Le BCG, seul vaccin anti-TB actuel, date de 1921."],
+    sources:["NEJM", "OMS", "IAVI / GSK"]
+  },
+{
+    rubric:"economy",source:"GSMA \u00b7 Banque mondiale",date:"30 mai 2026",headline:"L'Afrique, championne mondiale de l'argent mobile",
+    summary:"Plus de 60 % des transactions mondiales d'argent mobile ont lieu en Afrique subsaharienne.",
+    chapo:"Sans banques physiques, l'Afrique a invent\u00e9 sa propre finance.",
+    body:["L'Afrique subsaharienne concentre plus de 60 % des transactions mondiales d'argent mobile, avec 800 M+ de comptes actifs (GSMA).", "Des services comme M-Pesa couvrent des villages que les banques n'ont jamais atteints.", "Le mod\u00e8le africain est \u00e9tudi\u00e9 et reproduit en Asie du Sud et en Am\u00e9rique latine."],
+    facts:[">60 % des transactions mondiales d'argent mobile en Afrique (GSMA).", "+800 millions de comptes d'argent mobile actifs.", "M-Pesa (Kenya, 2007) : mod\u00e8le international."],
+    sources:["GSMA", "Banque mondiale", "FMI"]
+  },
+{
+    rubric:"tech",source:"Nature Energy \u00b7 The Ocean Cleanup",date:"30 mai 2026",headline:"Des plastiques oc\u00e9aniques convertis en carburant propre",
+    summary:"Un proc\u00e9d\u00e9 de pyrolyse catalytique transforme les d\u00e9chets r\u00e9colt\u00e9s en mer en hydrocarbures utilisables.",
+    chapo:"Et si les plastiques qui polluent les oc\u00e9ans devenaient une ressource ?",
+    body:["Un proc\u00e9d\u00e9 de pyrolyse catalytique convertit les plastiques r\u00e9colt\u00e9s en mer en hydrocarbures \u00e0 rendement positif.", "Coupl\u00e9 aux navires de The Ocean Cleanup, il forme une cha\u00eene de valeur : chaque tonne extraite finance la suivante.", "Les oc\u00e9ans contiendraient encore des millions de tonnes de plastique flottant."],
+    facts:["Pyrolyse catalytique : plastiques oc\u00e9aniques \u2192 carburant \u00e0 rendement positif.", "The Ocean Cleanup a extrait plusieurs milliers de tonnes depuis 2022.", "Les oc\u00e9ans contiendraient des millions de tonnes de plastique."],
+    sources:["Nature Energy", "The Ocean Cleanup", "PNUE"]
+  },
+{
+    rubric:"science",source:"PNAS \u00b7 Universit\u00e9 de Oviedo",date:"30 mai 2026",headline:"La m\u00e9duse immortelle livre les secrets de son ADN",
+    summary:"Le g\u00e9nome de Turritopsis dohrnii r\u00e9v\u00e8le des m\u00e9canismes in\u00e9dits de r\u00e9version du vieillissement.",
+    chapo:"La m\u00e9duse qui peut rajeunir fascine les biologistes. Son g\u00e9nome vient d'\u00eatre s\u00e9quenc\u00e9.",
+    body:["Des chercheurs de l'universit\u00e9 de Oviedo ont publi\u00e9 dans PNAS le s\u00e9quen\u00e7age du g\u00e9nome de Turritopsis dohrnii.", "L'analyse r\u00e9v\u00e8le des niveaux \u00e9lev\u00e9s d'expression de g\u00e8nes li\u00e9s \u00e0 la r\u00e9paration de l'ADN et \u00e0 la reprogrammation cellulaire.", "Ces m\u00e9canismes, inactifs chez l'homme, offrent des pistes pour les maladies li\u00e9es au vieillissement."],
+    facts:["G\u00e9nome complet de Turritopsis dohrnii s\u00e9quenc\u00e9 (PNAS, universit\u00e9 de Oviedo).", "La m\u00e9duse peut inverser son cycle de vie biologique sous stress.", "Des g\u00e8nes de r\u00e9paration de l'ADN sur-exprim\u00e9s existent aussi chez l'homme."],
+    sources:["PNAS", "Nature Aging", "Universit\u00e9 de Oviedo"]
+  },
+{
+    rubric:"society",source:"Alda \u00b7 Gouvernement islandais",date:"30 mai 2026",headline:"L'Islande g\u00e9n\u00e9ralise la semaine de travail de 4 jours",
+    summary:"Plus de 85 % des actifs islandais travaillent d\u00e9sormais 4 jours par semaine, sans perte de salaire.",
+    chapo:"Ce qui semblait une exp\u00e9rience audacieuse est devenu la norme. Productivit\u00e9 maintenue, bien-\u00eatre en hausse.",
+    body:["Plus de 85 % de la population active islandaise travaille dans le cadre d'accords de semaine de 4 jours (Alda, 2026).", "Les essais 2015-2019 ont port\u00e9 sur 2 500+ travailleurs et montr\u00e9 une productivit\u00e9 maintenue ou am\u00e9lior\u00e9e.", "Le Royaume-Uni, l'Espagne et le Portugal ont men\u00e9 leurs propres essais avec des r\u00e9sultats similaires."],
+    facts:[">85 % des actifs islandais : 4 jours/semaine sans perte de salaire (Alda, 2026).", "Essais 2015-2019 : 2 500+ travailleurs du service public.", "Productivit\u00e9 maintenue ou am\u00e9lior\u00e9e dans presque tous les lieux test\u00e9s."],
+    sources:["Alda", "Gouvernement islandais", "Autonomy (UK)"]
+  }
+  ];
+
+  var CHIFFRES=[{"num": "154 M", "text": "de vies sauvées par les vaccins depuis 1974.", "source": "The Lancet, 2024"}, {"num": "−90 %", "text": "de baisse du coût du solaire photovoltaïque en 13 ans.", "source": "IRENA, 2023"}, {"num": "1 Md+", "text": "de personnes sorties de l'extrême pauvreté en une génération.", "source": "Banque mondiale"}, {"num": "92 %", "text": "des jeunes de 15-24 ans savent lire et écrire dans le monde.", "source": "UNESCO"}, {"num": "−50 %", "text": "de déforestation en Amazonie brésilienne entre 2022 et 2023.", "source": "INPE, 2024"}, {"num": "73 ans", "text": "d'espérance de vie mondiale aujourd'hui, contre 46 ans en 1950.", "source": "ONU"}, {"num": "30 %", "text": "de l'électricité mondiale fournie par les renouvelables en 2023.", "source": "Ember"}, {"num": "200 M+", "text": "de structures de protéines cartographiées par l'IA, en accès libre.", "source": "AlphaFold DB, 2022"}, {"num": "2066", "text": "l'année prévue où la couche d'ozone sera pleinement rétablie.", "source": "ONU, 2023"}, {"num": "1/5", "text": "des voitures neuves vendues dans le monde étaient électriques en 2024.", "source": "AIE"}];
+
+  var QUOTES=[{"text": "L'optimisme est une forme de courage qui donne confiance aux autres.", "author": "Citation attribuée"}, {"text": "Le monde va mieux qu'on ne le croit, à condition de regarder les bons indicateurs.", "author": "Hans Rosling, statisticien"}, {"text": "L'espoir n'est pas la conviction que tout ira bien, mais la certitude que cela a un sens.", "author": "Václav Havel"}];
+
+  var STATES=[{"w": "☀️", "l": "Beau fixe", "s": 97}, {"w": "🌤", "l": "Grande éclaircie", "s": 91}, {"w": "☀️", "l": "Rayonnant", "s": 95}, {"w": "🌈", "l": "Arc-en-ciel mondial", "s": 89}, {"w": "☀️", "l": "Lumineux", "s": 93}, {"w": "🌤", "l": "Ciel dégagé", "s": 88}, {"w": "✨", "l": "Éblouissant", "s": 96}];
+
+  var SOURCE_INFO={"OMS": "L'Organisation mondiale de la santé est l'agence des Nations unies chargée de la santé publique mondiale.", "The Lancet": "The Lancet est une revue médicale britannique de référence.", "Nature": "Nature est l'une des revues scientifiques les plus rigoureuses, publiée depuis 1869.", "Science": "Science est une revue scientifique de premier plan éditée par l'AAAS.", "Banque mondiale": "La Banque mondiale produit les données de référence sur la pauvreté et le développement.", "AIE": "L'Agence internationale de l'énergie analyse les tendances énergétiques mondiales.", "WWF": "Le Fonds mondial pour la nature est l'une des plus grandes ONG environnementales.", "UNESCO": "L'UNESCO est l'agence de l'ONU pour l'éducation, la science et la culture.", "NASA": "La NASA est l'agence spatiale civile des États-Unis.", "ESA": "L'Agence spatiale européenne coordonne les programmes spatiaux du continent."};
+
+  window._quotes=QUOTES; window._fallback=FALLBACK;
+
+  /* ── PHOTOS PAR MOT-CLÉ (Creative Commons via LoremFlickr) ── */
+  var PHOTO_MAP=[
+    ['forêt amazonienne',   'amazon,forest,jungle,trees'],
+    ['récifs coralliens',   'coral,reef,underwater,ocean'],
+    ['espèces sauvées',     'whale,wildlife,ocean,nature'],
+    ["couche d'ozone",      'sky,atmosphere,clouds,nature'],
+    ['renouvelables couvrent','solar,panels,wind,energy'],
+    ['300 GW',              'solar,farm,energy,panels'],
+    ['charbon',             'wind,turbines,energy,green'],
+    ['Medellín',            'green,city,urban,trees,park'],
+    ['vaccination',         'vaccine,syringe,medical,health'],
+    ['tuberculose',         'laboratory,medical,research,science'],
+    ['cancer',              'medicine,hospital,doctor,research'],
+    ['maternelle',          'mother,baby,hospital,health'],
+    ['espérance de vie',    'healthy,elderly,fitness,wellbeing'],
+    ['pauvreté',            'community,people,hope,village'],
+    ['classe moyenne',      'city,asia,urban,buildings'],
+    ['argent mobile',       'mobile,phone,technology,africa'],
+    ['entreprise',          'startup,office,business,meeting'],
+    ['Nobel',               'laboratory,chemistry,science,award'],
+    ['voiture électrique',  'electric,car,charging,vehicle'],
+    ['internet',            'wifi,technology,computer,network'],
+    ['plastiques',          'ocean,plastic,pollution,cleanup'],
+    ['cerveau',             'brain,neuroscience,scan,science'],
+    ['méduse',              'jellyfish,ocean,underwater,sea'],
+    ['fusion',              'energy,science,nuclear,laboratory'],
+    ['espace',              'space,stars,galaxy,cosmos'],
+    ['James Webb',          'telescope,space,galaxy,stars'],
+    ['alphabétisation',     'books,reading,education,school'],
+    ['Islande',             'iceland,landscape,waterfall,nature'],
+    ['4 jours',             'work,office,balance,wellbeing'],
+    ['bénévolat',           'volunteer,community,help,people'],
+    ['peine de mort',       'justice,law,peace,rights'],
+  ];
+
+  function getImg(headline){
+    var hl=(headline||'').toLowerCase();
+    var m=PHOTO_MAP.find(function(e){return hl.includes(e[0].toLowerCase());});
+    if(!m) return null;
+    // Seed déterministe = toujours la même photo pour le même article
+    var seed=headline.split('').reduce(function(s,c){return s+c.charCodeAt(0);},0)%99+1;
+    return {
+      url:'https://loremflickr.com/900/450/'+m[1]+'?lock='+seed,
+      credit:'Photo : Creative Commons / LoremFlickr'
+    };
+  }
+
+  function fallbackFor(rubric){
+    var pool;
+    if(rubric==='all'){
+      pool=[];
+      RUBRIC_ORDER.forEach(function(r){
+        var arr=FALLBACK.filter(function(a){return a.rubric===r;});
+        if(arr.length) pool.push(arr[Math.floor(Math.random()*arr.length)]);
+      });
+      for(var i=pool.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=pool[i];pool[i]=pool[j];pool[j]=tmp;}
+    } else {
+      pool=FALLBACK.filter(function(a){return a.rubric===rubric;});
+      for(var i=pool.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=pool[i];pool[i]=pool[j];pool[j]=tmp;}
+    }
+    return {articles:pool,quote:QUOTES[Math.floor(Math.random()*QUOTES.length)]};
+  }
+
+  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+  function render(articles,quote){
+    currentArticles=articles;
+    var mosaic=(currentRubric==='all'&&articles.length>=5);
+    var h='<div class="grid">';
+    articles.forEach(function(a,i){
+      var cc=TAG_CLASS[a.rubric]||'c-society';
+      var tl=TAG_LABEL[a.rubric]||'Société';
+      var sp=mosaic?(SPAN[i]||'span-third'):'span-half';
+      var ghost=(mosaic&&i===0)?'<div class="ghost-num">1</div>':'';
+      var img=getImg(a.headline);
+      var photo=img?'<div class="card-photo"><img src="'+img.url+'" alt="" loading="lazy" class="card-img"></div>':'';
+      var cO=img?'<div class="card-content">':'';
+      var cC=img?'</div>':'';
+      h+='<article class="card '+cc+' '+sp+(img?' has-photo':'')+'" data-idx="'+i+'" role="button" tabindex="0">'
+        +photo+cO
+        +'<span class="tag">'+tl+'</span>'
+        +'<h2 class="headline">'+esc(a.headline)+'</h2>'
+        +'<p class="summary">'+esc(a.summary)+'</p>'
+        +'<div class="meta"><span>'+esc(a.source)+'</span><span>\u00b7</span><span>'+esc(a.date)+'</span></div>'
+        +'<span class="read-hint">Lire l\'article \u2192</span>'
+        +ghost+cC+'</article>';
+    });
+    h+='</div>';
+    if(quote){h+='<div class="quote"><div class="quote-mark">"</div><p class="quote-text">'+esc(quote.text)+'</p><p class="quote-author">\u2014 '+esc(quote.author)+'</p></div>';}
+    document.getElementById('content').innerHTML=h;
+    document.querySelectorAll('.card-img').forEach(function(im){im.addEventListener('error',function(){im.parentElement.style.display='none';});});
+    document.querySelectorAll('.card').forEach(function(card){
+      var open=function(){openDetail(parseInt(card.dataset.idx,10));};
+      card.addEventListener('click',open);
+      card.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});
+    });
+  }
+
+  var lastFocused=null;
+  function openDetail(idx){
+    var a=currentArticles[idx]; if(!a)return;
+    lastFocused=document.activeElement;
+    var cc=TAG_CLASS[a.rubric]||'c-society', tl=TAG_LABEL[a.rubric]||'Société';
+    document.getElementById('modal-head').className='modal-head '+cc;
+    document.getElementById('modal-tag').textContent=tl;
+    document.getElementById('modal-title').textContent=a.headline;
+    document.getElementById('modal-byline').innerHTML='<span>Par la rédaction</span><span>\u00b7</span><span>'+esc(a.source)+'</span><span>\u00b7</span><span>'+esc(a.date)+'</span>';
+    document.getElementById('modal-chapo').textContent=a.chapo||a.summary;
+    document.getElementById('modal-article').innerHTML=(a.body||[a.summary]).map(function(p){return '<p>'+esc(p)+'</p>';}).join('');
+    document.getElementById('modal-facts').innerHTML=(a.facts||[]).map(function(f){return '<li>'+esc(f)+'</li>';}).join('');
+    document.getElementById('modal-sources').innerHTML=(a.sources||[]).map(function(s){return '<span class="source-chip">'+esc(s)+'</span>';}).join('');
+    var note=SOURCE_INFO[a.source]||'';
+    document.getElementById('modal-sourcenote').textContent=note?note+' Recouper plusieurs sources reste la meilleure pratique.':'Recouper plusieurs sources reste la meilleure façon de se forger une opinion.';
+    var modal=document.getElementById('modal');
+    modal.classList.add('open'); modal.setAttribute('aria-hidden','false');
+    document.body.classList.add('modal-open');
+    document.getElementById('modal-close').focus();
+    document.querySelector('.modal-body').scrollTop=0;
+  }
+  function closeDetail(){
+    var modal=document.getElementById('modal');
+    modal.classList.remove('open'); modal.setAttribute('aria-hidden','true');
+    document.body.classList.remove('modal-open');
+    if(lastFocused)lastFocused.focus();
+  }
+  document.getElementById('modal-close').addEventListener('click',closeDetail);
+  document.getElementById('modal').addEventListener('click',function(e){if(e.target.id==='modal')closeDetail();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&document.getElementById('modal').classList.contains('open'))closeDetail();});
+
+  function setPage(page){
+    document.body.classList.remove('map-active','trends-active');
+    ['btn-journal','btn-map','btn-trends'].forEach(function(id){var b=document.getElementById(id);if(b)b.classList.remove('active');});
+    document.getElementById('view-map').setAttribute('aria-hidden','true');
+    document.getElementById('view-trends').setAttribute('aria-hidden','true');
+    if(page==='map'){
+      document.body.classList.add('map-active');
+      var bm=document.getElementById('btn-map');if(bm)bm.classList.add('active');
+      document.getElementById('view-map').setAttribute('aria-hidden','false');
+    } else if(page==='trends'){
+      document.body.classList.add('trends-active');
+      var bt=document.getElementById('btn-trends');if(bt)bt.classList.add('active');
+      document.getElementById('view-trends').setAttribute('aria-hidden','false');
+      buildTrends();
+      if(window._buildTrendsExtras)window._buildTrendsExtras();
+    } else {
+      var bj=document.getElementById('btn-journal');if(bj)bj.classList.add('active');
+    }
+  }
+  document.getElementById('btn-journal').addEventListener('click',function(){setPage('journal');});
+  document.getElementById('btn-trends').addEventListener('click',function(){setPage('trends');});
+  window._setPage=setPage;
+
+  // Counters
+  var COUNTS={};
+  RUBRIC_ORDER.forEach(function(r){COUNTS[r]=FALLBACK.filter(function(a){return a.rubric===r;}).length;});
+  function buildCounters(){
+    var wrap=document.getElementById('counters');
+    wrap.innerHTML=RUBRIC_ORDER.map(function(r){
+      var cc=TAG_CLASS[r], lbl=TAG_LABEL[r];
+      return '<button class="counter '+cc+'" data-rubric="'+r+'"><div class="c-num" data-target="'+COUNTS[r]+'">0</div><div class="c-lbl">'+lbl+'</div></button>';
+    }).join('');
+    wrap.querySelectorAll('.counter').forEach(function(c){
+      c.addEventListener('click',function(){
+        document.querySelectorAll('.pill').forEach(function(p){p.classList.toggle('active',p.dataset.rubric===c.dataset.rubric);});
+        load(c.dataset.rubric);
+        document.getElementById('content').scrollIntoView({behavior:'smooth',block:'start'});
+      });
+    });
+    document.querySelectorAll('.c-num').forEach(function(el){
+      var target=parseInt(el.dataset.target,10), dur=900, start=performance.now();
+      function step(t){
+        var p=Math.min((t-start)/dur,1), eased=1-Math.pow(1-p,3);
+        el.textContent=Math.round(eased*target);
+        if(p<1)requestAnimationFrame(step); else el.textContent=target;
+      }
+      requestAnimationFrame(step);
+    });
+  }
+
+  document.querySelectorAll('.pill').forEach(function(p){
+    p.addEventListener('click',function(){
+      document.querySelectorAll('.pill').forEach(function(x){x.classList.remove('active');});
+      p.classList.add('active');
+      load(p.dataset.rubric);
+    });
+  });
+  document.getElementById('refresh').addEventListener('click',function(){load(currentRubric);});
+
+  function load(rubric){
+    currentRubric=rubric;
+    var fb=fallbackFor(rubric);
+    render(fb.articles,fb.quote);
+  }
+
+  // Newsletter
+  document.querySelectorAll('.nl-topic').forEach(function(btn){btn.addEventListener('click',function(){btn.classList.toggle('active');});});
+  document.getElementById('nl-form').addEventListener('submit',function(e){
+    e.preventDefault();
+    var emailEl=document.getElementById('nl-email');
+    var email=emailEl.value.trim();
+    var valid=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    emailEl.classList.toggle('has-error',!valid);
+    document.getElementById('nl-error').textContent=valid?'':'Adresse email invalide.';
+    if(!valid){emailEl.focus();return;}
+    var btn=document.getElementById('nl-submit'); btn.disabled=true;
+    document.getElementById('nl-btn-text').textContent='Inscription...';
+    setTimeout(function(){
+      document.getElementById('nl-form').style.display='none';
+      var s=document.getElementById('nl-success');
+      s.style.display='flex'; s.classList.add('show');
+    },900);
+  });
+
+  buildCounters();
+
+</script>
+
+<script>
+// ── SCRIPT 1 : Chiffre, Score, Tendances ─────────────────────────────────
+(function(){
+  // ── FACTEURS DE L'INDICE ────────────────────────────────────────────────
+  var FACTORS_POS=[
+    {icon:'☀️',name:'Expansion des énergies renouvelables',pts:18,
+     desc:"Record mondial d'installation solaire en 2024. Le coût du solaire a chuté de 90% en 10 ans — désormais l'électricité la moins chère de l'histoire."},
+    {icon:'💉',name:'Progrès de la vaccination mondiale',pts:16,
+     desc:"154 millions de vies sauvées depuis 1974 (The Lancet, 2024). Nouveaux vaccins contre le paludisme déployés en Afrique depuis 2021."},
+    {icon:'📉',name:'Recul historique de l\'extrême pauvreté',pts:14,
+     desc:"Moins de 9% de l'humanité en extrême pauvreté — plus bas historique. Plus d'un milliard de personnes sorties de la misère en une génération."},
+    {icon:'📚',name:'Alphabétisation universelle en hausse',pts:10,
+     desc:"92% des jeunes (15-24 ans) savent lire et écrire — un sommet absolu dans l'histoire humaine. L'écart filles-garçons se réduit."},
+    {icon:'🐋',name:'Biodiversité : espèces qui se rétablissent',pts:7,
+     desc:"La baleine à bosse a retrouvé 93% de sa population. Le pygargue américain, sorti de la liste menacée. Des centaines d'espèces bénéficient d'aires protégées élargies."},
+  ];
+  var FACTORS_NEG=[
+    {icon:'💥',name:'Conflits armés actifs',pts:-18,
+     desc:"Guerre en Ukraine (depuis fév. 2022), conflit à Gaza, guerre au Soudan... Plus de 120 conflits recensés. Des millions de déplacés, des crises humanitaires à grande échelle."},
+    {icon:'🌡️',name:'Réchauffement climatique accéléré',pts:-14,
+     desc:"2023 et 2024 : années les plus chaudes jamais enregistrées. Le seuil de +1,5°C a été franchi sur des périodes prolongées. Événements extrêmes (inondations, sécheresses) en forte hausse."},
+    {icon:'⚖️',name:'Inégalités mondiales persistantes',pts:-10,
+     desc:"Les 1% les plus riches possèdent plus que les 50% les plus pauvres réunis. La pandémie a creusé les écarts. La santé et l'éducation restent inégalement réparties."},
+    {icon:'🦠',name:'Résistance aux antimicrobiens',pts:-5,
+     desc:"La résistance aux antibiotiques tue déjà 1,27 million de personnes par an et pourrait devenir la première cause de mortalité mondiale d'ici 2050 (OMS)."},
+  ];
+  var posTotal=FACTORS_POS.reduce(function(s,f){return s+f.pts;},0); // 65
+  var negTotal=Math.abs(FACTORS_NEG.reduce(function(s,f){return s+f.pts;},0)); // 47
+  var baseScore=Math.round(50+(posTotal-negTotal)/posTotal*50); // ~76
+  // Légère variation quotidienne (±3%) basée sur la date
+  var today2=new Date();
+  var daySeed=(today2.getDate()*7+today2.getMonth()*13)%7-3; // -3 à +3
+  var SCORE=Math.min(97,Math.max(58,baseScore+daySeed));
+  var st=STATES[SCORE%STATES.length];
+
+  document.getElementById('opt-weather').textContent=st.w;
+  document.getElementById('opt-state').textContent=st.l;
+  document.getElementById('opt-score').textContent=SCORE+'%';
+  document.getElementById('opt-panel-score').textContent=SCORE+'%';
+  setTimeout(function(){document.getElementById('opt-fill').style.width=SCORE+'%';},300);
+
+  // ── Remplir le panel ──────────────────────────────────────────────────
+  function buildFactorEl(f,isPos){
+    var cls=isPos?'opt-factor-pos':'opt-factor-neg';
+    var ptsStr=isPos?'+'+f.pts:f.pts;
+    return '<div class="opt-factor '+cls+'">'+
+      '<span class="opt-factor-icon">'+f.icon+'</span>'+
+      '<div class="opt-factor-body">'+
+        '<div class="opt-factor-name">'+f.name+'</div>'+
+        '<div class="opt-factor-desc">'+f.desc+'</div>'+
+      '</div>'+
+      '<span class="opt-factor-pts">'+ptsStr+'</span>'+
+    '</div>';
+  }
+  document.getElementById('opt-pos-list').innerHTML=FACTORS_POS.map(function(f){return buildFactorEl(f,true);}).join('');
+  document.getElementById('opt-neg-list').innerHTML=FACTORS_NEG.map(function(f){return buildFactorEl(f,false);}).join('');
+  var totalAll=posTotal+negTotal;
+  setTimeout(function(){
+    document.getElementById('opt-balance-pos').style.width=(posTotal/totalAll*100).toFixed(1)+'%';
+    document.getElementById('opt-balance-neg').style.width=(negTotal/totalAll*100).toFixed(1)+'%';
+  },500);
+
+  // ── Clic sur le soleil : animation + toggle panel ─────────────────────
+  var panelOpen=false;
+  document.getElementById('opt-icon-btn').addEventListener('click',function(){
+    var btn=this;
+    btn.classList.remove('spinning');
+    void btn.offsetWidth; // reset animation
+    btn.classList.add('spinning');
+    btn.addEventListener('animationend',function h(){btn.classList.remove('spinning');btn.removeEventListener('animationend',h);});
+    panelOpen=!panelOpen;
+    var panel=document.getElementById('opt-panel');
+    panel.classList.toggle('open',panelOpen);
+    panel.setAttribute('aria-hidden',String(!panelOpen));
+    btn.setAttribute('aria-expanded',String(panelOpen));
+  });
+
+  // ── Chiffre du jour ────────────────────────────────────────────────────
+  var today=new Date();
+  var seed=(today.getFullYear()*366+today.getMonth()*31+today.getDate())%CHIFFRES.length;
+  document.getElementById('chiffre-num').textContent=CHIFFRES[seed].num;
+  document.getElementById('chiffre-text').textContent=CHIFFRES[seed].text;
+  document.getElementById('chiffre-source').textContent='Source : '+CHIFFRES[seed].source;
+
+  var CHARTS=[
+    {id:'life',color:'#00c46a',cc:'cc-green',rubric:'Santé',title:'Espérance de vie mondiale',stat:'73 ans',statLbl:"aujourd'hui",desc:"La vie s'est allongée de près de 30 ans en trois générations.",dir:'up',data:[{y:1950,v:46},{y:1960,v:50},{y:1970,v:54},{y:1980,v:60},{y:1990,v:64},{y:2000,v:67},{y:2010,v:70},{y:2020,v:72},{y:2023,v:73}],min:35,max:80,notes:[{y:1950,v:46,l:'46 ans'},{y:2023,v:73,l:'73 ans'}],source:'ONU'},
+    {id:'poverty',color:'#ff7a00',cc:'cc-orange',rubric:'Économie',title:'Extrême pauvreté dans le monde (%)',stat:'−27 pts',statLbl:'depuis 1990',desc:"La part de l'humanité sous le seuil de 2,15$/jour est passée de 36 % à moins de 9 % en trente ans.",dir:'down',data:[{y:1820,v:90},{y:1900,v:75},{y:1950,v:55},{y:1970,v:40},{y:1990,v:36},{y:2000,v:26},{y:2010,v:16},{y:2019,v:9},{y:2023,v:9}],min:0,max:100,notes:[{y:1820,v:90,l:'90 %'},{y:2023,v:9,l:'~9 %'}],source:'Banque mondiale'},
+    {id:'literacy',color:'#7b3ff2',cc:'cc-purple',rubric:'Société',title:'Alphabétisation mondiale (%)',stat:'+75 pts',statLbl:'depuis 1820',desc:"D'une minorité lettrée à une humanité qui lit.",dir:'up',data:[{y:1820,v:12},{y:1900,v:21},{y:1950,v:42},{y:1970,v:58},{y:1990,v:73},{y:2000,v:80},{y:2010,v:85},{y:2023,v:87}],min:0,max:100,notes:[{y:1820,v:12,l:'12 %'},{y:2023,v:87,l:'87 %'}],source:'UNESCO'},
+    {id:'infant',color:'#ff5da2',cc:'cc-pink',rubric:'Santé',title:'Mortalité infantile (‰)',stat:'−87 %',statLbl:'depuis 1950',desc:"Des enfants qui survivent — le chiffre qui résume le mieux le progrès humain.",dir:'down',data:[{y:1950,v:140},{y:1960,v:115},{y:1970,v:90},{y:1980,v:70},{y:1990,v:55},{y:2000,v:42},{y:2010,v:30},{y:2020,v:22},{y:2023,v:18}],min:0,max:160,notes:[{y:1950,v:140,l:'140 ‰'},{y:2023,v:18,l:'18 ‰'}],source:'ONU/IGME'},
+    {id:'renew',color:'#1a6dff',cc:'cc-blue',rubric:'Climat',title:"Part des renouvelables (%)",stat:'+11 pts',statLbl:'depuis 2010',desc:"Le solaire et l'éolien s'imposent chaque année.",dir:'up',data:[{y:1990,v:19},{y:2000,v:19},{y:2010,v:20},{y:2015,v:23},{y:2018,v:26},{y:2020,v:28},{y:2022,v:30},{y:2023,v:31}],min:10,max:45,notes:[{y:2010,v:20,l:'20 %'},{y:2023,v:31,l:'31 %'}],source:'Ember'},
+  ];
+
+  function buildChart(c){
+    var W=580,H=180,PL=40,PR=16,PT=12,PB=36;
+    var xs=c.data.map(function(d){return d.y;}),ys=c.data.map(function(d){return d.v;});
+    var minX=Math.min.apply(null,xs),maxX=Math.max.apply(null,xs),minY=c.min,maxY=c.max;
+    function px(x){return PL+(x-minX)/(maxX-minX)*(W-PL-PR);}
+    function py(y){return H-PB-(y-minY)/(maxY-minY)*(H-PT-PB);}
+    var pts=c.data.map(function(d){return px(d.y).toFixed(1)+','+py(d.v).toFixed(1);}).join(' ');
+    var fillBot=py(minY);
+    var polyPts=px(minX).toFixed(1)+','+fillBot+' '+pts+' '+px(maxX).toFixed(1)+','+fillBot;
+    var pathLen=c.data.reduce(function(acc,d,i,a){
+      if(!i)return 0;
+      var dx=px(d.y)-px(a[i-1].y),dy=py(d.v)-py(a[i-1].v);
+      return acc+Math.sqrt(dx*dx+dy*dy);
+    },0).toFixed(0);
+    var gId='g'+c.id,aId='a'+c.id;
+    var xlabels=c.data.filter(function(_,i){return i===0||i===c.data.length-1||c.data[i].y%50===0;});
+    var xaxis=xlabels.map(function(d){return '<text x="'+px(d.y).toFixed(1)+'" y="'+(H-PB+14)+'" text-anchor="middle" class="chart-annotation">'+d.y+'</text>';}).join('');
+    var ylines=Array.from({length:4},function(_,i){var v=minY+(maxY-minY)*i/3,y=py(v);
+      return '<line x1="'+PL+'" y1="'+y.toFixed(1)+'" x2="'+(W-PR)+'" y2="'+y.toFixed(1)+'" stroke="#f0f0f0" stroke-width="1"/>'+
+        '<text x="'+(PL-6)+'" y="'+(y+4).toFixed(1)+'" text-anchor="end" class="chart-annotation">'+Math.round(v)+'</text>';}).join('');
+    var annot=c.notes.map(function(n){return '<circle cx="'+px(n.y).toFixed(1)+'" cy="'+py(n.v).toFixed(1)+'" r="5" fill="'+c.color+'"/>'+
+      '<text x="'+px(n.y).toFixed(1)+'" y="'+(py(n.v)-10).toFixed(1)+'" text-anchor="middle" fill="'+c.color+'" font-family="Archivo" font-weight="800" font-size="11">'+n.l+'</text>';}).join('');
+    return '<svg class="chart-svg" viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg">'+
+      '<defs><linearGradient id="'+gId+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="'+c.color+'" stop-opacity=".25"/><stop offset="100%" stop-color="'+c.color+'" stop-opacity="0"/></linearGradient>'+
+      '<clipPath id="'+aId+'"><rect x="'+PL+'" y="'+PT+'" width="'+(W-PL-PR)+'" height="'+(H-PT-PB)+'"/></clipPath></defs>'+
+      ylines+'<polygon points="'+polyPts+'" fill="url(#'+gId+')" clip-path="url(#'+aId+')"/>'+
+      '<polyline points="'+pts+'" fill="none" stroke="'+c.color+'" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="'+pathLen+'" stroke-dashoffset="'+pathLen+'" clip-path="url(#'+aId+')">'+
+      '<animate attributeName="stroke-dashoffset" from="'+pathLen+'" to="0" dur="1.4s" fill="freeze" begin="0.2s"/></polyline>'+
+      annot+xaxis+'</svg>';
+  }
+
+  function buildTrends(){
+    var grid=document.getElementById('charts-grid');
+    if(!grid||grid.dataset.built)return;
+    grid.dataset.built='1';
+    grid.innerHTML=CHARTS.map(function(c){
+      return '<div class="chart-card '+c.cc+'"><div class="trend-stat"><div class="trend-stat-num" style="color:'+c.color+'">'+c.stat+'</div><div class="trend-stat-lbl">'+c.statLbl+'</div></div>'+
+        '<div class="chart-label" style="color:'+c.color+'">'+c.rubric+'</div>'+
+        '<div class="chart-title">'+c.title+'</div><div class="chart-desc">'+c.desc+'</div>'+
+        buildChart(c)+
+        '<div style="font-size:.68rem;color:#5a5a5a;margin-top:10px;text-align:right">Source : '+c.source+'</div></div>';
+    }).join('');
+  }
+  window.buildTrends=buildTrends;
+})();
+</script>
+
+<script>
+// ── SCRIPT 2 : Globe 3D ─────────────────────────────────────────────────
+(function(){
+  var CNEWS=[
+    {n:1,rubric:'ecology',color:'#00c46a',place:'Amazonie, Brésil',lat:-3.1,lng:-60.0,title:'Déforestation en chute de 50 %'},
+    {n:2,rubric:'climate',color:'#1a6dff',place:'Royaume-Uni',lat:51.5,lng:-1.5,title:'Dernière centrale à charbon fermée'},
+    {n:3,rubric:'health',color:'#ff5da2',place:'Genève (OMS)',lat:46.2,lng:6.14,title:'154 millions de vies sauvées'},
+    {n:4,rubric:'tech',color:'#7b3ff2',place:'Londres',lat:51.52,lng:-0.1,title:'AlphaFold, Nobel de chimie 2024'},
+    {n:5,rubric:'science',color:'#00c9c9',place:'Californie, É.-U.',lat:37.7,lng:-121.7,title:'Fusion : premier gain net d\'énergie'},
+    {n:6,rubric:'climate',color:'#1a6dff',place:'Medellín, Colombie',lat:6.25,lng:-75.56,title:'Les corridors verts rafraîchissent la ville'},
+    {n:7,rubric:'tech',color:'#7b3ff2',place:'Norvège',lat:59.9,lng:10.7,title:'La voiture électrique en tête'},
+    {n:8,rubric:'economy',color:'#ff7a00',place:'Paris, France',lat:48.85,lng:2.35,title:"L'entreprise à mission"},
+    {n:9,rubric:'science',color:'#00c9c9',place:'Kourou, Guyane',lat:5.16,lng:-52.65,title:'Le télescope James Webb'},
+    {n:10,rubric:'ecology',color:'#00c46a',place:'Montréal, Canada',lat:45.5,lng:-73.55,title:"La couche d'ozone se reconstitue"},
+    {n:11,rubric:'health',color:'#ff5da2',place:'Lyon (CIRC)',lat:45.76,lng:4.83,title:'On survit de plus en plus au cancer'},
+    {n:12,rubric:'economy',color:'#ff7a00',place:'Inde',lat:22.0,lng:79.0,title:'Un milliard sortis de la pauvreté'},
+    {n:13,rubric:'tech',color:'#7b3ff2',place:'Nairobi, Kenya',lat:-1.29,lng:36.82,title:'Internet rejoint les villages isolés'},
+    {n:14,rubric:'science',color:'#00c9c9',place:'Boston, É.-U.',lat:42.37,lng:-71.11,title:'Le cerveau humain cartographié'},
+    {n:15,rubric:'society',color:'#ffd400',place:'Bangladesh',lat:23.7,lng:90.4,title:"L'alphabétisation au plus haut"},
+    {n:16,rubric:'ecology',color:'#00c46a',place:'Atlantique Sud',lat:-30.0,lng:-20.0,title:'Le retour des baleines à bosse'},
+  ];
+  var TAG_LABELS={ecology:'🌿 Écologie',climate:'🌍 Climat',health:'💚 Santé',economy:'📈 Économie',tech:'⚡ Tech',science:'🔬 Science',society:'🤝 Société'};
+  var R=2.0;
+  var scene,camera,renderer,globeGroup,markerMeshes=[],clockG;
+  var isDragging=false,prevX=0,prevY=0,velX=0,velY=0;
+  var focusTarget=null,autoRotate=true,focusTimer=null;
+  var globeInited=false,hoveredIdx=-1;
+
+  function ll2v(lat,lng,r){
+    var phi=(90-lat)*Math.PI/180,th=(lng+180)*Math.PI/180;
+    return new THREE.Vector3(-r*Math.sin(phi)*Math.cos(th),r*Math.cos(phi),r*Math.sin(phi)*Math.sin(th));
+  }
+  function arcPoints(v1,v2,h,segs){
+    var pts=[];
+    for(var i=0;i<=segs;i++){var t=i/segs,v=new THREE.Vector3().lerpVectors(v1,v2,t).normalize(),rise=Math.sin(Math.PI*t)*h;pts.push(v.multiplyScalar(R+rise));}
+    return pts;
+  }
+  function buildListicle(){
+    var ol=document.getElementById('news-list');
+    ol.innerHTML=CNEWS.map(function(d,i){
+      return '<li class="nl-item" data-i="'+i+'" style="color:'+d.color+'"><span class="nl-num">'+String(d.n).padStart(2,'0')+'</span>'+
+        '<span class="nl-dot" style="background:'+d.color+';color:'+d.color+'"></span>'+
+        '<span class="nl-body"><div class="nl-place">'+d.place+'</div><div class="nl-title">'+d.title+'</div>'+
+        '<span class="nl-rubric" style="background:'+d.color+'20;color:'+d.color+'">'+TAG_LABELS[d.rubric]+'</span></span></li>';
+    }).join('');
+    ol.querySelectorAll('.nl-item').forEach(function(el){el.addEventListener('click',function(){focusItem(parseInt(el.dataset.i));});});
+  }
+  function focusItem(i){
+    document.querySelectorAll('.nl-item').forEach(function(el){el.classList.remove('focused');});
+    var el=document.querySelector('.nl-item[data-i="'+i+'"]');
+    if(el){el.classList.add('focused');el.scrollIntoView({behavior:'smooth',block:'nearest'});}
+    var d=CNEWS[i],v=ll2v(d.lat,d.lng,1);
+    focusTarget={y:-Math.atan2(v.x,v.z),x:Math.asin(v.y)};
+    autoRotate=false;clearTimeout(focusTimer);
+    focusTimer=setTimeout(function(){autoRotate=true;},4000);
+    if(markerMeshes[i]){var m=markerMeshes[i];m.scale.set(2.5,2.5,2.5);setTimeout(function(){m.scale.set(1,1,1);},400);}
+  }
+  function initGlobe(){
+    if(globeInited)return; globeInited=true;
+    var canvas=document.getElementById('globe-canvas');
+    scene=new THREE.Scene();
+    camera=new THREE.PerspectiveCamera(42,canvas.clientWidth/canvas.clientHeight,.1,100);
+    camera.position.set(0,0,5.5);
+    renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true,alpha:true});
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+    renderer.setSize(canvas.clientWidth,canvas.clientHeight,false);
+    renderer.setClearColor(0x000000,0);
+    clockG=new THREE.Clock();
+    globeGroup=new THREE.Group(); scene.add(globeGroup);
+    var stGeo=new THREE.BufferGeometry(),stPos=[];
+    for(var si=0;si<1200;si++){var t=Math.random()*2*Math.PI,p=Math.acos(2*Math.random()-1),sr=18+Math.random()*8;stPos.push(sr*Math.sin(p)*Math.cos(t),sr*Math.cos(p),sr*Math.sin(p)*Math.sin(t));}
+    stGeo.setAttribute('position',new THREE.Float32BufferAttribute(stPos,3));
+    scene.add(new THREE.Points(stGeo,new THREE.PointsMaterial({color:0xffffff,size:.05,transparent:true,opacity:.5})));
+    var N=2400,dotPos=[],golden=Math.PI*(3-Math.sqrt(5));
+    for(var di=0;di<N;di++){var dy=1-di/(N-1)*2,drad=Math.sqrt(1-dy*dy),dth=golden*di;dotPos.push(R*drad*Math.cos(dth),R*dy,R*drad*Math.sin(dth));}
+    var dGeo=new THREE.BufferGeometry();dGeo.setAttribute('position',new THREE.Float32BufferAttribute(dotPos,3));
+    globeGroup.add(new THREE.Points(dGeo,new THREE.PointsMaterial({color:0x1e3a6e,size:.028,transparent:true,opacity:.85})));
+    var gridMat=new THREE.LineBasicMaterial({color:0x0d2040,transparent:true,opacity:.4});
+    [-60,-30,0,30,60].forEach(function(lat){var pts=[];for(var lg=-180;lg<=180;lg+=4)pts.push(ll2v(lat,lg,R*1.001));var g=new THREE.BufferGeometry().setFromPoints(pts);globeGroup.add(new THREE.Line(g,gridMat));});
+    [0,45,90,135,180,225,270,315].forEach(function(lng){var pts=[];for(var lt=-90;lt<=90;lt+=3)pts.push(ll2v(lt,lng,R*1.001));var g=new THREE.BufferGeometry().setFromPoints(pts);globeGroup.add(new THREE.Line(g,gridMat));});
+    globeGroup.add(new THREE.Mesh(new THREE.SphereGeometry(R*1.06,32,32),new THREE.MeshBasicMaterial({color:0x1a4fff,side:THREE.BackSide,transparent:true,opacity:.12})));
+    var mGeo=new THREE.SphereGeometry(.055,12,12);
+    markerMeshes=[];
+    CNEWS.forEach(function(d,i){
+      var col=new THREE.Color(d.color),pos=ll2v(d.lat,d.lng,R+.01);
+      var m=new THREE.Mesh(mGeo,new THREE.MeshBasicMaterial({color:col}));
+      m.position.copy(pos);m.userData={idx:i};globeGroup.add(m);markerMeshes.push(m);
+      var tip=ll2v(d.lat,d.lng,R*1.35);
+      globeGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([pos.clone().multiplyScalar(.98),tip]),new THREE.LineBasicMaterial({color:col,transparent:true,opacity:.7})));
+      var tMesh=new THREE.Mesh(new THREE.SphereGeometry(.025,8,8),new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:.9}));
+      tMesh.position.copy(tip);globeGroup.add(tMesh);
+      if(i>0){var prev=ll2v(CNEWS[i-1].lat,CNEWS[i-1].lng,R),cur=ll2v(d.lat,d.lng,R);
+        globeGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(arcPoints(prev,cur,0.4,40)),new THREE.LineBasicMaterial({color:col,transparent:true,opacity:.22})));}
+    });
+    globeGroup.rotation.y=0.4;globeGroup.rotation.x=0.18;
+    canvas.addEventListener('pointerdown',function(e){isDragging=true;prevX=e.clientX;prevY=e.clientY;velX=0;velY=0;autoRotate=false;clearTimeout(focusTimer);});
+    window.addEventListener('pointermove',function(e){
+      if(!isDragging)return;
+      velX=(e.clientX-prevX)*.005;velY=(e.clientY-prevY)*.005;
+      globeGroup.rotation.y+=velX;
+      globeGroup.rotation.x=Math.max(-1.1,Math.min(1.1,globeGroup.rotation.x+velY));
+      prevX=e.clientX;prevY=e.clientY;
+    });
+    window.addEventListener('pointerup',function(){if(!isDragging)return;isDragging=false;focusTimer=setTimeout(function(){autoRotate=true;},2000);});
+    canvas.addEventListener('wheel',function(e){e.preventDefault();camera.position.z=Math.max(3.2,Math.min(7,camera.position.z+e.deltaY*.005));},{passive:false});
+    var rc=new THREE.Raycaster(),mouse=new THREE.Vector2();
+    canvas.addEventListener('pointermove',function(e){
+      var rect=canvas.getBoundingClientRect();
+      mouse.x=((e.clientX-rect.left)/rect.width)*2-1;
+      mouse.y=-((e.clientY-rect.top)/rect.height)*2+1;
+      rc.setFromCamera(mouse,camera);
+      var hits=rc.intersectObjects(markerMeshes);
+      var newHov=hits.length?hits[0].object.userData.idx:-1;
+      if(newHov!==hoveredIdx){
+        if(hoveredIdx>=0)markerMeshes[hoveredIdx].scale.set(1,1,1);
+        hoveredIdx=newHov;
+        if(hoveredIdx>=0){markerMeshes[hoveredIdx].scale.set(1.8,1.8,1.8);canvas.style.cursor='pointer';}
+        else canvas.style.cursor='grab';
+        document.querySelectorAll('.nl-item').forEach(function(el,i){el.classList.toggle('focused',i===hoveredIdx);});
+      }
+    });
+    canvas.addEventListener('click',function(){if(hoveredIdx>=0)focusItem(hoveredIdx);});
+    new ResizeObserver(function(){var w=canvas.clientWidth,h=canvas.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}).observe(canvas);
+    animGlobe();
+  }
+  function animGlobe(){
+    requestAnimationFrame(animGlobe);
+    var t=clockG.getElapsedTime();
+    if(autoRotate&&!isDragging)globeGroup.rotation.y+=.0008;
+    if(focusTarget&&!isDragging){globeGroup.rotation.y+=(focusTarget.y-globeGroup.rotation.y)*.04;globeGroup.rotation.x+=(focusTarget.x-globeGroup.rotation.x)*.04;}
+    if(!isDragging&&!autoRotate&&(Math.abs(velX)>.0001||Math.abs(velY)>.0001)){globeGroup.rotation.y+=velX;globeGroup.rotation.x=Math.max(-1.1,Math.min(1.1,globeGroup.rotation.x+velY));velX*=.92;velY*=.92;}
+    markerMeshes.forEach(function(m,i){if(i===hoveredIdx)return;var s=1+.15*Math.sin(t*2+i*.8);m.scale.set(s,s,s);});
+    renderer.render(scene,camera);
+  }
+  if(document.getElementById('btn-map')){
+    document.getElementById('btn-map').addEventListener('click',function(){
+      window._setPage('map');
+      if(!globeInited){buildListicle();requestAnimationFrame(initGlobe);}
+    });
+  }
+})();
+</script>
+
+<script>
+// ── SCRIPT 3 : Calendrier ────────────────────────────────────────────────
+(function(){
+  var TODAY_STR='2026-05-30', YEST_STR='2026-05-29', D2_STR='2026-05-28';
+  var DATE_ARTICLES={};
+  DATE_ARTICLES[TODAY_STR]=TODAY_ARTICLES;
+  function buildYest(){var fb=window._fallback||[];return fb.slice(0,7);}
+  function buildD2(){var fb=window._fallback||[];return fb.slice(7,14);}
+  function getArticlesForDate(ds){
+    if(DATE_ARTICLES[ds])return DATE_ARTICLES[ds];
+    if(ds===YEST_STR){DATE_ARTICLES[YEST_STR]=buildYest();return DATE_ARTICLES[YEST_STR];}
+    if(ds===D2_STR){DATE_ARTICLES[D2_STR]=buildD2();return DATE_ARTICLES[D2_STR];}
+    return null;
+  }
+  var STORED_DATES=[D2_STR,YEST_STR,TODAY_STR];
+  function fmtDate(s){var d=new Date(s+'T12:00:00');return d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}
+  function setDateLabel(ds){
+    var el=document.getElementById('current-date-pill');if(!el)return;
+    var isToday=ds===TODAY_STR;
+    var prefix=isToday?"Aujourd\u2019hui \u2014 ":'';
+    el.textContent='\uD83D\uDCC5 '+prefix+fmtDate(ds);
+    el.style.color=isToday?'var(--green)':'var(--purple)';
+  }
+  function loadDate(ds){
+    var arts=getArticlesForDate(ds);if(!arts||!arts.length)return;
+    var q=window._quotes||[];
+    render(arts,q[Math.floor(Math.random()*q.length)]);
+    setDateLabel(ds);calState.selected=ds;renderCalGrid();
+  }
+  function init(){loadDate(TODAY_STR);renderCalGrid();}
+  var calState={year:2026,month:4,selected:TODAY_STR};
+  var MONTHS=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+  function openCal(){var m=document.getElementById('cal-modal');if(!m)return;m.classList.add('open');m.setAttribute('aria-hidden','false');renderCalGrid();}
+  function closeCal(){var m=document.getElementById('cal-modal');if(!m)return;m.classList.remove('open');m.setAttribute('aria-hidden','true');}
+  function renderCalGrid(){
+    var lbl=document.getElementById('cal-month-label'),grid=document.getElementById('cal-grid');
+    if(!lbl||!grid)return;
+    lbl.textContent=MONTHS[calState.month]+' '+calState.year;
+    var firstDay=new Date(calState.year,calState.month,1).getDay(),offset=(firstDay===0?6:firstDay-1);
+    var dim=new Date(calState.year,calState.month+1,0).getDate();
+    var tnow=new Date(),td=tnow.getDate(),tm=tnow.getMonth(),ty=tnow.getFullYear();
+    var html='';
+    for(var i=0;i<offset;i++)html+='<div class="cal-day empty"></div>';
+    for(var d=1;d<=dim;d++){
+      var mm=String(calState.month+1).padStart(2,'0'),dd=String(d).padStart(2,'0');
+      var ds=calState.year+'-'+mm+'-'+dd;
+      var hasNews=STORED_DATES.includes(ds),isToday=d===td&&calState.month===tm&&calState.year===ty,isSel=ds===calState.selected;
+      var cls='cal-day'+(hasNews?' has-news':'')+(isToday?' is-today':'')+(isSel?' selected':'');
+      html+='<div class="'+cls+'" data-date="'+ds+'"><span class="cal-day-num">'+d+'</span><span class="cal-dot"></span></div>';
+    }
+    grid.innerHTML=html;
+    grid.querySelectorAll('.cal-day.has-news').forEach(function(el){el.addEventListener('click',function(){closeCal();loadDate(el.dataset.date);});});
+  }
+  document.getElementById('cal-prev').addEventListener('click',function(){calState.month--;if(calState.month<0){calState.month=11;calState.year--;}renderCalGrid();});
+  document.getElementById('cal-next').addEventListener('click',function(){calState.month++;if(calState.month>11){calState.month=0;calState.year++;}renderCalGrid();});
+  document.getElementById('cal-close').addEventListener('click',closeCal);
+  document.getElementById('cal-modal').addEventListener('click',function(e){if(e.target.id==='cal-modal')closeCal();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&document.getElementById('cal-modal').classList.contains('open'))closeCal();});
+  document.getElementById('archives-btn').addEventListener('click',openCal);
+  init();
+})();
+</script>
+
+<script>
+// ── SCRIPT 4 : Stats dynamiques + Cases secrètes + Feu d'artifice ────────
+(function(){
+  var DYN_STATS=[
+    {icon:'\uD83D\uDCDA',target:92,suffix:'%',label:"des jeunes savent lire",sub:"vs 12 % en 1820 \u00b7 UNESCO",color:'#7b3ff2'},
+    {icon:'\uD83D\uDC89',target:154,suffix:' M',label:"vies sauvées par les vaccins",sub:"depuis 1974 \u00b7 The Lancet",color:'#ff5da2'},
+    {icon:'\u2600\uFE0F',target:90,suffix:'%',label:"de baisse du co\u00fbt solaire",sub:"en 13 ans \u00b7 IRENA",color:'#ffd400'},
+    {icon:'\u2764\uFE0F',target:73,suffix:' ans',label:"d'esp\u00e9rance de vie mondiale",sub:"vs 46 ans en 1950 \u00b7 ONU",color:'#ff4d4d'},
+    {icon:'\uD83C\uDF31',target:31,suffix:'%',label:"d'\u00e9lectricit\u00e9 verte",sub:"record mondial 2023 \u00b7 Ember",color:'#00c46a'},
+    {icon:'\uD83C\uDF0D',target:1000,suffix:' M+',label:"sortis de l'extr\u00eame pauvret\u00e9",sub:"en une g\u00e9n\u00e9ration \u00b7 Banque mondiale",color:'#ff7a00'},
+  ];
+  var SECRETS=[
+    {color:'#7b3ff2',tc:'#fff',q:"Combien de langues humaines existent encore\u00a0?",emoji:'\uD83D\uDDE3\uFE0F',answer:'7 168',detail:"langues vivantes. Des centaines sont en cours de revitalisation (Ethnologue)."},
+    {color:'#00c46a',tc:'#04210f',q:"Combien d'hectares de for\u00eat prot\u00e9g\u00e9s depuis 2000\u00a0?",emoji:'\uD83C\uDF33',answer:'+200 M ha',detail:"de nouvelles aires prot\u00e9g\u00e9es d\u00e9clar\u00e9es depuis l'an 2000 (UICN)."},
+    {color:'#1a6dff',tc:'#fff',q:"Quelle part de l'oc\u00e9an est prot\u00e9g\u00e9e\u00a0?",emoji:'\uD83C\uDF0A',answer:'8,2 %',detail:"des oc\u00e9ans mondiaux en aires marines prot\u00e9g\u00e9es \u2014 un record (PNUE)."},
+    {color:'#ff5da2',tc:'#2b0014',q:"Combien de maladies \u00e9radiqu\u00e9es par la vaccination\u00a0?",emoji:'\uD83D\uDC89',answer:'2 \u00e9radiqu\u00e9es',detail:"La variole (1980) et la polio de type 2 (2015). La polio de type 1 est pr\u00e8s de l'\u00eatre (OMS)."},
+    {color:'#ffd400',tc:'#1a1500',q:"Combien de personnes sorties de la pauvret\u00e9 en 30 ans\u00a0?",emoji:'\u2728',answer:'1 milliard+',detail:"De 36 % \u00e0 9 % entre 1990 et 2019 (Banque mondiale)."},
+    {color:'#ff7a00',tc:'#2b1400',q:"Combien de personnes acc\u00e8dent \u00e0 l'\u00e9lectricit\u00e9 depuis 2000\u00a0?",emoji:'\uD83D\uDCA1',answer:'+1,2 Md',detail:"de personnes suppl\u00e9mentaires raccord\u00e9es depuis 2000 (AIE)."},
+  ];
+  var FW_COLORS=['#ffd400','#ff4d4d','#ff5da2','#00c46a','#1a6dff','#7b3ff2','#00c9c9','#ff7a00','#fff'];
+  function launchFireworks(originEl){
+    var canvas=document.getElementById('fw-canvas');if(!canvas)return;
+    canvas.width=window.innerWidth;canvas.height=window.innerHeight;canvas.style.display='block';
+    var ctx=canvas.getContext('2d');
+    var rect=originEl.getBoundingClientRect();
+    var cx=rect.left+rect.width/2,cy=rect.top+rect.height/2;
+    var allP=[],startT=performance.now();
+    var offsets=[[0,0],[-90,-35],[90,-25],[20,-75],[-30,-60]];
+    var delays=[0,120,240,360,480];
+    function makeBurst(x,y){
+      var p=[],cnt=80;
+      for(var i=0;i<cnt;i++){
+        var ang=Math.random()*Math.PI*2,spd=3+Math.random()*8,star=Math.random()<.3;
+        p.push({x:x,y:y,vx:Math.cos(ang)*spd,vy:Math.sin(ang)*spd-2,color:FW_COLORS[Math.floor(Math.random()*FW_COLORS.length)],life:1,decay:.013+Math.random()*.008,size:(star?6:3)+Math.random()*4,star:star,rot:Math.random()*Math.PI*2});
+      }
+      return p;
+    }
+    offsets.forEach(function(o,i){setTimeout(function(){allP=allP.concat(makeBurst(cx+o[0],cy+o[1]));},delays[i]);});
+    function drawStar(ctx,x,y,r,rot){
+      ctx.save();ctx.translate(x,y);ctx.rotate(rot);ctx.beginPath();
+      for(var i=0;i<5;i++){ctx.lineTo(Math.cos((18+72*i)*Math.PI/180)*r,-Math.sin((18+72*i)*Math.PI/180)*r);ctx.lineTo(Math.cos((54+72*i)*Math.PI/180)*(r*.42),-Math.sin((54+72*i)*Math.PI/180)*(r*.42));}
+      ctx.closePath();ctx.fill();ctx.restore();
+    }
+    var fc=0;
+    function anim(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);var alive=0;
+      allP.forEach(function(p){
+        if(p.life<=0)return;alive++;
+        p.x+=p.vx;p.y+=p.vy;p.vy+=.18;p.vx*=.97;p.life-=p.decay;p.rot+=.07;
+        ctx.globalAlpha=Math.max(0,p.life);ctx.fillStyle=p.color;
+        if(p.star){drawStar(ctx,p.x,p.y,p.size*(0.4+p.life*.6),p.rot);}
+        else{ctx.beginPath();ctx.ellipse(p.x,p.y,p.size*.35,p.size*(0.4+p.life*.6),p.rot,0,Math.PI*2);ctx.fill();}
+      });
+      ctx.globalAlpha=1;fc++;
+      if(alive>0||fc<40)requestAnimationFrame(anim);else canvas.style.display='none';
+    }
+    setTimeout(function(){requestAnimationFrame(anim);},50);
+  }
+  function animCounter(el,target,suffix,dur){
+    var start=performance.now();
+    function step(t){var p=Math.min((t-start)/dur,1),ease=1-Math.pow(1-p,3);el.textContent=Math.round(ease*target)+suffix;if(p<1)requestAnimationFrame(step);else el.textContent=target+suffix;}
+    requestAnimationFrame(step);
+  }
+  function buildExtras(){
+    var sg=document.getElementById('dyn-stats-grid');
+    if(sg&&!sg.dataset.built){
+      sg.dataset.built='1';
+      sg.innerHTML=DYN_STATS.map(function(s,i){return '<div class="dyn-stat" style="--c:'+s.color+'" data-sidx="'+i+'"><div class="dyn-stat-icon">'+s.icon+'</div><div class="dyn-stat-num" id="dsn-'+i+'">0</div><div class="dyn-stat-label">'+s.label+'</div><div class="dyn-stat-sub">'+s.sub+'</div></div>';}).join('');
+      var obs=new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if(!entry.isIntersecting)return;
+          var idx=parseInt(entry.target.dataset.sidx);
+          var el=document.getElementById('dsn-'+idx);
+          if(el&&!el.dataset.animated){el.dataset.animated='1';animCounter(el,DYN_STATS[idx].target,DYN_STATS[idx].suffix,1200+idx*80);}
+          obs.unobserve(entry.target);
+        });
+      },{threshold:.25});
+      document.querySelectorAll('.dyn-stat').forEach(function(el){obs.observe(el);});
+    }
+    var secG=document.getElementById('secrets-grid');
+    if(secG&&!secG.dataset.built){
+      secG.dataset.built='1';
+      secG.innerHTML=SECRETS.map(function(s,i){
+        return '<div class="secret-card" id="sc-'+i+'" style="background:'+s.color+';color:'+s.tc+'">'+
+          '<div class="secret-front"><div class="secret-qmark">\uD83D\uDD2E</div><div class="secret-question">'+s.q+'</div><div class="secret-tap-hint">Toucher pour r\u00e9v\u00e9ler</div></div>'+
+          '<div class="secret-back"><div class="secret-answer-emoji">'+s.emoji+'</div><div class="secret-answer-num">'+s.answer+'</div><div class="secret-answer-detail">'+s.detail+'</div></div></div>';
+      }).join('');
+      document.querySelectorAll('.secret-card').forEach(function(card){
+        card.addEventListener('click',function(){if(this.classList.contains('revealed'))return;this.classList.add('revealed');launchFireworks(this);});
+      });
+    }
+  }
+  window._buildTrendsExtras=buildExtras;
+  window.addEventListener('resize',function(){var c=document.getElementById('fw-canvas');if(c&&c.style.display!=='none'){c.width=window.innerWidth;c.height=window.innerHeight;}});
+})();
+</script>
+</body>
+</html>
