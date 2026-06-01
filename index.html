@@ -1197,7 +1197,6 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
       var sp=mosaic?(SPAN[i]||'span-third'):'span-half';
       var ghost=(mosaic&&i===0)?'<div class="ghost-num">1</div>':'';
       h+='<article class="card '+cc+' '+sp+'" data-idx="'+i+'" role="button" tabindex="0">'
-        +
         +'<span class="tag">'+tl+'</span>'
         +'<h2 class="headline">'+esc(a.headline)+'</h2>'
         +'<p class="summary">'+esc(a.summary)+'</p>'
@@ -1330,6 +1329,21 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
   document.getElementById('btn-journal').addEventListener('click',function(){setPage('journal');});
   document.getElementById('btn-trends').addEventListener('click',function(){setPage('trends');});
   window._setPage=setPage;
+
+  // ── Filtres de rubriques (dans l'IIFE → accès à currentRubric, showSkeleton, fallbackFor, render) ──
+  document.querySelectorAll('#filters .pill').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      document.querySelectorAll('#filters .pill').forEach(function(b){b.classList.remove('active');});
+      btn.classList.add('active');
+      var rubric=btn.dataset.rubric||'all';
+      currentRubric=rubric;
+      showSkeleton();
+      setTimeout(function(){
+        var data=fallbackFor(rubric);
+        render(data.articles,data.quote);
+      },260);
+    });
+  });
 
   // Clic sur le logo → retour accueil en haut
   document.querySelector('.brand').addEventListener('click',function(){setPage('journal');});
