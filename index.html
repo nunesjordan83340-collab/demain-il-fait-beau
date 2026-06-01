@@ -310,6 +310,7 @@ a.source-chip:hover{background:var(--blue);color:#fff;border-color:var(--blue);t
 a.source-chip .src-icon{font-size:.7rem;opacity:.75;}
 a.source-chip:hover .src-icon{opacity:1;}
 .sources-note{font-size:.74rem;color:var(--ink-soft);line-height:1.5;margin-top:8px;font-style:italic;}
+@media(max-width:767px){.imm-open-btn{display:none;}}
 body.modal-open{overflow:hidden;}
 /* TRENDS */
 .trends-header{text-align:center;margin-bottom:52px;}
@@ -1236,6 +1237,11 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     var a=currentArticles[idx]; if(!a)return;
     lastFocused=document.activeElement;
     window._currentModalIdx=idx;
+    // Sur mobile (<768px) : ouvrir directement en immersif
+    if(window.innerWidth < 768 && window._openImmersive){
+      window._openImmersive(a);
+      return;
+    }
     var cc=TAG_CLASS[a.rubric]||'c-society', tl=TAG_LABEL[a.rubric]||'Société';
     document.getElementById('modal-head').className='modal-head '+cc;
     var RUBRIC_COLORS={ecology:'#00c46a',climate:'#1a6dff',health:'#ff5da2',economy:'#ff7a00',tech:'#7b3ff2',science:'#00c9c9',society:'#ffd400'};
@@ -1330,14 +1336,14 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
   document.getElementById('btn-trends').addEventListener('click',function(){setPage('trends');});
   window._setPage=setPage;
 
-  // ── Filtres de rubriques (dans l'IIFE → accès à currentRubric, showSkeleton, fallbackFor, render) ──
+  // ── Filtres de rubriques ──
   document.querySelectorAll('#filters .pill').forEach(function(btn){
     btn.addEventListener('click',function(){
       document.querySelectorAll('#filters .pill').forEach(function(b){b.classList.remove('active');});
       btn.classList.add('active');
       var rubric=btn.dataset.rubric||'all';
       currentRubric=rubric;
-      showSkeleton();
+      if(window._showSkeleton) window._showSkeleton();
       setTimeout(function(){
         var data=fallbackFor(rubric);
         render(data.articles,data.quote);
@@ -1814,6 +1820,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
       +'</div>';
     document.getElementById('content').innerHTML=s;
   }
+  window._showSkeleton = showSkeleton;
   function loadDate(ds){
     showSkeleton();
     setTimeout(function(){
@@ -2149,6 +2156,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
   }
 
   function openImmersive(a){
+    // exposé sur window via l'init ci-dessous
     currentArticle=a;
     var rcolor=RUBRIC_COLORS[a.rubric]||'#7b3ff2';
     // Tag
@@ -2191,6 +2199,8 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     document.body.style.overflow='hidden';
     closeBtn.focus();
   }
+
+  window._openImmersive = openImmersive;
 
   function closeImmersive(){
     overlay.classList.remove('open');
