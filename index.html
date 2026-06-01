@@ -119,6 +119,27 @@ body.trends-active footer{display:block;}
     .hero-animated.revealed .hero-line:nth-child(2) .hero-word:nth-child(3){opacity:1;transform:translateY(0);transition-delay:420ms;}
     .hero-sub{font-size:clamp(1.05rem,2.2vw,1.4rem);color:var(--ink-soft);max-width:640px;margin:0 auto;line-height:1.5;opacity:0;transform:translateY(16px);transition:opacity .7s ease .65s,transform .7s ease .65s;}
     .hero.revealed .hero-sub{opacity:1;transform:translateY(0);}
+/* HERO SCENE (soleil + arc-en-ciel) */
+.hero-scene{display:block;width:100%;max-width:700px;margin:0 auto 8px;overflow:visible;opacity:0;transform:translateY(10px);transition:opacity .8s ease .4s,transform .8s ease .4s;}
+.hero.revealed .hero-scene{opacity:1;transform:translateY(0);}
+/* Rayons du soleil tournent lentement */
+.hero.revealed .sun-rays{animation:sunRotate 20s linear infinite;}
+@keyframes sunRotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+/* Arc-en-ciel se déplie depuis le bas */
+.arc-rainbow{transform-origin:50% 100%;transform:scaleY(0);opacity:0;transition:transform .9s cubic-bezier(.2,.8,.25,1) .6s, opacity .6s ease .6s;}
+.hero.revealed .arc-rainbow{transform:scaleY(1);opacity:.75;}
+/* Sparkles */
+.sparkle{opacity:0;}
+.hero.revealed .sparkle:nth-child(1){animation:sparkleAnim .5s ease .75s forwards;}
+.hero.revealed .sparkle:nth-child(2){animation:sparkleAnim .5s ease .9s forwards;}
+.hero.revealed .sparkle:nth-child(3){animation:sparkleAnim .5s ease 1.05s forwards;}
+.hero.revealed .sparkle:nth-child(4){animation:sparkleAnim .5s ease 1.2s forwards;}
+.hero.revealed .sparkle:nth-child(5){animation:sparkleAnim .5s ease 1.35s forwards;}
+@keyframes sparkleAnim{
+  0%{opacity:0;transform:scale(0) rotate(0deg);}
+  55%{opacity:1;transform:scale(1.5) rotate(25deg);}
+  100%{opacity:.8;transform:scale(1) rotate(0deg);}
+}
 /* COUNTERS */
 .counter{border:none;cursor:pointer;border-radius:var(--radius-sm);padding:16px 20px;min-width:120px;flex:0 0 auto;text-align:left;transition:transform .25s,box-shadow .25s;}
 .counter:hover{transform:translateY(-4px);box-shadow:0 16px 32px -16px rgba(0,0,0,.35);}
@@ -490,6 +511,44 @@ footer .fbrand{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.4rem
 
 <!-- HERO -->
 <section class="hero journal-only" id="hero">
+
+<!-- 🌅 Scène décorative : arc-en-ciel + soleil horaire + sparkles -->
+<svg id="hero-scene" class="hero-scene" viewBox="0 0 700 160" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+
+  <!-- Arc-en-ciel en arrière-plan, ancré en bas de la scène -->
+  <g class="arc-rainbow">
+    <path d="M20,158 Q350,-80 680,158" fill="none" stroke="#ff4d4d" stroke-width="9" stroke-linecap="round" opacity=".85"/>
+    <path d="M38,158 Q350,-56 662,158" fill="none" stroke="#ff7a00" stroke-width="9" stroke-linecap="round" opacity=".85"/>
+    <path d="M56,158 Q350,-34 644,158" fill="none" stroke="#ffd400" stroke-width="9" stroke-linecap="round" opacity=".85"/>
+    <path d="M74,158 Q350,-14 626,158" fill="none" stroke="#00c46a" stroke-width="9" stroke-linecap="round" opacity=".85"/>
+    <path d="M92,158 Q350,4  608,158" fill="none" stroke="#1a6dff" stroke-width="9" stroke-linecap="round" opacity=".85"/>
+    <path d="M110,158 Q350,20 590,158" fill="none" stroke="#7b3ff2" stroke-width="9" stroke-linecap="round" opacity=".85"/>
+  </g>
+
+  <!-- Soleil positionné par JS selon l'heure -->
+  <g id="sun-group" opacity="0" style="transition:opacity .7s ease .5s;">
+    <g id="sun-rays">
+      <line x1="0" y1="-20" x2="0" y2="-30" stroke="#ffd400" stroke-width="3" stroke-linecap="round"/>
+      <line x1="0" y1="20"  x2="0" y2="30"  stroke="#ffd400" stroke-width="3" stroke-linecap="round"/>
+      <line x1="-20" y1="0" x2="-30" y2="0" stroke="#ffd400" stroke-width="3" stroke-linecap="round"/>
+      <line x1="20"  y1="0" x2="30"  y2="0" stroke="#ffd400" stroke-width="3" stroke-linecap="round"/>
+      <line x1="-14" y1="-14" x2="-21" y2="-21" stroke="#ffd400" stroke-width="3" stroke-linecap="round"/>
+      <line x1="14"  y1="14"  x2="21"  y2="21"  stroke="#ffd400" stroke-width="3" stroke-linecap="round"/>
+      <line x1="14"  y1="-14" x2="21"  y2="-21" stroke="#ffd400" stroke-width="3" stroke-linecap="round"/>
+      <line x1="-14" y1="14"  x2="-21" y2="21"  stroke="#ffd400" stroke-width="3" stroke-linecap="round"/>
+    </g>
+    <circle cx="0" cy="0" r="14" fill="#ffd400"/>
+    <circle cx="0" cy="0" r="14" fill="none" stroke="#ffec6e" stroke-width="3" opacity=".5"/>
+  </g>
+
+  <!-- Sparkles -->
+  <text class="sparkle" x="30"  y="40"  font-size="20" fill="#ffd400">✦</text>
+  <text class="sparkle" x="640" y="35"  font-size="16" fill="#ff5da2">✦</text>
+  <text class="sparkle" x="610" y="120" font-size="11" fill="#7b3ff2">✦</text>
+  <text class="sparkle" x="55"  y="125" font-size="14" fill="#00c46a">✦</text>
+  <text class="sparkle" x="350" y="18"  font-size="10" fill="#1a6dff">✦</text>
+</svg>
+
 <h1 class="hero-animated">
   <span class="hero-line"><span class="hero-word">Demain,</span></span>
   <span class="hero-line"><span class="hero-word grad">il</span> <span class="hero-word grad">fait</span> <span class="hero-word grad">beau.</span></span>
@@ -1840,6 +1899,80 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     if(el) el.addEventListener('input', function(){ el.classList.remove('err'); });
   });
 
+})();
+</script>
+
+<script>
+// ── SOLEIL HORAIRE ──────────────────────────────────────────────────────────
+// Le soleil suit une trajectoire en arc dans le SVG hero (viewBox 700×160)
+// Est (gauche) → zénith (centre-haut) → Ouest (droite)
+// Jour solaire : 6h (lever) → 12h (zénith) → 20h (coucher)
+(function(){
+  function positionSun(){
+    var now   = new Date();
+    var hours = now.getHours() + now.getMinutes()/60;
+
+    // Limites du jour visible : 6h → 20h (14h de trajet)
+    var RISE  = 6;   // lever
+    var SET   = 20;  // coucher
+    var SPAN  = SET - RISE;
+
+    // t ∈ [0,1] : progression dans la journée
+    var t = Math.max(0, Math.min(1, (hours - RISE) / SPAN));
+
+    // Trajectoire en demi-ellipse dans le SVG (700×160)
+    // x : de 30 (est) à 670 (ouest), centre 350
+    // y : suit une parabole, zénith à y=18, horizon à y=150
+    var cx = 700;  // largeur viewBox
+    var sunX = 30 + t * (670 - 30);                       // linéaire est→ouest
+    var sunY = 150 - Math.sin(t * Math.PI) * 132;         // arc parabolique
+
+    var sunGroup = document.getElementById('sun-group');
+    var sunRays  = document.getElementById('sun-rays');
+    if(!sunGroup) return;
+
+    sunGroup.setAttribute('transform','translate('+sunX+','+sunY+')');
+
+    // Nuit / tôt le matin / tard le soir : masquer le soleil
+    var isDay = hours >= RISE && hours <= SET;
+    sunGroup.style.opacity = isDay ? '1' : '0';
+
+    // Couleur selon la position : orangé au lever/coucher, jaune à midi
+    var proximity = Math.abs(t - 0.5) * 2; // 0=zénith, 1=horizon
+    var coreColor = proximity > 0.7
+      ? '#ff8c00'   // horizon : orangé
+      : proximity > 0.4
+        ? '#ffb700'  // mi-hauteur : doré
+        : '#ffd400'; // zénith : jaune vif
+    var coreEl = sunGroup.querySelector('circle');
+    var glowEl = sunGroup.querySelectorAll('circle')[1];
+    if(coreEl){ coreEl.setAttribute('fill', coreColor); }
+
+    // Les rayons héritent de la couleur
+    sunGroup.querySelectorAll('line').forEach(function(l){
+      l.setAttribute('stroke', coreColor);
+    });
+    if(glowEl){ glowEl.setAttribute('stroke', coreColor); }
+
+    // Animation rotation des rayons
+    if(isDay && sunRays && !sunRays._animStarted){
+      sunRays._animStarted = true;
+      sunRays.style.transformOrigin = '0 0'; // rotation autour du centre du groupe (0,0)
+      var angle = 0;
+      (function rotate(){
+        angle += 0.02;
+        sunRays.setAttribute('transform','rotate('+angle+')');
+        requestAnimationFrame(rotate);
+      })();
+    }
+  }
+
+  // Lancer après que le hero soit révélé (délai ~600ms après load)
+  window.addEventListener('load', function(){
+    setTimeout(positionSun, 600);
+  });
+  // Recalculer toutes les minutes (pour les longues sessions)
+  setInterval(positionSun, 60000);
 })();
 </script>
 </body>
