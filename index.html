@@ -494,43 +494,105 @@ footer .fbrand{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.4rem
 .imm-open-btn{display:inline-flex;align-items:center;gap:7px;font-family:"Sora",sans-serif;font-size:.8rem;font-weight:700;padding:8px 18px;border-radius:100px;border:1.5px solid var(--line);background:transparent;color:var(--ink-soft);cursor:pointer;transition:all .22s;margin-bottom:20px;}
 .imm-open-btn:hover{border-color:var(--purple);color:var(--purple);background:rgba(123,63,242,.06);}
 
-/* ── VUE ARTICLES CARROUSEL ── */
+/* ── VUE ARTICLES TINDER ── */
 body.map-active .journal-only{display:none!important;}
 body.trends-active .journal-only{display:none!important;}
 #view-map{display:none;}
-body.map-active #view-map{display:flex;flex-direction:column;min-height:calc(100vh - 52px);}
-.carousel-header{padding:32px 40px 20px;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;}
-.carousel-title{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.6rem;letter-spacing:-.03em;}
-.carousel-sub{font-size:.78rem;color:var(--ink-soft);font-weight:600;}
-.carousel-filters{display:flex;gap:8px;flex-wrap:wrap;padding:0 40px 16px;}
-.carousel-pill{font-size:.72rem;font-weight:700;padding:5px 14px;border-radius:100px;border:1.5px solid var(--line);background:transparent;cursor:pointer;transition:all .2s;letter-spacing:.04em;text-transform:uppercase;}
+body.map-active #view-map{display:flex;flex-direction:column;height:calc(100vh - 52px);overflow:hidden;}
+
+/* Header */
+.carousel-header{padding:20px 32px 0;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px;}
+.carousel-title{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.3rem;letter-spacing:-.03em;}
+.carousel-sub{font-size:.75rem;color:var(--ink-soft);font-weight:600;}
+.carousel-filters{display:flex;gap:6px;flex-wrap:wrap;padding:10px 32px 0;flex-shrink:0;}
+.carousel-pill{font-size:.68rem;font-weight:700;padding:4px 12px;border-radius:100px;border:1.5px solid var(--line);background:transparent;cursor:pointer;transition:all .2s;letter-spacing:.04em;text-transform:uppercase;}
 .carousel-pill.active{background:var(--ink);color:#fff;border-color:var(--ink);}
-.carousel-track-wrap{position:relative;overflow:hidden;}
-.carousel-track{display:flex;gap:20px;padding:8px 40px 32px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;cursor:grab;}
-.carousel-track:active{cursor:grabbing;}
-.carousel-track::-webkit-scrollbar{height:4px;}
-.carousel-track::-webkit-scrollbar-track{background:transparent;}
-.carousel-track::-webkit-scrollbar-thumb{background:var(--line);border-radius:2px;}
-.ccard{flex:0 0 340px;scroll-snap-align:start;border-radius:var(--radius);border:1px solid var(--line);background:var(--paper);display:flex;flex-direction:column;cursor:pointer;transition:transform .22s,box-shadow .22s;overflow:hidden;position:relative;}
-.ccard:hover{transform:translateY(-6px);box-shadow:0 18px 40px -10px rgba(0,0,0,.13);}
-.ccard-color{height:5px;width:100%;flex-shrink:0;}
-.ccard-body{padding:22px 22px 16px;flex:1;display:flex;flex-direction:column;gap:8px;}
-.ccard-tag{font-family:"Archivo",sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;}
-.ccard-headline{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.05rem;line-height:1.15;letter-spacing:-.02em;}
-.ccard-summary{font-size:.82rem;color:var(--ink-soft);line-height:1.55;flex:1;}
-.ccard-meta{font-size:.72rem;color:var(--ink-soft);font-weight:600;display:flex;gap:6px;align-items:center;padding:0 22px 18px;margin-top:auto;}
-.ccard-num{position:absolute;right:-8px;bottom:-20px;font-family:"Archivo",sans-serif;font-weight:900;font-size:7rem;line-height:1;opacity:.05;pointer-events:none;user-select:none;}
-.swipe-hint{display:flex;align-items:center;gap:8px;padding:0 40px 8px;font-size:.72rem;color:var(--ink-soft);font-weight:600;letter-spacing:.04em;}
+
+/* Zone de swipe */
+.tinder-arena{flex:1;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+
+/* Stack de cartes */
+.tinder-stack{position:relative;width:min(480px,88vw);height:min(620px,72vh);}
+
+/* Carte individuelle */
+.tcard{position:absolute;inset:0;border-radius:24px;display:flex;flex-direction:column;cursor:grab;user-select:none;touch-action:none;
+  box-shadow:0 12px 48px -8px rgba(0,0,0,.18),0 0 0 1px rgba(0,0,0,.06);
+  transform-origin:50% 110%;
+  transition:box-shadow .2s;
+  overflow:hidden;
+  will-change:transform;}
+.tcard:active{cursor:grabbing;}
+/* Fond coloré plein selon la rubrique */
+.tcard.c-ecology{background:linear-gradient(155deg,#00c46a 0%,#007a40 100%);}
+.tcard.c-climate{background:linear-gradient(155deg,#1a6dff 0%,#003fcc 100%);}
+.tcard.c-health{background:linear-gradient(155deg,#ff5da2 0%,#c0005e 100%);}
+.tcard.c-economy{background:linear-gradient(155deg,#ff7a00 0%,#c04500 100%);}
+.tcard.c-tech{background:linear-gradient(155deg,#7b3ff2 0%,#4a00cc 100%);}
+.tcard.c-science{background:linear-gradient(155deg,#00c9c9 0%,#007a7a 100%);}
+.tcard.c-society{background:linear-gradient(155deg,#ffd400 0%,#cc9900 100%);}
+/* Contenu de la carte */
+.tcard-inner{flex:1;display:flex;flex-direction:column;padding:32px 28px 24px;color:#fff;position:relative;overflow:hidden;}
+.tcard.c-society .tcard-inner{color:#1a1000;}
+/* Numéro géant en fond */
+.tcard-bg-num{position:absolute;right:-20px;bottom:-30px;font-family:"Archivo",sans-serif;font-weight:900;font-size:14rem;line-height:1;opacity:.08;pointer-events:none;user-select:none;}
+/* Tag rubrique */
+.tcard-tag{font-family:"Archivo",sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;opacity:.8;margin-bottom:16px;display:inline-block;}
+/* Titre */
+.tcard-headline{font-family:"Archivo",sans-serif;font-weight:900;font-size:clamp(1.3rem,3vw,1.75rem);line-height:1.1;letter-spacing:-.03em;margin-bottom:16px;}
+/* Chapo */
+.tcard-chapo{font-family:"Lora",serif;font-style:italic;font-size:clamp(.88rem,1.6vw,1rem);line-height:1.6;opacity:.88;flex:1;}
+/* Footer de la carte */
+.tcard-footer{padding:16px 28px 20px;display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,.12);flex-shrink:0;}
+.tcard.c-society .tcard-footer{background:rgba(0,0,0,.06);}
+.tcard-source{font-size:.72rem;font-weight:600;color:rgba(255,255,255,.7);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60%;}
+.tcard.c-society .tcard-source{color:rgba(0,0,0,.5);}
+.tcard-read{font-family:"Archivo",sans-serif;font-size:.7rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.9);display:flex;align-items:center;gap:5px;flex-shrink:0;}
+.tcard.c-society .tcard-read{color:rgba(0,0,0,.65);}
+
+/* Cartes du dessous (empilées) */
+.tcard.behind-1{transform:scale(.94) translateY(14px);z-index:1;pointer-events:none;}
+.tcard.behind-2{transform:scale(.88) translateY(26px);z-index:0;pointer-events:none;opacity:.7;}
+.tcard.active-card{z-index:3;}
+
+/* Overlay like/nope lors du drag */
+.tcard-like-badge,.tcard-nope-badge{position:absolute;top:32px;padding:8px 18px;border-radius:8px;font-family:"Archivo",sans-serif;font-weight:900;font-size:1.4rem;letter-spacing:.06em;opacity:0;transition:opacity .15s;border:3px solid;pointer-events:none;z-index:10;}
+.tcard-like-badge{left:24px;color:#00c46a;border-color:#00c46a;transform:rotate(-12deg);}
+.tcard-nope-badge{right:24px;color:#ff4d4d;border-color:#ff4d4d;transform:rotate(12deg);}
+
+/* Contrôles bas */
+.tinder-controls{display:flex;align-items:center;justify-content:center;gap:16px;padding:12px 32px 20px;flex-shrink:0;}
+.tinder-btn{width:52px;height:52px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.2rem;transition:all .2s;flex-shrink:0;}
+.tinder-btn-prev{background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.12);color:var(--ink-soft);}
+.tinder-btn-prev:hover{transform:scale(1.08);box-shadow:0 6px 20px rgba(0,0,0,.16);}
+.tinder-btn-read{background:var(--ink);color:#fff;width:64px;height:64px;font-size:1rem;box-shadow:0 6px 20px rgba(0,0,0,.2);}
+.tinder-btn-read:hover{transform:scale(1.06);}
+.tinder-btn-next{background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.12);color:var(--ink-soft);}
+.tinder-btn-next:hover{transform:scale(1.08);box-shadow:0 6px 20px rgba(0,0,0,.16);}
+.tinder-counter{font-family:"Archivo",sans-serif;font-size:.78rem;font-weight:700;color:var(--ink-soft);min-width:60px;text-align:center;}
+
+/* Hint swipe */
+.swipe-hint{display:flex;align-items:center;justify-content:center;gap:8px;font-size:.72rem;color:var(--ink-soft);font-weight:600;letter-spacing:.04em;padding:0 0 4px;flex-shrink:0;}
 .swipe-hint-arrow{animation:swipeArrow 1.4s ease-in-out infinite;}
-@keyframes swipeArrow{0%,100%{transform:translateX(0)}50%{transform:translateX(9px)}}
-.carousel-nav{display:flex;align-items:center;gap:10px;padding:0 40px 16px;justify-content:space-between;}
-.carousel-nav-btn{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--line);background:transparent;cursor:pointer;font-size:.95rem;display:flex;align-items:center;justify-content:center;transition:all .2s;}
-.carousel-nav-btn:hover{border-color:var(--ink);background:var(--ink);color:#fff;}
-.carousel-count{font-family:"Archivo",sans-serif;font-size:.8rem;font-weight:700;color:var(--ink-soft);}
+@keyframes swipeArrow{0%,100%{transform:translateX(0)}50%{transform:translateX(8px)}}
+
+/* Animations de sortie */
+@keyframes swipeLeft{to{transform:translateX(-140%) rotate(-22deg);opacity:0;}}
+@keyframes swipeRight{to{transform:translateX(140%) rotate(22deg);opacity:0;}}
+.tcard.swipe-left{animation:swipeLeft .38s cubic-bezier(.4,0,1,1) forwards;}
+.tcard.swipe-right{animation:swipeRight .38s cubic-bezier(.4,0,1,1) forwards;}
+
+/* Fin de stack */
+.tinder-empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--ink-soft);font-family:"Archivo",sans-serif;font-weight:700;}
+.tinder-empty-icon{font-size:3rem;}
+.tinder-empty-text{font-size:.9rem;}
+.tinder-empty-reset{padding:10px 24px;border-radius:100px;border:2px solid var(--ink);background:transparent;cursor:pointer;font-family:"Archivo",sans-serif;font-weight:700;font-size:.82rem;transition:all .2s;}
+.tinder-empty-reset:hover{background:var(--ink);color:#fff;}
+
 @media(max-width:767px){
-  .carousel-header,.carousel-filters,.swipe-hint,.carousel-nav{padding-left:16px;padding-right:16px;}
-  .carousel-track{padding:8px 16px 24px;gap:14px;}
-  .ccard{flex:0 0 min(300px,82vw);}
+  .carousel-header,.carousel-filters{padding-left:16px;padding-right:16px;}
+  .tinder-stack{width:92vw;height:68vh;}
+  .tcard-headline{font-size:1.25rem;}
+  .tinder-controls{padding:8px 16px 16px;gap:12px;}
 }
 .news-list{list-style:none;overflow-y:auto;-webkit-overflow-scrolling:touch;flex:1;padding:8px 0;}
 .news-list::-webkit-scrollbar{width:4px;}.news-list::-webkit-scrollbar-track{background:transparent;}.news-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px;}
@@ -798,18 +860,14 @@ ONU"></textarea>
 </div>
 </div>
 
-<!-- CARROUSEL ARTICLES -->
+<!-- TINDER ARTICLES -->
 <section id="view-map" aria-hidden="true">
   <div class="carousel-header">
     <div>
-      <div class="carousel-title">Tous les articles</div>
+      <div class="carousel-title">📚 Tous les articles</div>
       <div class="carousel-sub" id="carousel-count-label">Chargement…</div>
     </div>
-    <div class="carousel-nav">
-      <button class="carousel-nav-btn" id="carr-prev" aria-label="Précédent">←</button>
-      <span class="carousel-count" id="carr-pos">1 / —</span>
-      <button class="carousel-nav-btn" id="carr-next" aria-label="Suivant">→</button>
-    </div>
+    <span class="tinder-counter" id="carr-pos">— / —</span>
   </div>
   <div class="carousel-filters" id="carousel-filters">
     <button class="carousel-pill active" data-rubric="all">Tout</button>
@@ -821,12 +879,18 @@ ONU"></textarea>
     <button class="carousel-pill" data-rubric="science">🔬 Science</button>
     <button class="carousel-pill" data-rubric="society">🤝 Société</button>
   </div>
-  <div class="swipe-hint" id="swipe-hint">
-    <span class="swipe-hint-arrow">→</span>
-    <span>Glissez pour parcourir · Cliquez pour lire</span>
+  <div class="tinder-arena">
+    <div class="tinder-stack" id="tinder-stack"></div>
   </div>
-  <div class="carousel-track-wrap">
-    <div class="carousel-track" id="carousel-track"></div>
+  <div class="swipe-hint" id="swipe-hint">
+    <span class="swipe-hint-arrow">←</span>
+    <span>Glissez ou utilisez les boutons</span>
+    <span class="swipe-hint-arrow" style="transform:scaleX(-1)">←</span>
+  </div>
+  <div class="tinder-controls">
+    <button class="tinder-btn tinder-btn-prev" id="carr-prev" title="Article précédent">←</button>
+    <button class="tinder-btn tinder-btn-read" id="tinder-read-btn" title="Lire l'article">📖</button>
+    <button class="tinder-btn tinder-btn-next" id="carr-next" title="Article suivant">→</button>
   </div>
 </section>
 
@@ -2028,12 +2092,14 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
 
 
 <script>
-// ── CARROUSEL ARTICLES ───────────────────────────────────────────────────────
+// ── TINDER ARTICLES ───────────────────────────────────────────────────────────
 (function(){
   var TAG_COLORS={ecology:'#00c46a',climate:'#1a6dff',health:'#ff5da2',economy:'#ff7a00',tech:'#7b3ff2',science:'#00c9c9',society:'#ffd400'};
   var TAG_LABELS={ecology:'🌿 Écologie',climate:'🌍 Climat',health:'💚 Santé',economy:'📈 Économie',tech:'⚡ Tech',science:'🔬 Science',society:'🤝 Société'};
+  var TAG_CLASS={ecology:'c-ecology',climate:'c-climate',health:'c-health',economy:'c-economy',tech:'c-tech',science:'c-science',society:'c-society'};
 
-  var track, allArticles=[], currentRubricC='all', initialized=false;
+  var stack, articles=[], currentIdx=0, currentRubricC='all', initialized=false;
+  var isDragging=false, startX=0, startY=0, currentX=0, activeCard=null;
 
   function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
@@ -2043,131 +2109,219 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     return td.concat(fb);
   }
 
-  function filtered(){
+  function getFiltered(){
     var all=getArticles();
     if(currentRubricC==='all') return all;
     return all.filter(function(a){return a.rubric===currentRubricC;});
   }
 
-  function buildCard(a, idx, globalIdx){
-    var color=TAG_COLORS[a.rubric]||'#999';
+  function buildCard(a, idx, total){
+    var cc=TAG_CLASS[a.rubric]||'c-society';
     var label=TAG_LABELS[a.rubric]||a.rubric;
-    return '<article class="ccard" data-global="'+globalIdx+'" role="button" tabindex="0" aria-label="'+esc(a.headline)+'">'
-      +'<div class="ccard-color" style="background:'+color+'"></div>'
-      +'<div class="ccard-body">'
-        +'<span class="ccard-tag" style="color:'+color+'">'+label+'</span>'
-        +'<h3 class="ccard-headline">'+esc(a.headline)+'</h3>'
-        +'<p class="ccard-summary">'+esc(a.summary)+'</p>'
-      +'</div>'
-      +'<div class="ccard-meta">'
-        +'<span>'+esc(a.source)+'</span>'
-        +'<span>·</span>'
-        +'<span>'+esc(a.date)+'</span>'
-      +'</div>'
-      +'<div class="ccard-num">'+(idx+1)+'</div>'
-    +'</article>';
+    var el=document.createElement('article');
+    el.className='tcard '+cc;
+    el.setAttribute('role','button');
+    el.setAttribute('tabindex','0');
+    el.setAttribute('data-idx', idx);
+    el.innerHTML=
+      '<div class="tcard-inner">'+
+        '<span class="tcard-tag">'+esc(label)+'</span>'+
+        '<h3 class="tcard-headline">'+esc(a.headline)+'</h3>'+
+        '<p class="tcard-chapo">'+esc(a.chapo||a.summary)+'</p>'+
+        '<div class="tcard-bg-num">'+(idx+1)+'</div>'+
+        '<span class="tcard-like-badge" aria-hidden="true">SUIVANT ✓</span>'+
+        '<span class="tcard-nope-badge" aria-hidden="true">RETOUR ✗</span>'+
+      '</div>'+
+      '<div class="tcard-footer">'+
+        '<span class="tcard-source">'+esc(a.source)+' · '+esc(a.date)+'</span>'+
+        '<span class="tcard-read">Lire →</span>'+
+      '</div>';
+    return el;
   }
 
   function updateCounter(){
-    var articles=filtered();
-    var total=articles.length;
-    var label=document.getElementById('carousel-count-label');
-    if(label) label.textContent=total+' article'+(total>1?'s':'');
-    updatePos();
-  }
-
-  function updatePos(){
+    var art=getFiltered();
+    var total=art.length;
     var posEl=document.getElementById('carr-pos');
-    if(!posEl||!track) return;
-    var cards=track.querySelectorAll('.ccard');
-    if(!cards.length){posEl.textContent='—';return;}
-    // Trouver la card la plus visible
-    var trackRect=track.getBoundingClientRect();
-    var best=0, bestVis=0;
-    cards.forEach(function(card,i){
-      var r=card.getBoundingClientRect();
-      var vis=Math.min(r.right,trackRect.right)-Math.max(r.left,trackRect.left);
-      if(vis>bestVis){bestVis=vis;best=i;}
-    });
-    posEl.textContent=(best+1)+' / '+cards.length;
+    var lblEl=document.getElementById('carousel-count-label');
+    if(posEl) posEl.textContent=(currentIdx+1)+' / '+total;
+    if(lblEl) lblEl.textContent=total+' article'+(total>1?'s':'');
   }
 
-  function render(){
-    if(!track) return;
-    var all=getArticles();
-    var articles=filtered();
-    var html='';
-    articles.forEach(function(a,i){
-      var globalIdx=all.indexOf(a);
-      html+=buildCard(a,i,globalIdx>=0?globalIdx:i);
-    });
-    track.innerHTML=html||'<p style="padding:40px;color:var(--ink-soft);">Aucun article dans cette rubrique.</p>';
-    updateCounter();
-
-    // Listeners click + clavier
-    track.querySelectorAll('.ccard').forEach(function(card){
-      var open=function(){
-        var gIdx=parseInt(card.dataset.global,10);
-        var allA=getArticles();
-        var a=allA[gIdx];
-        if(!a) return;
-        // Mobile : immersif direct
-        if(window.innerWidth<768&&window._openImmersive){
-          window._openImmersive(a);
-        } else {
-          // Desktop : charger dans le journal pour openDetail
-          window.currentArticles=allA;
-          window._currentModalIdx=gIdx;
-          if(typeof openDetail==='function') openDetail(gIdx);
-        }
-      };
-      card.addEventListener('click',open);
-      card.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});
-      // Tilt hover desktop
-      card.addEventListener('mousemove',function(e){
-        var r=card.getBoundingClientRect();
-        var x=(e.clientX-r.left)/r.width-.5;
-        var y=(e.clientY-r.top)/r.height-.5;
-        card.style.transform='perspective(700px) rotateY('+(x*8)+'deg) rotateX('+(-y*6)+'deg) translateY(-6px)';
-      });
-      card.addEventListener('mouseleave',function(){card.style.transform='';});
-    });
-  }
-
-  // Swipe touch + drag souris
-  function initDrag(){
-    if(!track) return;
-    var isDown=false, startX=0, scrollLeft=0;
-    track.addEventListener('mousedown',function(e){
-      isDown=true;track.style.cursor='grabbing';
-      startX=e.pageX-track.offsetLeft;scrollLeft=track.scrollLeft;
-    });
-    track.addEventListener('mouseleave',function(){isDown=false;track.style.cursor='grab';});
-    track.addEventListener('mouseup',function(){isDown=false;track.style.cursor='grab';});
-    track.addEventListener('mousemove',function(e){
-      if(!isDown)return;
-      e.preventDefault();
-      var x=e.pageX-track.offsetLeft;
-      track.scrollLeft=scrollLeft-(x-startX)*1.2;
-    });
-    track.addEventListener('scroll',updatePos,{passive:true});
-  }
-
-  // Boutons précédent / suivant
-  function initNavBtns(){
-    var prev=document.getElementById('carr-prev');
-    var next=document.getElementById('carr-next');
-    if(!prev||!next) return;
-    function scrollBy(dir){
-      var card=track.querySelector('.ccard');
-      var w=card?(card.offsetWidth+20):360;
-      track.scrollBy({left:dir*w,behavior:'smooth'});
+  function renderStack(){
+    if(!stack) return;
+    stack.innerHTML='';
+    var art=getFiltered();
+    if(!art.length){
+      stack.innerHTML='<div class="tinder-empty"><div class="tinder-empty-icon">✨</div><div class="tinder-empty-text">Aucun article dans cette rubrique</div></div>';
+      return;
     }
-    prev.addEventListener('click',function(){scrollBy(-1);});
-    next.addEventListener('click',function(){scrollBy(1);});
+
+    // Afficher max 3 cartes (la courante + 2 derrière)
+    for(var i=Math.min(currentIdx+2, art.length-1); i>=currentIdx; i--){
+      if(i>=art.length) continue;
+      var card=buildCard(art[i], i, art.length);
+      if(i===currentIdx){
+        card.classList.add('active-card');
+        attachDrag(card, i);
+      } else if(i===currentIdx+1){
+        card.classList.add('behind-1');
+      } else {
+        card.classList.add('behind-2');
+      }
+      stack.appendChild(card);
+    }
+
+    // Si on a tout vu
+    if(currentIdx>=art.length){
+      stack.innerHTML=
+        '<div class="tinder-empty">'+
+          '<div class="tinder-empty-icon">🎉</div>'+
+          '<div class="tinder-empty-text">Vous avez tout lu !</div>'+
+          '<button class="tinder-empty-reset" id="tinder-reset">Recommencer</button>'+
+        '</div>';
+      document.getElementById('tinder-reset').addEventListener('click',function(){
+        currentIdx=0;renderStack();updateCounter();
+      });
+    }
+    updateCounter();
   }
 
-  // Filtres rubriques du carrousel
+  function goNext(){
+    var art=getFiltered();
+    if(currentIdx>=art.length-1){ currentIdx=art.length; renderStack(); updateCounter(); return; }
+    var topCard=stack.querySelector('.active-card');
+    if(!topCard) return;
+    topCard.classList.add('swipe-right');
+    setTimeout(function(){
+      currentIdx++;
+      renderStack();
+    },380);
+  }
+
+  function goPrev(){
+    if(currentIdx<=0) return;
+    var topCard=stack.querySelector('.active-card');
+    if(!topCard) return;
+    topCard.classList.add('swipe-left');
+    setTimeout(function(){
+      currentIdx--;
+      renderStack();
+    },380);
+  }
+
+  function openCurrentArticle(){
+    var art=getFiltered();
+    var a=art[currentIdx];
+    if(!a) return;
+    var allA=getArticles();
+    var gIdx=allA.indexOf(a);
+    if(window.innerWidth<768 && window._openImmersive){
+      window._openImmersive(a);
+    } else {
+      window.currentArticles=allA;
+      window._currentModalIdx=gIdx>=0?gIdx:currentIdx;
+      if(typeof openDetail==='function') openDetail(gIdx>=0?gIdx:currentIdx);
+    }
+  }
+
+  // ── DRAG / SWIPE ──────────────────────────────────────────────────
+  function attachDrag(card, idx){
+    var startRotation=0;
+
+    function onStart(e){
+      if(e.target.closest('.tcard-read')) return; // clic sur "Lire →" → ouvrir
+      isDragging=true;
+      activeCard=card;
+      var p=e.touches?e.touches[0]:e;
+      startX=p.clientX;
+      startY=p.clientY;
+      currentX=0;
+      card.style.transition='none';
+    }
+
+    function onMove(e){
+      if(!isDragging||activeCard!==card) return;
+      var p=e.touches?e.touches[0]:e;
+      currentX=p.clientX-startX;
+      var rot=currentX*0.08;
+      var lift=Math.min(Math.abs(currentX)*0.04, 12);
+      card.style.transform='translateX('+currentX+'px) rotate('+rot+'deg) translateY(-'+lift+'px)';
+
+      // Badges like/nope
+      var like=card.querySelector('.tcard-like-badge');
+      var nope=card.querySelector('.tcard-nope-badge');
+      var ratio=Math.min(Math.abs(currentX)/120, 1);
+      if(currentX>20){ if(like)like.style.opacity=ratio; if(nope)nope.style.opacity=0; }
+      else if(currentX<-20){ if(nope)nope.style.opacity=ratio; if(like)like.style.opacity=0; }
+      else{ if(like)like.style.opacity=0; if(nope)nope.style.opacity=0; }
+    }
+
+    function onEnd(e){
+      if(!isDragging||activeCard!==card) return;
+      isDragging=false;
+      card.style.transition='transform .35s cubic-bezier(.2,.8,.25,1)';
+      var like=card.querySelector('.tcard-like-badge');
+      var nope=card.querySelector('.tcard-nope-badge');
+      if(like)like.style.opacity=0;
+      if(nope)nope.style.opacity=0;
+
+      var THRESHOLD=80;
+      if(currentX>THRESHOLD){
+        // swipe droite → suivant
+        card.classList.add('swipe-right');
+        setTimeout(function(){currentIdx++;renderStack();},380);
+      } else if(currentX<-THRESHOLD){
+        // swipe gauche → précédent
+        if(currentIdx>0){
+          card.classList.add('swipe-left');
+          setTimeout(function(){currentIdx--;renderStack();},380);
+        } else {
+          card.style.transform='';
+        }
+      } else {
+        // Pas assez loin → retour
+        card.style.transform='';
+        // Tap court → ouvrir l'article
+        if(Math.abs(currentX)<10){
+          openCurrentArticle();
+        }
+      }
+      activeCard=null;
+    }
+
+    card.addEventListener('mousedown',onStart);
+    document.addEventListener('mousemove',onMove);
+    document.addEventListener('mouseup',onEnd);
+    card.addEventListener('touchstart',onStart,{passive:true});
+    document.addEventListener('touchmove',onMove,{passive:true});
+    document.addEventListener('touchend',onEnd);
+
+    // Keyboard
+    card.addEventListener('keydown',function(e){
+      if(e.key==='ArrowRight'||e.key===' ') goNext();
+      if(e.key==='ArrowLeft') goPrev();
+      if(e.key==='Enter') openCurrentArticle();
+    });
+  }
+
+  // Masquer le hint au premier swipe
+  function initHint(){
+    var hint=document.getElementById('swipe-hint');
+    if(!hint) return;
+    var removed=false;
+    function hide(){
+      if(removed) return;
+      removed=true;
+      hint.style.transition='opacity .5s';
+      hint.style.opacity='0';
+      setTimeout(function(){hint.style.display='none';},500);
+    }
+    document.addEventListener('mousedown',function(e){if(e.target.closest('.tcard'))hide();},{once:true});
+    document.addEventListener('touchstart',function(e){if(e.target.closest('.tcard'))hide();},{once:true});
+  }
+
+  // Filtres
   function initFilters(){
     var container=document.getElementById('carousel-filters');
     if(!container) return;
@@ -2176,44 +2330,35 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
         container.querySelectorAll('.carousel-pill').forEach(function(b){b.classList.remove('active');});
         btn.classList.add('active');
         currentRubricC=btn.dataset.rubric||'all';
-        track.scrollLeft=0;
-        render();
+        currentIdx=0;
+        renderStack();
       });
     });
   }
 
-  // Masquer le hint après premier scroll
-  function initHint(){
-    var hint=document.getElementById('swipe-hint');
-    if(!hint||!track) return;
-    var removed=false;
-    track.addEventListener('scroll',function(){
-      if(!removed&&track.scrollLeft>30){
-        removed=true;
-        hint.style.transition='opacity .4s';
-        hint.style.opacity='0';
-        setTimeout(function(){hint.style.display='none';},400);
-      }
-    },{passive:true,once:false});
+  // Boutons de navigation
+  function initBtns(){
+    var prev=document.getElementById('carr-prev');
+    var next=document.getElementById('carr-next');
+    var read=document.getElementById('tinder-read-btn');
+    if(prev) prev.addEventListener('click',goPrev);
+    if(next) next.addEventListener('click',goNext);
+    if(read) read.addEventListener('click',openCurrentArticle);
   }
 
   window._initCarousel=function(){
     if(initialized) return;
-    track=document.getElementById('carousel-track');
-    if(!track) return;
+    stack=document.getElementById('tinder-stack');
+    if(!stack) return;
     initialized=true;
-    render();
-    initDrag();
-    initNavBtns();
+    renderStack();
     initFilters();
+    initBtns();
     initHint();
   };
 
-  // Si la vue est déjà active au chargement, initialiser
   document.addEventListener('DOMContentLoaded',function(){
-    if(document.body.classList.contains('map-active')){
-      window._initCarousel();
-    }
+    if(document.body.classList.contains('map-active')) window._initCarousel();
   });
 })();
 </script>
