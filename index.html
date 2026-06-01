@@ -504,8 +504,7 @@ body.map-active #view-map{
   height:calc(100vh - 52px);
   overflow:hidden;
   box-sizing:border-box;
-  padding:12px 12px 8px;
-  gap:10px;
+  padding:8px 10px 10px;
 }
 
 /* Zone de swipe — prend tout l'espace disponible */
@@ -523,7 +522,7 @@ body.map-active #view-map{
   position:relative;
   width:100%;
   height:100%;
-  max-width:520px;
+  max-width:560px;
 }
 
 /* Carte individuelle */
@@ -617,30 +616,8 @@ body.map-active #view-map{
 .tcard-like-badge{left:18px;color:#00c46a;border-color:#00c46a;transform:rotate(-12deg);}
 .tcard-nope-badge{right:18px;color:#ff4d4d;border-color:#ff4d4d;transform:rotate(12deg);}
 
-/* Contrôles */
-.tinder-controls{
-  display:flex;align-items:center;justify-content:center;
-  gap:14px;flex-shrink:0;padding-bottom:4px;
-}
-.tinder-btn{
-  width:48px;height:48px;border-radius:50%;border:none;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.1rem;transition:all .2s;flex-shrink:0;
-}
-.tinder-btn-prev{background:#fff;box-shadow:0 3px 12px rgba(0,0,0,.12);color:var(--ink-soft);}
-.tinder-btn-prev:hover{transform:scale(1.08);}
-.tinder-btn-read{
-  background:var(--ink);color:#fff;
-  width:56px;height:56px;font-size:.9rem;
-  box-shadow:0 5px 18px rgba(0,0,0,.2);
-}
-.tinder-btn-read:hover{transform:scale(1.06);}
-.tinder-btn-next{background:#fff;box-shadow:0 3px 12px rgba(0,0,0,.12);color:var(--ink-soft);}
-.tinder-btn-next:hover{transform:scale(1.08);}
-.tinder-counter{
-  font-family:"Archivo",sans-serif;font-size:.78rem;
-  font-weight:700;color:var(--ink-soft);min-width:48px;text-align:center;
-}
+/* Compteur discret dans le footer de carte */
+.tinder-counter{display:none;}
 
 /* Animations */
 @keyframes swipeLeft{to{transform:translateX(-140%) rotate(-22deg);opacity:0;}}
@@ -935,13 +912,6 @@ ONU"></textarea>
 <section id="view-map" aria-hidden="true">
   <div class="tinder-arena">
     <div class="tinder-stack" id="tinder-stack"></div>
-  </div>
-  <div class="tinder-controls">
-    <button class="tinder-btn tinder-btn-prev" id="carr-prev" title="Article précédent">←</button>
-    <span class="tinder-counter" id="carr-pos">— / —</span>
-    <button class="tinder-btn tinder-btn-read" id="tinder-read-btn" title="Lire l'article">📖</button>
-    <span class="tinder-counter"></span>
-    <button class="tinder-btn tinder-btn-next" id="carr-next" title="Article suivant">→</button>
   </div>
 </section>
 
@@ -2185,7 +2155,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
       '</div>'+
       '<div class="tcard-footer">'+
         '<span class="tcard-source">'+esc(a.source)+' · '+esc(a.date)+'</span>'+
-        '<span class="tcard-read">Lire →</span>'+
+        '<span class="tcard-read">'+(idx+1)+' / '+total+' · Lire →</span>'+
       '</div>';
     return el;
   }
@@ -2387,15 +2357,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     });
   }
 
-  // Boutons de navigation
-  function initBtns(){
-    var prev=document.getElementById('carr-prev');
-    var next=document.getElementById('carr-next');
-    var read=document.getElementById('tinder-read-btn');
-    if(prev) prev.addEventListener('click',goPrev);
-    if(next) next.addEventListener('click',goNext);
-    if(read) read.addEventListener('click',openCurrentArticle);
-  }
+  function initBtns(){ /* boutons supprimés */ }
 
   window._initCarousel=function(){
     if(initialized) return;
