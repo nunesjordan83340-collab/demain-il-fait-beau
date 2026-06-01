@@ -266,7 +266,7 @@ body.modal-open{overflow:hidden;}
 .cal-legend-dot{width:8px;height:8px;border-radius:50%;background:var(--purple);flex-shrink:0;}
 /* MAP */
 .map-stage{position:relative;background:radial-gradient(ellipse at center,#0d1b3e 0%,#040a1a 70%);overflow:hidden;}
-#globe-canvas{width:100%!important;height:100%!important;display:block;}
+#globe-canvas{width:100%!important;height:100%!important;display:block;touch-action:none;-webkit-user-select:none;user-select:none;}
 .map-hint{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);pointer-events:none;white-space:nowrap;}
 .map-list{background:#0a0f24;border-left:1px solid rgba(255,255,255,.07);display:flex;flex-direction:column;overflow:hidden;}
 .map-list-head{padding:28px 28px 16px;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.07);}
@@ -325,6 +325,16 @@ footer .fbrand{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.4rem
 }
 @media(max-width:768px){
   .nl-inner{grid-template-columns:1fr;gap:40px;}.nl-right{padding:28px 22px;}
+  /* Compteurs cachés sur mobile (doublons avec filtres) */
+  .counters-wrap{display:none;}
+  /* Graphiques lisibles : 1 colonne */
+  .charts-grid{grid-template-columns:1fr!important;}
+  .chart-card:first-child{grid-column:span 1;}
+  .trend-stat{position:static!important;display:flex;align-items:baseline;gap:10px;margin-bottom:10px;}
+  .trend-stat-num{font-size:1.3rem;}
+  .chart-card{padding:20px 18px 16px;}
+  .chart-title{font-size:1rem;}
+  .chart-desc{font-size:.78rem;margin-bottom:12px;}
   .dyn-stats-grid{grid-template-columns:repeat(2,1fr);}
   .secrets-grid{grid-template-columns:repeat(2,1fr);}
   body.map-active #view-map{grid-template-columns:1fr;grid-template-rows:55vh 1fr;overflow:hidden;}
@@ -1500,7 +1510,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
         globeGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(arcPoints(prev,cur,0.4,40)),new THREE.LineBasicMaterial({color:col,transparent:true,opacity:.22})));}
     });
     globeGroup.rotation.y=0.4;globeGroup.rotation.x=0.18;
-    canvas.addEventListener('pointerdown',function(e){isDragging=true;prevX=e.clientX;prevY=e.clientY;velX=0;velY=0;autoRotate=false;clearTimeout(focusTimer);});
+    canvas.addEventListener('pointerdown',function(e){isDragging=true;prevX=e.clientX;prevY=e.clientY;velX=0;velY=0;autoRotate=false;clearTimeout(focusTimer);canvas.setPointerCapture(e.pointerId);});
     window.addEventListener('pointermove',function(e){
       if(!isDragging)return;
       velX=(e.clientX-prevX)*.005;velY=(e.clientY-prevY)*.005;
