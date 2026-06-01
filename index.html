@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <meta name="color-scheme" content="light"/>
 <title>Demain, il fait beau — Les bonnes nouvelles du monde</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='7' fill='%23ffd400'/%3E%3Cg stroke='%23ffd400' stroke-width='2.2' stroke-linecap='round'%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='16' y1='26' x2='16' y2='30'/%3E%3Cline x1='2' y1='16' x2='6' y2='16'/%3E%3Cline x1='26' y1='16' x2='30' y2='16'/%3E%3Cline x1='6' y1='6' x2='9' y2='9'/%3E%3Cline x1='23' y1='23' x2='26' y2='26'/%3E%3Cline x1='26' y1='6' x2='23' y2='9'/%3E%3Cline x1='6' y1='26' x2='9' y2='23'/%3E%3C/g%3E%3C/svg%3E"/>
+<meta name="theme-color" content="#ffd400"/>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Archivo:wght@400;500;600;700;800;900&family=Lora:ital@0;1&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -25,6 +27,91 @@ body{background:#f5f5f5!important;color:#0a0a0a;font-family:"Sora",-apple-system
 }
 /* CARD PHOTOS */
 /* MODAL PHOTO */
+/* ── SKELETON LOADING ── */
+.skeleton-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:20px;}
+.skel-card{border-radius:var(--radius);overflow:hidden;background:#ebebeb;position:relative;}
+.skel-card::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.55) 50%,transparent 100%);animation:shimmer 1.4s infinite;}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.skel-f{grid-column:span 4;grid-row:span 2;min-height:420px;}
+.skel-t{grid-column:span 2;grid-row:span 2;min-height:420px;}
+.skel-h{grid-column:span 3;min-height:240px;}
+/* ── TRANSITIONS VUES ── */
+.view-fade{animation:viewFadeIn .38s cubic-bezier(.2,.8,.25,1) both;}
+@keyframes viewFadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+/* ── HOVER CARDS : SHINE + TILT ── */
+.card{transform-style:preserve-3d;will-change:transform;}
+.card-shine{position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.28) 0%,transparent 60%);transition:opacity .3s;}
+.card:hover .card-shine{opacity:1;}
+/* ── BARRE PROGRESSION LECTURE ── */
+.read-progress-bar{position:sticky;top:0;left:0;height:3px;width:0%;border-radius:0 3px 3px 0;z-index:10;transition:width .1s linear;flex-shrink:0;}
+/* ── MODE LECTURE IMMERSIF ── */
+.immersive-overlay{position:fixed;inset:0;z-index:2000;opacity:0;pointer-events:none;transition:opacity .45s ease;display:flex;flex-direction:column;overflow:hidden;}
+.immersive-overlay.open{opacity:1;pointer-events:auto;}
+/* Fond clair */
+.immersive-overlay.theme-light{background:#fafaf8;}
+/* Fond sombre */
+.immersive-overlay.theme-dark{background:#111010;}
+/* Barre de contrôles */
+.imm-bar{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;flex-shrink:0;gap:12px;}
+.theme-light .imm-bar{border-bottom:1px solid #e8e8e8;}
+.theme-dark  .imm-bar{border-bottom:1px solid #2a2a2a;}
+.imm-tag{font-family:"Archivo",sans-serif;font-weight:800;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;padding:5px 14px;border-radius:100px;}
+.imm-meta{font-size:.78rem;font-weight:600;opacity:.5;}
+.theme-light .imm-meta{color:#0a0a0a;}
+.theme-dark  .imm-meta{color:#fff;}
+.imm-controls{display:flex;align-items:center;gap:8px;}
+/* Toggle thème */
+.imm-theme-toggle{display:flex;background:rgba(128,128,128,.12);border-radius:100px;padding:3px;gap:2px;border:none;cursor:pointer;}
+.imm-theme-btn{font-size:.78rem;padding:5px 12px;border-radius:100px;border:none;background:transparent;cursor:pointer;transition:all .2s;font-weight:600;}
+.theme-light .imm-theme-btn.active{background:#fff;color:#0a0a0a;box-shadow:0 1px 4px rgba(0,0,0,.12);}
+.theme-dark  .imm-theme-btn.active{background:#2a2a2a;color:#fff;box-shadow:0 1px 4px rgba(0,0,0,.3);}
+.theme-light .imm-theme-btn:not(.active){color:#666;}
+.theme-dark  .imm-theme-btn:not(.active){color:#888;}
+.imm-close{width:36px;height:36px;border-radius:50%;border:none;cursor:pointer;font-size:.9rem;font-weight:700;transition:all .2s;display:flex;align-items:center;justify-content:center;}
+.theme-light .imm-close{background:#f0f0f0;color:#0a0a0a;}
+.theme-dark  .imm-close{background:#2a2a2a;color:#fff;}
+.imm-close:hover{transform:rotate(90deg) scale(1.05);}
+/* Barre de progression immersive */
+.imm-progress{height:2px;width:0%;transition:width .1s linear;flex-shrink:0;}
+/* Scroll area */
+.imm-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:52px 24px 80px;}
+/* Contenu article */
+.imm-content{max-width:660px;margin:0 auto;}
+.imm-rubric-stripe{width:40px;height:4px;border-radius:2px;margin-bottom:28px;}
+.imm-title{font-family:"Archivo",sans-serif;font-weight:900;font-size:clamp(2rem,4vw,3rem);line-height:1.05;letter-spacing:-.035em;margin-bottom:16px;}
+.theme-light .imm-title{color:#0a0a0a;}
+.theme-dark  .imm-title{color:#f5f5f5;}
+.imm-byline{font-size:.8rem;font-weight:600;opacity:.45;margin-bottom:36px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.theme-light .imm-byline{color:#0a0a0a;}
+.theme-dark  .imm-byline{color:#fff;}
+.imm-chapo{font-family:"Lora",Georgia,serif;font-style:italic;font-size:1.22rem;line-height:1.6;padding-bottom:28px;margin-bottom:32px;}
+.theme-light .imm-chapo{color:#1a1a1a;border-bottom:1px solid #e8e8e8;}
+.theme-dark  .imm-chapo{color:#d0d0d0;border-bottom:1px solid #2a2a2a;}
+.imm-body p{font-family:"Lora",Georgia,serif;font-size:1.15rem;line-height:1.82;margin-bottom:24px;}
+.theme-light .imm-body p{color:#1a1a1a;}
+.theme-dark  .imm-body p{color:#c8c8c8;}
+.imm-body p:first-child::first-letter{font-family:"Archivo",sans-serif;font-weight:900;font-size:3.6rem;float:left;line-height:.82;padding:8px 12px 0 0;}
+.theme-light .imm-body p:first-child::first-letter{color:var(--purple);}
+.theme-dark  .imm-body p:first-child::first-letter{color:#a78bfa;}
+.imm-factbox{border-radius:var(--radius-sm);padding:22px 24px;margin:32px 0;}
+.theme-light .imm-factbox{background:#f6f8ff;border:1.5px solid #e3e9ff;border-left:5px solid var(--blue);}
+.theme-dark  .imm-factbox{background:#1a1f2e;border:1.5px solid #2a3050;border-left:5px solid #4d7fff;}
+.imm-factbox-title{font-family:"Archivo",sans-serif;font-weight:800;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;margin-bottom:14px;}
+.theme-light .imm-factbox-title{color:var(--blue);}
+.theme-dark  .imm-factbox-title{color:#4d7fff;}
+.imm-factbox ul{list-style:none;padding:0;}
+.imm-factbox li{position:relative;padding-left:26px;margin-bottom:10px;font-size:.96rem;line-height:1.5;}
+.imm-factbox li::before{content:"¹3";position:absolute;left:0;font-weight:800;color:var(--green);}
+.theme-light .imm-factbox li{color:#1f1f1f;}
+.theme-dark  .imm-factbox li{color:#b0b0b0;}
+/* Bouton ouvrir immersif dans la modal */
+.imm-open-btn{display:inline-flex;align-items:center;gap:7px;font-family:"Sora",sans-serif;font-size:.8rem;font-weight:700;padding:8px 18px;border-radius:100px;border:1.5px solid var(--line);background:transparent;color:var(--ink-soft);cursor:pointer;transition:all .22s;margin-bottom:20px;}
+.imm-open-btn:hover{border-color:var(--purple);color:var(--purple);background:rgba(123,63,242,.06);}
+/* Compteur hero */
+.hero-counter{font-family:"Archivo",sans-serif;font-weight:700;font-size:.82rem;color:var(--ink-soft);margin-top:16px;display:inline-flex;align-items:center;gap:6px;opacity:0;transform:translateY(8px);transition:opacity .6s ease 1.1s,transform .6s ease 1.1s;}
+.hero.revealed .hero-counter{opacity:1;transform:translateY(0);}
+.hero-counter-num{font-weight:900;color:var(--green);font-size:.92rem;}
+.hero-counter-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
 /* TOPBAR */
 .topbar{position:sticky;top:0;z-index:100;backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);background:rgba(245,245,245,.85);border-bottom:1px solid var(--line);}
 .topbar-inner{max-width:1280px;margin:0 auto;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;}
@@ -213,7 +300,11 @@ body.trends-active footer{display:block;}
 .factbox li:last-child{margin-bottom:0;}.factbox li::before{content:"\2713";position:absolute;left:0;top:0;font-weight:800;color:var(--green);}
 .sources{margin-top:28px;padding-top:22px;border-top:1px solid var(--line);}
 .sources-title{font-family:"Archivo",sans-serif;font-weight:800;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:12px;}
-.source-chip{display:inline-block;font-size:.8rem;font-weight:600;color:#333;background:#f2f2f2;border:1px solid var(--line);padding:6px 12px;border-radius:100px;margin:0 6px 8px 0;}
+.source-chip{display:inline-flex;align-items:center;gap:5px;font-size:.8rem;font-weight:600;color:#333;background:#f2f2f2;border:1px solid var(--line);padding:6px 12px;border-radius:100px;margin:0 6px 8px 0;text-decoration:none;transition:all .2s;}
+a.source-chip{color:var(--blue);background:#f0f5ff;border-color:#c8daff;cursor:pointer;}
+a.source-chip:hover{background:var(--blue);color:#fff;border-color:var(--blue);transform:translateY(-1px);box-shadow:0 4px 12px -4px rgba(26,109,255,.4);}
+a.source-chip .src-icon{font-size:.7rem;opacity:.75;}
+a.source-chip:hover .src-icon{opacity:1;}
 .sources-note{font-size:.74rem;color:var(--ink-soft);line-height:1.5;margin-top:8px;font-style:italic;}
 body.modal-open{overflow:hidden;}
 /* TRENDS */
@@ -554,6 +645,11 @@ footer .fbrand{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.4rem
   <span class="hero-line"><span class="hero-word grad">il</span> <span class="hero-word grad">fait</span> <span class="hero-word grad">beau.</span></span>
 </h1>
 <p class="hero-sub">Chaque jour, nous parcourons le monde pour ne garder que les progrès, les avancées et les vraies raisons d'être optimiste.</p>
+<div class="hero-counter" id="hero-counter">
+  <span class="hero-counter-dot"></span>
+  <span id="hero-counter-num" class="hero-counter-num">0</span>
+  <span>bonnes nouvelles partagées depuis le lancement</span>
+</div>
 </section>
 
 
@@ -627,8 +723,10 @@ Troisième paragraphe..."></textarea>
 15 000 habitants impliqués dans le programme."></textarea>
 </div>
 <div class="editor-field">
-<label class="editor-label">Source(s) <span class="hint">— séparées par une virgule</span></label>
-<input class="editor-input" id="ed-sources" type="text" placeholder="Ex : Le Monde, WWF, ONU"/>
+<label class="editor-label">Source(s) <span class="hint">— une par ligne · format : Nom | https://url (l'URL est optionnelle)</span></label>
+<textarea class="editor-textarea" id="ed-sources" rows="3" placeholder="Le Monde | https://lemonde.fr/article
+WWF | https://wwf.fr
+ONU"></textarea>
 </div>
 <div class="editor-field">
 <label class="editor-label">Date</label>
@@ -700,7 +798,11 @@ Troisième paragraphe..."></textarea>
 <h2 class="modal-title" id="modal-title"></h2>
 <div class="modal-byline" id="modal-byline"></div>
 </div>
-<div class="modal-body">
+<div class="read-progress-bar" id="modal-progress-bar"></div>
+<div class="modal-body" id="modal-body-scroll">
+<button class="imm-open-btn" id="imm-open-btn" title="Ouvrir en mode lecture immersif">
+  <span style="font-size:1rem;">🖥️</span> Lecture immersive
+</button>
 <p class="chapo" id="modal-chapo"></p>
 <div class="article-body" id="modal-article"></div>
 <div class="factbox">
@@ -714,6 +816,37 @@ Troisième paragraphe..."></textarea>
 </div>
 </div>
 </div>
+</div>
+
+<!-- OVERLAY LECTURE IMMERSIVE -->
+<div class="immersive-overlay theme-dark" id="immersive-overlay" aria-hidden="true">
+  <div class="imm-bar">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span class="imm-tag" id="imm-tag"></span>
+      <span class="imm-meta" id="imm-meta"></span>
+    </div>
+    <div class="imm-controls">
+      <div class="imm-theme-toggle" id="imm-theme-toggle" title="Changer le thème">
+        <button class="imm-theme-btn" data-theme="light" id="imm-btn-light">☀️ Clair</button>
+        <button class="imm-theme-btn active" data-theme="dark" id="imm-btn-dark">🌙 Sombre</button>
+      </div>
+      <button class="imm-close" id="imm-close" aria-label="Quitter la lecture immersive">✕</button>
+    </div>
+  </div>
+  <div class="imm-progress" id="imm-progress"></div>
+  <div class="imm-scroll" id="imm-scroll">
+    <div class="imm-content">
+      <div class="imm-rubric-stripe" id="imm-stripe"></div>
+      <h2 class="imm-title" id="imm-title"></h2>
+      <div class="imm-byline" id="imm-byline"></div>
+      <p class="imm-chapo" id="imm-chapo"></p>
+      <div class="imm-body" id="imm-body"></div>
+      <div class="imm-factbox" id="imm-factbox" style="display:none;">
+        <div class="imm-factbox-title">📊 Les faits, vérifiés</div>
+        <ul id="imm-facts"></ul>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- NEWSLETTER -->
@@ -789,7 +922,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     chapo:"Apr\u00e8s une d\u00e9cennie d'acc\u00e9l\u00e9ration, la d\u00e9forestation de l'Amazonie br\u00e9silienne conna\u00eet un retournement spectaculaire.",
     body:["Selon les donn\u00e9es du syst\u00e8me PRODES de l'INPE, la d\u00e9forestation a chut\u00e9 d'environ 50 % en 2023 par rapport \u00e0 2022, puis a continu\u00e9 de baisser en 2024.", "Ce revirement co\u00efncide avec le retour au pouvoir de Lula da Silva en janvier 2023, qui a r\u00e9activ\u00e9 l'agence IBAMA et le Fonds amazonien, abond\u00e9 par la Norv\u00e8ge et l'Allemagne.", "L'enjeu est plan\u00e9taire : l'Amazonie recycle l'humidit\u00e9 qui alimente les pluies d'une grande partie du continent et stocke des dizaines de milliards de tonnes de carbone."],
     facts:["\u221250 % de d\u00e9forestation en Amazonie br\u00e9silienne en 2023 vs 2022 (INPE/PRODES).", "Le Fonds amazonien a \u00e9t\u00e9 r\u00e9activ\u00e9 en 2023 avec le soutien de la Norv\u00e8ge et de l'Allemagne.", "Les terres autochtones enregistrent les taux de d\u00e9forestation les plus bas."],
-    sources:["INPE", "Fonds amazonien", "Mongabay"]
+    sources:["INPE","Fonds amazonien","Mongabay"]
   },
 {
     rubric:"climate",source:"AIE \u00b7 IRENA \u00b7 Ember",date:"Rapport 2024",headline:"Les renouvelables, d\u00e9sormais l'\u00e9lectricit\u00e9 la moins ch\u00e8re",
@@ -797,7 +930,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     chapo:"Le solaire et l'\u00e9olien ne sont plus seulement les \u00e9nergies les plus propres : ils sont devenus les moins ch\u00e8res.",
     body:["Selon l'IRENA, le co\u00fbt du solaire photovolta\u00efque a chut\u00e9 d'environ 90 % entre 2010 et 2023, et celui de l'\u00e9olien terrestre de plus de 70 %.", "Les renouvelables ont fourni plus de 30 % de l'\u00e9lectricit\u00e9 mondiale en 2023, un record historique (Ember).", "Pour les m\u00e9nages comme pour les industries, cela annonce une \u00e9lectricit\u00e9 dont le carburant \u2014 soleil et vent \u2014 est gratuit et local."],
     facts:["\u221290 % : effondrement du co\u00fbt du solaire PV entre 2010 et 2023 (IRENA).", "Plus de 30 % de l'\u00e9lectricit\u00e9 mondiale d'origine renouvelable en 2023 (Ember).", "Le co\u00fbt des batteries de stockage a \u00e9t\u00e9 divis\u00e9 par plus de six depuis 2010."],
-    sources:["AIE", "IRENA", "Ember"]
+    sources:["AIE","IRENA","Ember"]
   },
 {
     rubric:"health",source:"OMS \u00b7 The Lancet",date:"\u00c9tude 2024",headline:"La vaccination a sauv\u00e9 154 millions de vies en 50 ans",
@@ -805,7 +938,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     chapo:"C'est l'un des plus grands succ\u00e8s de sant\u00e9 publique de l'histoire : six vies sauv\u00e9es par minute pendant cinquante ans.",
     body:["\u00c0 l'occasion des 50 ans du PEV, une \u00e9tude publi\u00e9e dans The Lancet en 2024 a estim\u00e9 que la vaccination a sauv\u00e9 environ 154 millions de vies depuis 1974.", "La mortalit\u00e9 des enfants de moins de cinq ans a \u00e9t\u00e9 plus que divis\u00e9e par deux depuis 1990 (ONU/IGME).", "Les plateformes \u00e0 ARN messager laissent esp\u00e9rer des r\u00e9ponses plus rapides face aux futures \u00e9pid\u00e9mies."],
     facts:["154 millions de vies sauv\u00e9es par la vaccination depuis 1974 (The Lancet, 2024).", "Mortalit\u00e9 des moins de 5 ans divis\u00e9e par plus de deux depuis 1990 (ONU, IGME).", "Premier vaccin antipaludique recommand\u00e9 par l'OMS depuis 2021."],
-    sources:["OMS", "The Lancet (2024)", "UN IGME"]
+    sources:["OMS","The Lancet (2024)","UN IGME"]
   },
 {
     rubric:"economy",source:"Banque mondiale",date:"S\u00e9ries longues",headline:"Plus d'un milliard de personnes sorties de l'extr\u00eame pauvret\u00e9",
@@ -813,7 +946,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     chapo:"En une g\u00e9n\u00e9ration, l'humanit\u00e9 a accompli ce que beaucoup jugeaient hors de port\u00e9e.",
     body:["La part de la population mondiale en extr\u00eame pauvret\u00e9 est pass\u00e9e de 36 % en 1990 \u00e0 moins de 10 % (Banque mondiale).", "Le service k\u00e9nyan M-Pesa, lanc\u00e9 en 2007, a bancaris\u00e9 des millions de personnes via le mobile.", "La tendance de fond d\u00e9montre qu'une pauvret\u00e9 de masse n'est pas une fatalit\u00e9."],
     facts:["Extr\u00eame pauvret\u00e9 : de 36 % (1990) \u00e0 moins de 10 % de l'humanit\u00e9 (Banque mondiale).", "Plus d'un milliard de personnes sorties en une g\u00e9n\u00e9ration.", "M-Pesa (Kenya, 2007) : mod\u00e8le de bancarisation mobile mondiale."],
-    sources:["Banque mondiale", "Our World in Data", "ONU"]
+    sources:["Banque mondiale","Our World in Data","ONU"]
   },
 {
     rubric:"tech",source:"Comit\u00e9 Nobel \u00b7 Nature",date:"Nobel 2024",headline:"Un Nobel pour l'IA qui r\u00e9volutionne la biologie",
@@ -821,7 +954,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     chapo:"En r\u00e9compensant AlphaFold, le Nobel de chimie 2024 a consacr\u00e9 une rupture pour la m\u00e9decine de demain.",
     body:["En octobre 2024, le prix Nobel de chimie a r\u00e9compens\u00e9 Demis Hassabis et John Jumper (DeepMind) ainsi que David Baker.", "En 2022, la base AlphaFold a \u00e9t\u00e9 rendue publique avec plus de 200 millions de prot\u00e9ines cartographi\u00e9es \u2014 gratuitement.", "La m\u00eame technologie s'applique \u00e0 la conception d'enzymes capables de d\u00e9composer le plastique ou de capter du CO\u2082."],
     facts:["Prix Nobel de chimie 2024 pour la pr\u00e9diction des prot\u00e9ines par IA.", "Plus de 200 millions de structures de prot\u00e9ines publi\u00e9es gratuitement (2022).", "Des m\u00e9dicaments con\u00e7us par IA sont d\u00e9j\u00e0 en essais cliniques."],
-    sources:["Comit\u00e9 Nobel", "Nature", "Google DeepMind"]
+    sources:["Comit\u00e9 Nobel","Nature","Google DeepMind"]
   },
 {
     rubric:"science",source:"Science \u00b7 Harvard/Google",date:"Mai 2024",headline:"La carte la plus d\u00e9taill\u00e9e d'un cerveau humain",
@@ -829,7 +962,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     chapo:"Microscopie et IA ont permis de reconstituer, neurone par neurone, un fragment de cerveau d'une complexit\u00e9 vertigineuse.",
     body:["En mai 2024, une \u00e9quipe Harvard/Google a publi\u00e9 dans Science la carte la plus d\u00e9taill\u00e9e d'un fragment de cerveau humain.", "Sur un volume d'\u00e0 peine un millim\u00e8tre cube : 57 000 cellules et 150 millions de connexions (synapses).", "Des interfaces cerveau-machine (Synchron, Neuralink) ont \u00e9t\u00e9 test\u00e9es chez des patients paralys\u00e9s."],
     facts:["1 mm\u00b3 de cortex : 57 000 cellules, 150 millions de synapses (Science, 2024).", "Plus d'un p\u00e9taoctet de donn\u00e9es g\u00e9n\u00e9r\u00e9es pour cette reconstruction.", "Des interfaces cerveau-machine test\u00e9es chez des patients paralys\u00e9s."],
-    sources:["Science (2024)", "Harvard / Google Research"]
+    sources:["Science (2024)","Harvard / Google Research"]
   },
 {
     rubric:"society",source:"UNESCO",date:"S\u00e9ries longues",headline:"L'alphab\u00e9tisation mondiale atteint son plus haut niveau",
@@ -837,7 +970,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     chapo:"Il y a deux si\u00e8cles, \u00e0 peine 12 % de l'humanit\u00e9 savait lire. Aujourd'hui, c'est l'immense majorit\u00e9.",
     body:["Le taux d'alphab\u00e9tisation des adultes d\u00e9passe 86 % dans le monde, et 92 % chez les 15-24 ans (UNESCO).", "L'\u00e9cart filles-gar\u00e7ons, encore b\u00e9ant au si\u00e8cle dernier, s'est fortement r\u00e9duit.", "L'alphab\u00e9tisation est le socle de tout le reste : sant\u00e9, emploi, d\u00e9mocratie."],
     facts:["Alphab\u00e9tisation : plus de 86 % des adultes, 92 % des jeunes (UNESCO).", "Vers 1820, seulement 12 % de l'humanit\u00e9 savait lire (Our World in Data).", "La parit\u00e9 filles-gar\u00e7ons est atteinte chez les jeunes dans de nombreuses r\u00e9gions."],
-    sources:["UNESCO", "Our World in Data", "Banque mondiale"]
+    sources:["UNESCO","Our World in Data","Banque mondiale"]
   },
 {
     rubric:"ecology",source:"UICN \u00b7 Royal Society",date:"\u00c9tudes r\u00e9centes",headline:"Ces esp\u00e8ces sauv\u00e9es de l'extinction",
@@ -845,7 +978,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     chapo:"Quand on lui en laisse la chance, la nature revient.",
     body:["La baleine \u00e0 bosse de l'Atlantique sud est remont\u00e9e \u00e0 environ 93 % de sa population d'avant la chasse (Royal Society Open Science).", "Le moratoire sur la chasse commerciale a \u00e9t\u00e9 adopt\u00e9 par la CBI en 1982, entr\u00e9 en vigueur en 1986.", "Le pygargue \u00e0 t\u00eate blanche a \u00e9t\u00e9 retir\u00e9 de la liste des esp\u00e8ces menac\u00e9es aux \u00c9tats-Unis en 2007."],
     facts:["Baleine \u00e0 bosse Atlantique sud : ~93 % de sa population d'avant la chasse (Royal Society).", "Moratoire sur la chasse commerciale : adopt\u00e9 1982, en vigueur 1986.", "Pygargue \u00e0 t\u00eate blanche retir\u00e9 de la liste des esp\u00e8ces menac\u00e9es en 2007."],
-    sources:["UICN", "Commission baleini\u00e8re internationale", "WWF"]
+    sources:["UICN","Commission baleini\u00e8re internationale","WWF"]
   },
 {
     rubric:"health",source:"OMS \u00b7 UNICEF",date:"S\u00e9ries longues",headline:"La mortalit\u00e9 maternelle a fortement chut\u00e9",
@@ -853,7 +986,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     chapo:"Accoucher n'a jamais \u00e9t\u00e9 aussi s\u00fbr.",
     body:["La mortalit\u00e9 maternelle a recul\u00e9 d'environ un tiers depuis 2000, selon l'OMS.", "La pr\u00e9sence de personnel qualifi\u00e9 \u00e0 l'accouchement est le facteur le plus d\u00e9terminant.", "La tr\u00e8s grande majorit\u00e9 des d\u00e9c\u00e8s maternels sont \u00e9vitables avec des soins de base."],
     facts:["Mortalit\u00e9 maternelle : baisse d'environ un tiers depuis 2000 (OMS).", "Personnel qualifi\u00e9 \u00e0 l'accouchement = facteur le plus d\u00e9terminant.", "La plupart des d\u00e9c\u00e8s maternels sont \u00e9vitables."],
-    sources:["OMS", "UNICEF", "UNFPA"]
+    sources:["OMS","UNICEF","UNFPA"]
   },
 {
     rubric:"tech",source:"UIT",date:"Donn\u00e9es 2023",headline:"La majorit\u00e9 de l'humanit\u00e9 est d\u00e9sormais connect\u00e9e",
@@ -861,7 +994,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     chapo:"Pour la premi\u00e8re fois, plus de la moiti\u00e9 de l'humanit\u00e9 est en ligne.",
     body:["Environ 67 % de la population mondiale utilisait internet en 2023, soit pr\u00e8s de 5,4 milliards de personnes (UIT).", "Les constellations de satellites en orbite basse apportent le haut d\u00e9bit dans des zones sans infrastructure terrestre.", "Pour des centaines de millions, c'est l'occasion de sauter une \u00e9tape enti\u00e8re de d\u00e9veloppement."],
     facts:["67 % de l'humanit\u00e9 connect\u00e9e en 2023 (~5,4 milliards de personnes) (UIT).", "Les satellites en orbite basse couvrent des zones sans r\u00e9seau terrestre.", "Le co\u00fbt d'un smartphone d'entr\u00e9e de gamme a fortement chut\u00e9."],
-    sources:["UIT", "Banque mondiale", "GSMA"]
+    sources:["UIT","Banque mondiale","GSMA"]
   },
 {
     rubric:"climate",source:"Ville de Medell\u00edn \u00b7 C40",date:"Depuis 2016",headline:"\u00c0 Medell\u00edn, des corridors verts rafra\u00eechissent la ville",
@@ -869,7 +1002,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     chapo:"Face aux canicules, des villes se r\u00e9inventent en vert.",
     body:["Depuis 2016, Medell\u00edn a am\u00e9nag\u00e9 des dizaines de corridors verts, plantant des centaines de milliers d'arbres.", "La municipalit\u00e9 fait \u00e9tat d'une baisse de la temp\u00e9rature de plusieurs degr\u00e9s dans les zones v\u00e9g\u00e9talis\u00e9es.", "Paris, Milan et des dizaines de m\u00e9tropoles du r\u00e9seau C40 s'engagent sur la m\u00eame voie."],
     facts:["Medell\u00edn : corridors verts depuis 2016, baisse de plusieurs degr\u00e9s mesur\u00e9e.", "Le r\u00e9seau C40 r\u00e9unit des dizaines de m\u00e9tropoles mondiales.", "Paris et Milan multiplient for\u00eats urbaines et fa\u00e7ades v\u00e9g\u00e9talis\u00e9es."],
-    sources:["Ville de Medell\u00edn", "C40 Cities", "PNUE"]
+    sources:["Ville de Medell\u00edn","C40 Cities","PNUE"]
   },
 {
     rubric:"economy",source:"Loi PACTE \u00b7 B Lab",date:"Depuis 2019",headline:"L'entreprise \u00e0 mission s'installe dans le paysage",
@@ -877,7 +1010,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     chapo:"Et si l'entreprise ne servait pas qu'\u00e0 faire du profit ?",
     body:["La loi PACTE de 2019 a cr\u00e9\u00e9 le statut d'entreprise \u00e0 mission en France.", "Le label B Corp certifie plusieurs milliers d'entreprises dans le monde.", "L'\u00e9conomie sociale et solidaire repr\u00e9sente environ 10 % du PIB et de l'emploi en France."],
     facts:["Loi PACTE (France, 2019) : cr\u00e9ation du statut d'entreprise \u00e0 mission.", "Le label B Corp certifie plusieurs milliers d'entreprises.", "L'ESS \u2248 10 % du PIB et de l'emploi en France."],
-    sources:["L\u00e9gifrance", "B Lab", "ESS France"]
+    sources:["L\u00e9gifrance","B Lab","ESS France"]
   },
 {
     rubric:"science",source:"NASA \u00b7 ESA",date:"Depuis 2022",headline:"L'espace vit un \u00e2ge d'or de la coop\u00e9ration",
@@ -885,7 +1018,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     chapo:"De l'observation des premi\u00e8res galaxies \u00e0 la d\u00e9fense plan\u00e9taire, l'exploration spatiale encha\u00eene les premi\u00e8res.",
     body:["Le t\u00e9lescope James Webb, lanc\u00e9 en d\u00e9cembre 2021, observe des galaxies form\u00e9es quelques centaines de millions d'ann\u00e9es apr\u00e8s le Big Bang.", "La mission DART de la NASA a d\u00e9lib\u00e9r\u00e9ment percut\u00e9 un ast\u00e9ro\u00efde en septembre 2022 \u2014 premi\u00e8re d\u00e9monstration de d\u00e9fense plan\u00e9taire.", "Envoyer un kilo en orbite co\u00fbte plus de dix fois moins cher qu'au temps de la navette."],
     facts:["T\u00e9lescope James Webb : lanc\u00e9 d\u00e9c. 2021, premi\u00e8res images juillet 2022.", "Mission DART (sept. 2022) : premier d\u00e9tournement r\u00e9ussi d'un ast\u00e9ro\u00efde.", "Co\u00fbt orbital divis\u00e9 par plus de 10 gr\u00e2ce aux fus\u00e9es r\u00e9utilisables."],
-    sources:["NASA", "ESA"]
+    sources:["NASA","ESA"]
   },
 {
     rubric:"society",source:"VNU \u00b7 Croix-Rouge",date:"Tendance de fond",headline:"Le b\u00e9n\u00e9volat se r\u00e9invente et gagne du terrain",
@@ -893,7 +1026,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     chapo:"Loin de d\u00e9cliner, l'engagement citoyen se transforme.",
     body:["Des centaines de millions de personnes donnent de leur temps b\u00e9n\u00e9volement chaque ann\u00e9e dans le monde.", "Les plateformes num\u00e9riques permettent de trouver une mission en quelques clics.", "Pendant la pand\u00e9mie, des r\u00e9seaux d'entraide de quartier se sont mont\u00e9s en quelques jours."],
     facts:["Des centaines de millions de b\u00e9n\u00e9voles actifs chaque ann\u00e9e (VNU).", "Les plateformes num\u00e9riques ont transform\u00e9 l'engagement citoyen.", "Les communaut\u00e9s engag\u00e9es sont les plus r\u00e9silientes face aux crises."],
-    sources:["Volontaires des Nations unies", "Croix-Rouge"]
+    sources:["Volontaires des Nations unies","Croix-Rouge"]
   },
 {
     rubric:"ecology",source:"PNUE \u00b7 OMM",date:"Bilan ONU 2023",headline:"La couche d'ozone est en voie de gu\u00e9rison",
@@ -901,7 +1034,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     chapo:"C'est l'un des plus beaux exemples de coop\u00e9ration mondiale.",
     body:["La couche d'ozone devrait retrouver ses niveaux de 1980 vers 2040 pour la majeure partie du globe (ONU, 2023).", "Le Protocole de Montr\u00e9al (1987) est le seul trait\u00e9 environnemental ratifi\u00e9 par tous les pays du monde.", "L'\u00e9limination des CFC a aussi \u00e9vit\u00e9 plusieurs dixi\u00e8mes de degr\u00e9 de r\u00e9chauffement."],
     facts:["Couche d'ozone attendue \u00e0 ses niveaux de 1980 vers 2040 (ONU, 2023).", "Protocole de Montr\u00e9al (1987) : seul trait\u00e9 environnemental ratifi\u00e9 par tous.", "\u00c9limination des CFC = plusieurs dixi\u00e8mes de degr\u00e9 de r\u00e9chauffement \u00e9vit\u00e9s."],
-    sources:["PNUE", "OMM", "\u00c9valuation scientifique de l'ozone ONU"]
+    sources:["PNUE","OMM","\u00c9valuation scientifique de l'ozone ONU"]
   },
 {
     rubric:"climate",source:"Ember \u00b7 AIE",date:"Donn\u00e9es 2023-2024",headline:"En Europe, le charbon et les \u00e9missions reculent",
@@ -909,7 +1042,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     chapo:"L'Union europ\u00e9enne tourne la page des \u00e9nergies les plus polluantes.",
     body:["La production \u00e9lectrique au charbon dans l'UE est tomb\u00e9e \u00e0 un niveau historiquement bas en 2023 (Ember).", "Le Royaume-Uni a ferm\u00e9 sa derni\u00e8re centrale \u00e0 charbon en 2024.", "\u00c9olien + solaire ont d\u00e9pass\u00e9 l'ensemble des fossiles dans l'\u00e9lectricit\u00e9 de l'UE."],
     facts:["Production \u00e9lectrique au charbon UE au plus bas historique en 2023.", "Royaume-Uni : derni\u00e8re centrale \u00e0 charbon ferm\u00e9e en 2024.", "\u00c9olien + solaire > fossiles dans l'\u00e9lectricit\u00e9 europ\u00e9enne."],
-    sources:["Ember", "AIE", "Commission europ\u00e9enne"]
+    sources:["Ember","AIE","Commission europ\u00e9enne"]
   },
 {
     rubric:"health",source:"CIRC \u00b7 INCa",date:"Tendances r\u00e9centes",headline:"On survit de plus en plus au cancer",
@@ -917,7 +1050,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     chapo:"Le cancer reste un fl\u00e9au, mais les chances d'en gu\u00e9rir n'ont jamais \u00e9t\u00e9 aussi \u00e9lev\u00e9es.",
     body:["La survie \u00e0 cinq ans a fortement progress\u00e9 pour de nombreux cancers en quelques d\u00e9cennies.", "L'immunoth\u00e9rapie a valu le prix Nobel de m\u00e9decine 2018 \u00e0 James Allison et Tasuku Honjo.", "Les vaccins th\u00e9rapeutiques \u00e0 ARN messager, \u00e0 l'essai, laissent esp\u00e9rer des traitements personnalis\u00e9s."],
     facts:["Survie \u00e0 cinq ans en forte hausse pour de nombreux cancers.", "Certaines leuc\u00e9mies de l'enfant gu\u00e9rissent dans plus de 80 % des cas.", "Prix Nobel de m\u00e9decine 2018 pour l'immunoth\u00e9rapie."],
-    sources:["CIRC (OMS)", "INCa", "The Lancet Oncology"]
+    sources:["CIRC (OMS)","INCa","The Lancet Oncology"]
   },
 {
     rubric:"economy",source:"Banque mondiale \u00b7 OIT",date:"S\u00e9ries longues",headline:"Une classe moyenne mondiale en pleine expansion",
@@ -925,7 +1058,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     chapo:"\u00c0 mesure que la pauvret\u00e9 recule, une classe moyenne mondiale \u00e9merge.",
     body:["La classe moyenne repr\u00e9sente aujourd'hui environ la moiti\u00e9 de la population mondiale.", "La Chine et l'Inde ont vu \u00e9merger des classes moyennes massives.", "\u00c9ducation, emploi salari\u00e9 et acc\u00e8s au cr\u00e9dit en sont les principaux moteurs."],
     facts:["La classe moyenne \u2248 moiti\u00e9 de la population mondiale (estimations).", "L'Asie concentre l'essentiel de cette expansion.", "\u00c9ducation, emploi et cr\u00e9dit : les trois leviers cl\u00e9s."],
-    sources:["Banque mondiale", "OIT", "Brookings Institution"]
+    sources:["Banque mondiale","OIT","Brookings Institution"]
   },
 {
     rubric:"tech",source:"AIE",date:"Donn\u00e9es 2024",headline:"La voiture \u00e9lectrique passe \u00e0 la vitesse sup\u00e9rieure",
@@ -933,7 +1066,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     chapo:"Longtemps confidentielle, la voiture \u00e9lectrique s'impose.",
     body:["Environ une voiture neuve sur cinq vendue dans le monde en 2024 \u00e9tait \u00e9lectrique (AIE).", "Le co\u00fbt des batteries a \u00e9t\u00e9 divis\u00e9 par plus de six depuis 2010.", "L'\u00e9lectrification am\u00e9liore la qualit\u00e9 de l'air des villes et r\u00e9duit la d\u00e9pendance au p\u00e9trole."],
     facts:["~1 voiture neuve sur 5 vendue \u00e9lectrique en 2024 (AIE).", "Co\u00fbt des batteries divis\u00e9 par plus de 6 depuis 2010.", "La Chine et l'Europe tirent la croissance du march\u00e9."],
-    sources:["AIE (Global EV Outlook)", "BloombergNEF"]
+    sources:["AIE (Global EV Outlook)","BloombergNEF"]
   },
 {
     rubric:"science",source:"Lawrence Livermore \u00b7 ITER",date:"D\u00e9cembre 2022",headline:"La fusion nucl\u00e9aire franchit un cap historique",
@@ -941,7 +1074,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     chapo:"Le Graal de l'\u00e9nergie propre se rapproche.",
     body:["En d\u00e9cembre 2022, le National Ignition Facility a annonc\u00e9 un gain net d'\u00e9nergie par fusion \u2014 une premi\u00e8re mondiale.", "La fusion promet une \u00e9nergie abondante, sans d\u00e9chets \u00e0 vie longue ni risque d'emballement.", "Le projet international ITER est en construction dans le sud de la France."],
     facts:["D\u00e9cembre 2022 : premier gain net d'\u00e9nergie par fusion (NIF, \u00c9tats-Unis).", "La fusion ne produit pas de d\u00e9chets nucl\u00e9aires \u00e0 vie longue.", "ITER en construction dans le sud de la France."],
-    sources:["Lawrence Livermore National Laboratory", "ITER", "Nature"]
+    sources:["Lawrence Livermore National Laboratory","ITER","Nature"]
   },
 {
     rubric:"society",source:"Amnesty International",date:"Tendance longue",headline:"La peine de mort recule \u00e0 travers le monde",
@@ -949,7 +1082,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     chapo:"En un demi-si\u00e8cle, le monde a largement tourn\u00e9 le dos \u00e0 la peine de mort.",
     body:["Plus des deux tiers des \u00c9tats ont aboli la peine de mort en droit ou ne l'appliquent plus (Amnesty International).", "Le mouvement s'est acc\u00e9l\u00e9r\u00e9 avec les vagues de d\u00e9mocratisation.", "De nouveaux pays franchissent le pas presque chaque ann\u00e9e."],
     facts:["Plus des deux tiers des pays : peine de mort abolie en droit ou en pratique.", "Dans les ann\u00e9es 1970, seule une poign\u00e9e de pays l'avaient abolie.", "De nouveaux pays franchissent le pas presque chaque ann\u00e9e."],
-    sources:["Amnesty International", "ONU"]
+    sources:["Amnesty International","ONU"]
   },
 {
     rubric:"health",source:"ONU \u00b7 OMS",date:"S\u00e9ries longues",headline:"L'esp\u00e9rance de vie a gagn\u00e9 plus de 25 ans depuis 1950",
@@ -957,7 +1090,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     chapo:"En trois g\u00e9n\u00e9rations, l'humanit\u00e9 a ajout\u00e9 plus d'un quart de si\u00e8cle \u00e0 sa vie.",
     body:["En 1950, l'esp\u00e9rance de vie mondiale avoisinait 46 ans. Elle d\u00e9passe aujourd'hui 73 ans (ONU).", "Ce progr\u00e8s tient \u00e0 l'effondrement de la mortalit\u00e9 infantile et au recul des grandes causes de d\u00e9c\u00e8s.", "L'objectif n'est plus seulement d'ajouter des ann\u00e9es \u00e0 la vie, mais de la vie aux ann\u00e9es."],
     facts:["Esp\u00e9rance de vie : de 46 ans (1950) \u00e0 plus de 73 ans (ONU).", "Forte baisse de la mortalit\u00e9 cardiovasculaire o\u00f9 la pr\u00e9vention a \u00e9t\u00e9 men\u00e9e.", "Objectif : ajouter des ann\u00e9es 'en bonne sant\u00e9', pas seulement des ann\u00e9es."],
-    sources:["ONU (World Population Prospects)", "OMS", "The Lancet"]
+    sources:["ONU (World Population Prospects)","OMS","The Lancet"]
   }
   ];
 
@@ -968,7 +1101,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     chapo:"Aux Philippines, des p\u00eacheurs et des chercheurs reconstruisent les coraux pi\u00e8ce par pi\u00e8ce \u2014 avec des r\u00e9sultats surprenants.",
     body:["Sur l'\u00eele d'Apo, des projets pilotes ont permis de reconstituer plus de 3 000 m\u00b2 de r\u00e9cif en quelques ann\u00e9es gr\u00e2ce au biorock.", "La technique, qui fait passer un faible courant \u00e9lectrique dans des structures m\u00e9talliques, acc\u00e9l\u00e8re la min\u00e9ralisation du corail de 2 \u00e0 3 fois.", "Les Philippines abritent une grande partie du Coral Triangle \u2014 75 % des esp\u00e8ces de coraux connues."],
     facts:["Plus de 3 000 m\u00b2 de r\u00e9cif restaur\u00e9 aux Philippines via biorock.", "R\u00e9g\u00e9n\u00e9ration 2 \u00e0 3 fois plus rapide que la r\u00e9cup\u00e9ration naturelle.", "Le Coral Triangle : 75 % des esp\u00e8ces de coraux connues."],
-    sources:["Nature Climate Change", "Coral Triangle Initiative", "PNUE"]
+    sources:["Nature Climate Change","Coral Triangle Initiative","PNUE"]
   },
 {
     rubric:"climate",source:"MNRE \u00b7 AIE",date:"30 mai 2026",headline:"L'Inde franchit 300 GW de renouvelables install\u00e9s",
@@ -976,7 +1109,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     chapo:"En quelques ann\u00e9es, l'Inde est devenue l'un des march\u00e9s solaires les plus dynamiques.",
     body:["Le MNRE a annonc\u00e9 que la capacit\u00e9 install\u00e9e en solaire et \u00e9olien a d\u00e9pass\u00e9 les 300 GW en Inde.", "Des ench\u00e8res r\u00e9guli\u00e8res et une fili\u00e8re locale de fabrication de panneaux r\u00e9duisent les co\u00fbts.", "L'objectif national est de 500 GW de renouvelables d'ici 2030."],
     facts:["L'Inde a franchi les 300 GW de capacit\u00e9 renouvelable install\u00e9e.", "Objectif national : 500 GW de renouvelables d'ici 2030 (MNRE).", "L'Inde est le 3\u00e8me march\u00e9 solaire au monde."],
-    sources:["MNRE (Inde)", "AIE", "BloombergNEF"]
+    sources:["MNRE (Inde)","AIE","BloombergNEF"]
   },
 {
     rubric:"health",source:"NEJM \u00b7 OMS \u00b7 IAVI",date:"30 mai 2026",headline:"Un vaccin candidat contre la tuberculose, premier espoir en cent ans",
@@ -984,7 +1117,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     chapo:"La tuberculose tue encore plus d'un million de personnes par an. Un vaccin efficace pour les adultes est en vue.",
     body:["Le vaccin M72/AS01E confirme une efficacit\u00e9 d'environ 50 % pour pr\u00e9venir la tuberculose pulmonaire chez l'adulte (NEJM).", "L'enjeu est immense : le BCG, seul vaccin actuel, date de 1921 et est peu efficace chez les adultes.", "Des essais de phase 3 seront lanc\u00e9s en Afrique et en Asie du Sud."],
     facts:["Vaccin M72/AS01E : efficacit\u00e9 ~50 % dans l'essai de phase 2b (NEJM).", "La TB tue plus d'un million de personnes par an (OMS).", "Le BCG, seul vaccin anti-TB actuel, date de 1921."],
-    sources:["NEJM", "OMS", "IAVI / GSK"]
+    sources:["NEJM","OMS","IAVI / GSK"]
   },
 {
     rubric:"economy",source:"GSMA \u00b7 Banque mondiale",date:"30 mai 2026",headline:"L'Afrique, championne mondiale de l'argent mobile",
@@ -992,7 +1125,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     chapo:"Sans banques physiques, l'Afrique a invent\u00e9 sa propre finance.",
     body:["L'Afrique subsaharienne concentre plus de 60 % des transactions mondiales d'argent mobile, avec 800 M+ de comptes actifs (GSMA).", "Des services comme M-Pesa couvrent des villages que les banques n'ont jamais atteints.", "Le mod\u00e8le africain est \u00e9tudi\u00e9 et reproduit en Asie du Sud et en Am\u00e9rique latine."],
     facts:[">60 % des transactions mondiales d'argent mobile en Afrique (GSMA).", "+800 millions de comptes d'argent mobile actifs.", "M-Pesa (Kenya, 2007) : mod\u00e8le international."],
-    sources:["GSMA", "Banque mondiale", "FMI"]
+    sources:["GSMA","Banque mondiale","FMI"]
   },
 {
     rubric:"tech",source:"Nature Energy \u00b7 The Ocean Cleanup",date:"30 mai 2026",headline:"Des plastiques oc\u00e9aniques convertis en carburant propre",
@@ -1000,7 +1133,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     chapo:"Et si les plastiques qui polluent les oc\u00e9ans devenaient une ressource ?",
     body:["Un proc\u00e9d\u00e9 de pyrolyse catalytique convertit les plastiques r\u00e9colt\u00e9s en mer en hydrocarbures \u00e0 rendement positif.", "Coupl\u00e9 aux navires de The Ocean Cleanup, il forme une cha\u00eene de valeur : chaque tonne extraite finance la suivante.", "Les oc\u00e9ans contiendraient encore des millions de tonnes de plastique flottant."],
     facts:["Pyrolyse catalytique : plastiques oc\u00e9aniques \u2192 carburant \u00e0 rendement positif.", "The Ocean Cleanup a extrait plusieurs milliers de tonnes depuis 2022.", "Les oc\u00e9ans contiendraient des millions de tonnes de plastique."],
-    sources:["Nature Energy", "The Ocean Cleanup", "PNUE"]
+    sources:["Nature Energy","The Ocean Cleanup","PNUE"]
   },
 {
     rubric:"science",source:"PNAS \u00b7 Universit\u00e9 de Oviedo",date:"30 mai 2026",headline:"La m\u00e9duse immortelle livre les secrets de son ADN",
@@ -1008,7 +1141,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     chapo:"La m\u00e9duse qui peut rajeunir fascine les biologistes. Son g\u00e9nome vient d'\u00eatre s\u00e9quenc\u00e9.",
     body:["Des chercheurs de l'universit\u00e9 de Oviedo ont publi\u00e9 dans PNAS le s\u00e9quen\u00e7age du g\u00e9nome de Turritopsis dohrnii.", "L'analyse r\u00e9v\u00e8le des niveaux \u00e9lev\u00e9s d'expression de g\u00e8nes li\u00e9s \u00e0 la r\u00e9paration de l'ADN et \u00e0 la reprogrammation cellulaire.", "Ces m\u00e9canismes, inactifs chez l'homme, offrent des pistes pour les maladies li\u00e9es au vieillissement."],
     facts:["G\u00e9nome complet de Turritopsis dohrnii s\u00e9quenc\u00e9 (PNAS, universit\u00e9 de Oviedo).", "La m\u00e9duse peut inverser son cycle de vie biologique sous stress.", "Des g\u00e8nes de r\u00e9paration de l'ADN sur-exprim\u00e9s existent aussi chez l'homme."],
-    sources:["PNAS", "Nature Aging", "Universit\u00e9 de Oviedo"]
+    sources:["PNAS","Nature Aging","Universit\u00e9 de Oviedo"]
   },
 {
     rubric:"society",source:"Alda \u00b7 Gouvernement islandais",date:"30 mai 2026",headline:"L'Islande g\u00e9n\u00e9ralise la semaine de travail de 4 jours",
@@ -1016,7 +1149,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     chapo:"Ce qui semblait une exp\u00e9rience audacieuse est devenu la norme. Productivit\u00e9 maintenue, bien-\u00eatre en hausse.",
     body:["Plus de 85 % de la population active islandaise travaille dans le cadre d'accords de semaine de 4 jours (Alda, 2026).", "Les essais 2015-2019 ont port\u00e9 sur 2 500+ travailleurs et montr\u00e9 une productivit\u00e9 maintenue ou am\u00e9lior\u00e9e.", "Le Royaume-Uni, l'Espagne et le Portugal ont men\u00e9 leurs propres essais avec des r\u00e9sultats similaires."],
     facts:[">85 % des actifs islandais : 4 jours/semaine sans perte de salaire (Alda, 2026).", "Essais 2015-2019 : 2 500+ travailleurs du service public.", "Productivit\u00e9 maintenue ou am\u00e9lior\u00e9e dans presque tous les lieux test\u00e9s."],
-    sources:["Alda", "Gouvernement islandais", "Autonomy (UK)"]
+    sources:["Alda","Gouvernement islandais","Autonomy (UK)"]
   }
   ];
 
@@ -1064,16 +1197,32 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
         +'<h2 class="headline">'+esc(a.headline)+'</h2>'
         +'<p class="summary">'+esc(a.summary)+'</p>'
         +'<div class="meta"><span>'+esc(a.source)+'</span><span>\u00b7</span><span>'+esc(a.date)+'</span></div>'
-        +'<span class="read-hint">Lire l\'article \u2192</span>'
+        +'<div class="card-shine"></div>'+'<span class="read-hint">Lire l\'article \u2192</span>'
         +ghost+'</article>';
     });
     h+='</div>';
     if(quote){h+='<div class="quote"><div class="quote-mark">"</div><p class="quote-text">'+esc(quote.text)+'</p><p class="quote-author">\u2014 '+esc(quote.author)+'</p></div>';}
     document.getElementById('content').innerHTML=h;
+    var cont=document.getElementById('content');
+    if(cont){cont.classList.remove('view-fade');requestAnimationFrame(function(){cont.classList.add('view-fade');});}
     document.querySelectorAll('.card').forEach(function(card){
       var open=function(){openDetail(parseInt(card.dataset.idx,10));};
       card.addEventListener('click',open);
       card.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});
+      // Tilt 3D + shine
+      card.addEventListener('mousemove',function(e){
+        var r=card.getBoundingClientRect();
+        var x=(e.clientX-r.left)/r.width-.5;
+        var y=(e.clientY-r.top)/r.height-.5;
+        card.style.transform='perspective(600px) rotateY('+(x*10)+'deg) rotateX('+(-y*8)+'deg) translateY(-6px)';
+        var mx=((e.clientX-r.left)/r.width*100).toFixed(1)+'%';
+        var my=((e.clientY-r.top)/r.height*100).toFixed(1)+'%';
+        card.style.setProperty('--mx',mx);
+        card.style.setProperty('--my',my);
+      });
+      card.addEventListener('mouseleave',function(){
+        card.style.transform='';
+      });
     });
   }
 
@@ -1081,15 +1230,28 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
   function openDetail(idx){
     var a=currentArticles[idx]; if(!a)return;
     lastFocused=document.activeElement;
+    window._currentModalIdx=idx;
     var cc=TAG_CLASS[a.rubric]||'c-society', tl=TAG_LABEL[a.rubric]||'Société';
     document.getElementById('modal-head').className='modal-head '+cc;
+    var RUBRIC_COLORS={ecology:'#00c46a',climate:'#1a6dff',health:'#ff5da2',economy:'#ff7a00',tech:'#7b3ff2',science:'#00c9c9',society:'#ffd400'};
+    var rcolor=RUBRIC_COLORS[a.rubric]||'#7b3ff2';
+    document.getElementById('modal-progress-bar').style.background=rcolor;
+    document.getElementById('modal-body-scroll').scrollTop=0;
     document.getElementById('modal-tag').textContent=tl;
     document.getElementById('modal-title').textContent=a.headline;
     document.getElementById('modal-byline').innerHTML='<span>Par la rédaction</span><span>\u00b7</span><span>'+esc(a.source)+'</span><span>\u00b7</span><span>'+esc(a.date)+'</span>';
     document.getElementById('modal-chapo').textContent=a.chapo||a.summary;
     document.getElementById('modal-article').innerHTML=(a.body||[a.summary]).map(function(p){return '<p>'+esc(p)+'</p>';}).join('');
     document.getElementById('modal-facts').innerHTML=(a.facts||[]).map(function(f){return '<li>'+esc(f)+'</li>';}).join('');
-    document.getElementById('modal-sources').innerHTML=(a.sources||[]).map(function(s){return '<span class="source-chip">'+esc(s)+'</span>';}).join('');
+    document.getElementById('modal-sources').innerHTML=(a.sources||[]).map(function(s){
+      var parts=s.split(/\s*\|\s*/);
+      var label=parts[0].trim();
+      var url=(parts[1]||'').trim();
+      if(url && /^https?:\/\//i.test(url)){
+        return '<a class="source-chip" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(label)+'<span class="src-icon">\u2197</span></a>';
+      }
+      return '<span class="source-chip">'+esc(label)+'</span>';
+    }).join('');
     var note=SOURCE_INFO[a.source]||'';
     document.getElementById('modal-sourcenote').textContent=note?note+' Recouper plusieurs sources reste la meilleure pratique.':'Recouper plusieurs sources reste la meilleure façon de se forger une opinion.';
     var modal=document.getElementById('modal');
@@ -1105,6 +1267,16 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     if(lastFocused)lastFocused.focus();
   }
   document.getElementById('modal-close').addEventListener('click',closeDetail);
+  // Barre de progression lecture dans la modal
+  (function(){
+    var body=document.getElementById('modal-body-scroll');
+    var bar=document.getElementById('modal-progress-bar');
+    if(!body||!bar)return;
+    body.addEventListener('scroll',function(){
+      var pct=body.scrollTop/(body.scrollHeight-body.clientHeight)*100;
+      bar.style.width=Math.min(100,pct)+'%';
+    });
+  })();
   document.getElementById('modal').addEventListener('click',function(e){if(e.target.id==='modal')closeDetail();});
   document.addEventListener('keydown',function(e){if(e.key==='Escape'&&document.getElementById('modal').classList.contains('open'))closeDetail();});
 
@@ -1125,8 +1297,13 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
       document.getElementById('view-trends').setAttribute('aria-hidden','false');
       buildTrends();
       if(window._buildTrendsExtras)window._buildTrendsExtras();
+      var vt=document.getElementById('view-trends');
+      if(vt){vt.classList.remove('view-fade');requestAnimationFrame(function(){vt.classList.add('view-fade');});}
     } else {
       var bj=document.getElementById('btn-journal');if(bj)bj.classList.add('active');
+      var cont=document.getElementById('content');
+      if(cont)cont.classList.remove('view-fade');
+      requestAnimationFrame(function(){if(cont)cont.classList.add('view-fade');});
     }
   }
   document.getElementById('btn-journal').addEventListener('click',function(){setPage('journal');});
@@ -1592,11 +1769,23 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     el.textContent='\uD83D\uDCC5 '+prefix+fmtDate(ds);
     el.style.color=isToday?'var(--green)':'var(--purple)';
   }
+  function showSkeleton(){
+    var s='<div class="skeleton-grid">'
+      +'<div class="skel-card skel-f"></div>'
+      +'<div class="skel-card skel-t"></div>'
+      +'<div class="skel-card skel-h"></div>'
+      +'<div class="skel-card skel-h"></div>'
+      +'</div>';
+    document.getElementById('content').innerHTML=s;
+  }
   function loadDate(ds){
+    showSkeleton();
+    setTimeout(function(){
     var arts=getArticlesForDate(ds);if(!arts||!arts.length)return;
     var q=window._quotes||[];
     render(arts,q[Math.floor(Math.random()*q.length)]);
     setDateLabel(ds);calState.selected=ds;renderCalGrid();
+    }, 300);
   }
   function init(){loadDate(TODAY_STR);renderCalGrid();}
   var calState={year:2026,month:4,selected:TODAY_STR};
@@ -1855,7 +2044,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
 
     var body    = bodyRaw.split(/\n\s*\n/).map(function(p){ return p.trim(); }).filter(Boolean);
     var facts   = factsRaw ? factsRaw.split('\n').map(function(f){ return f.trim(); }).filter(Boolean) : [];
-    var sources = sourcesRaw ? sourcesRaw.split(',').map(function(s){ return s.trim(); }).filter(Boolean) : ['Rédaction'];
+    var sources = sourcesRaw ? sourcesRaw.split('\n').map(function(s){ return s.trim(); }).filter(Boolean) : ['Rédaction'];
 
     var article = {
       rubric:   selectedRubric,
@@ -1903,6 +2092,144 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
 </script>
 
 <script>
+// ── MODE LECTURE IMMERSIF ────────────────────────────────────────────────────
+(function(){
+  var overlay  = document.getElementById('immersive-overlay');
+  var openBtn  = document.getElementById('imm-open-btn');
+  var closeBtn = document.getElementById('imm-close');
+  var scroll   = document.getElementById('imm-scroll');
+  var progress = document.getElementById('imm-progress');
+  var themeToggle = document.getElementById('imm-theme-toggle');
+  if(!overlay||!openBtn)return;
+
+  var RUBRIC_COLORS={ecology:'#00c46a',climate:'#1a6dff',health:'#ff5da2',economy:'#ff7a00',tech:'#7b3ff2',science:'#00c9c9',society:'#ffd400'};
+  var TAG_LABEL_IMM={ecology:'🌿 Écologie',climate:'🌍 Climat',health:'💚 Santé',economy:'📈 Économie',tech:'⚡ Tech',science:'🔬 Science',society:'🤝 Société'};
+  var currentTheme='dark';
+  var currentArticle=null;
+
+  function calcReadTime(text){
+    var words=(text||'').split(/\s+/).length;
+    return Math.max(1,Math.round(words/200));
+  }
+
+  function openImmersive(a){
+    currentArticle=a;
+    var rcolor=RUBRIC_COLORS[a.rubric]||'#7b3ff2';
+    // Tag
+    var tagEl=document.getElementById('imm-tag');
+    tagEl.textContent=TAG_LABEL_IMM[a.rubric]||'';
+    tagEl.style.background=rcolor+'22';
+    tagEl.style.color=rcolor;
+    // Stripe couleur
+    document.getElementById('imm-stripe').style.background=rcolor;
+    // Barre de progression
+    progress.style.background=rcolor;
+    progress.style.width='0%';
+    // Titre, byline
+    document.getElementById('imm-title').textContent=a.headline;
+    var fullText=(a.body||[]).join(' ');
+    var mins=calcReadTime(fullText);
+    document.getElementById('imm-meta').textContent=mins+' min de lecture';
+    document.getElementById('imm-byline').innerHTML='<span>Par la rédaction</span><span>·</span><span>'+a.date+'</span><span>·</span><span>'+mins+' min</span>';
+    // Chapo
+    document.getElementById('imm-chapo').textContent=a.chapo||a.summary;
+    // Corps
+    document.getElementById('imm-body').innerHTML=(a.body||[a.summary]).map(function(p){
+      return '<p>'+p.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</p>';
+    }).join('');
+    // Facts
+    var facts=a.facts||[];
+    if(facts.length){
+      document.getElementById('imm-factbox').style.display='block';
+      document.getElementById('imm-facts').innerHTML=facts.map(function(f){
+        return '<li>'+f.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</li>';
+      }).join('');
+    } else {
+      document.getElementById('imm-factbox').style.display='none';
+    }
+    // Reset scroll
+    scroll.scrollTop=0;
+    // Ouvrir
+    overlay.classList.add('open');
+    overlay.setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden';
+    closeBtn.focus();
+  }
+
+  function closeImmersive(){
+    overlay.classList.remove('open');
+    overlay.setAttribute('aria-hidden','true');
+    document.body.style.overflow='';
+    if(openBtn)openBtn.focus();
+  }
+
+  function setTheme(theme){
+    currentTheme=theme;
+    overlay.classList.remove('theme-light','theme-dark');
+    overlay.classList.add('theme-'+theme);
+    document.querySelectorAll('.imm-theme-btn').forEach(function(b){
+      b.classList.toggle('active', b.dataset.theme===theme);
+    });
+  }
+
+  // Ouvrir depuis le bouton dans la modal
+  openBtn.addEventListener('click',function(){
+    // Récupérer l'article courant depuis la modal ouverte
+    var idx=window._currentModalIdx;
+    if(idx===undefined||idx===null)return;
+    var a=(window.currentArticles||[])[idx];
+    if(!a)return;
+    openImmersive(a);
+  });
+
+  closeBtn.addEventListener('click',closeImmersive);
+
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'&&overlay.classList.contains('open'))closeImmersive();
+  });
+
+  // Toggle thème
+  themeToggle.querySelectorAll('.imm-theme-btn').forEach(function(btn){
+    btn.addEventListener('click',function(){ setTheme(btn.dataset.theme); });
+  });
+
+  // Barre de progression
+  scroll.addEventListener('scroll',function(){
+    var pct=scroll.scrollTop/(scroll.scrollHeight-scroll.clientHeight)*100;
+    progress.style.width=Math.min(100,pct)+'%';
+  });
+})();
+
+// ── COMPTEUR HERO ─────────────────────────────────────────────────────────────
+(function(){
+  var numEl=document.getElementById('hero-counter-num');
+  if(!numEl)return;
+  // Nombre de base : articles * jours depuis lancement fictif
+  var BASE=3847;
+  var target=BASE+Math.floor(Math.random()*200);
+  var started=false;
+  function animCount(){
+    if(started)return;
+    started=true;
+    var start=0, duration=1800, startTime=null;
+    function step(ts){
+      if(!startTime)startTime=ts;
+      var p=Math.min(1,(ts-startTime)/duration);
+      var ease=1-Math.pow(1-p,3);
+      numEl.textContent=Math.round(ease*target).toLocaleString('fr-FR');
+      if(p<1)requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  // Déclencher quand le hero est dans le viewport
+  var hero=document.getElementById('hero');
+  if(!hero){return;}
+  var obs=new IntersectionObserver(function(entries){
+    if(entries[0].isIntersecting)animCount();
+  },{threshold:.3});
+  obs.observe(hero);
+})();
+
 // ── SOLEIL HORAIRE ──────────────────────────────────────────────────────────
 // Le soleil suit une trajectoire en arc dans le SVG hero (viewBox 700×160)
 // Est (gauche) → zénith (centre-haut) → Ouest (droite)
