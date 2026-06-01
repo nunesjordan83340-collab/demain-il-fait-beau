@@ -146,6 +146,10 @@ body.trends-active footer{display:block;}
 .opt-icon-btn{background:none;border:none;cursor:pointer;font-size:1.5rem;line-height:1;padding:4px;border-radius:50%;transition:background .2s;position:relative;}
 .opt-icon-btn:hover{background:#fff9e0;}
 .opt-icon-btn.spinning{animation:sunSpin .9s cubic-bezier(.2,.7,.3,1);}
+.opt-icon-btn{position:relative;}
+.opt-icon-btn::after{content:"Détail";position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);font-size:.58rem;font-weight:700;letter-spacing:.04em;color:var(--ink-soft);white-space:nowrap;opacity:.7;pointer-events:none;}
+.opt-pulse-ring{position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--yellow);animation:optPulseRing 2s ease-out infinite;pointer-events:none;}
+@keyframes optPulseRing{0%{transform:scale(.8);opacity:.9}70%{transform:scale(1.5);opacity:0}100%{transform:scale(1.5);opacity:0}}
 @keyframes sunSpin{0%{transform:scale(1) rotate(0)}35%{transform:scale(1.8) rotate(180deg)}70%{transform:scale(1.3) rotate(300deg)}100%{transform:scale(1) rotate(360deg)}}
 .opt-state{font-family:"Archivo",sans-serif;font-weight:800;font-size:.9rem;color:var(--ink);}
 .opt-track{width:120px;height:6px;background:#f0f0f0;border-radius:100px;overflow:hidden;}
@@ -554,7 +558,8 @@ footer .fbrand{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.4rem
 <!-- SCORE -->
 <div class="optimism-bar journal-only" id="optimism-bar">
 <span class="opt-label">Indice du jour</span>
-<button class="opt-icon-btn" id="opt-icon-btn" title="Voir le détail de l'indice" aria-expanded="false">
+<button class="opt-icon-btn" id="opt-icon-btn" title="Cliquer pour le détail de l'indice" aria-expanded="false" style="position:relative;">
+<span class="opt-pulse-ring"></span>
 <span id="opt-weather">☀️</span>
 </button>
 <span class="opt-state" id="opt-state">Beau fixe</span>
@@ -648,7 +653,7 @@ footer .fbrand{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.4rem
 <div class="hero-counter" id="hero-counter">
   <span class="hero-counter-dot"></span>
   <span id="hero-counter-num" class="hero-counter-num">0</span>
-  <span>bonnes nouvelles partagées depuis le lancement</span>
+  <span>articles vérifiés disponibles</span>
 </div>
 </section>
 
@@ -1161,7 +1166,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
 
   var SOURCE_INFO={"OMS": "L'Organisation mondiale de la santé est l'agence des Nations unies chargée de la santé publique mondiale.", "The Lancet": "The Lancet est une revue médicale britannique de référence.", "Nature": "Nature est l'une des revues scientifiques les plus rigoureuses, publiée depuis 1869.", "Science": "Science est une revue scientifique de premier plan éditée par l'AAAS.", "Banque mondiale": "La Banque mondiale produit les données de référence sur la pauvreté et le développement.", "AIE": "L'Agence internationale de l'énergie analyse les tendances énergétiques mondiales.", "WWF": "Le Fonds mondial pour la nature est l'une des plus grandes ONG environnementales.", "UNESCO": "L'UNESCO est l'agence de l'ONU pour l'éducation, la science et la culture.", "NASA": "La NASA est l'agence spatiale civile des États-Unis.", "ESA": "L'Agence spatiale européenne coordonne les programmes spatiaux du continent."};
 
-  window._quotes=QUOTES; window._fallback=FALLBACK;
+  window._quotes=QUOTES; window._fallback=FALLBACK; window.TODAY_ARTICLES=TODAY_ARTICLES;
 
 
   function fallbackFor(rubric){
@@ -1209,7 +1214,8 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
       var open=function(){openDetail(parseInt(card.dataset.idx,10));};
       card.addEventListener('click',open);
       card.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});
-      // Tilt 3D + shine
+      // Tilt 3D + shine (seulement sur les vraies cards avec data-idx)
+      if(!card.dataset.idx)return;
       card.addEventListener('mousemove',function(e){
         var r=card.getBoundingClientRect();
         var x=(e.clientX-r.left)/r.width-.5;
@@ -1306,6 +1312,21 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
       requestAnimationFrame(function(){if(cont)cont.classList.add('view-fade');});
     }
   }
+  // ── Filtres de rubriques ──
+  document.querySelectorAll('#filters .pill').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      document.querySelectorAll('#filters .pill').forEach(function(b){b.classList.remove('active');});
+      btn.classList.add('active');
+      var rubric=btn.dataset.rubric||'all';
+      currentRubric=rubric;
+      showSkeleton();
+      setTimeout(function(){
+        var data=fallbackFor(rubric);
+        render(data.articles,data.quote);
+      },260);
+    });
+  });
+
   document.getElementById('btn-journal').addEventListener('click',function(){setPage('journal');});
   document.getElementById('btn-trends').addEventListener('click',function(){setPage('trends');});
   window._setPage=setPage;
@@ -1402,6 +1423,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     btn.classList.remove('spinning');
     void btn.offsetWidth; // reset animation
     btn.classList.add('spinning');
+    var ring=btn.querySelector('.opt-pulse-ring');if(ring)ring.style.display='none';
     btn.addEventListener('animationend',function h(){btn.classList.remove('spinning');btn.removeEventListener('animationend',h);});
     panelOpen=!panelOpen;
     var panel=document.getElementById('opt-panel');
@@ -2205,8 +2227,11 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
   var numEl=document.getElementById('hero-counter-num');
   if(!numEl)return;
   // Nombre de base : articles * jours depuis lancement fictif
-  var BASE=3847;
-  var target=BASE+Math.floor(Math.random()*200);
+  // Compter les vrais articles dans les données
+  var allArticles=(window._fallback||[]).length;
+  var todayArticles=(window.TODAY_ARTICLES||[]).length;
+  var target=allArticles+todayArticles;
+  if(target===0)target=28; // fallback si données pas encore chargées
   var started=false;
   function animCount(){
     if(started)return;
