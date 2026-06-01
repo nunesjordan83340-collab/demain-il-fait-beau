@@ -501,10 +501,10 @@ body.trends-active .journal-only{display:none!important;}
 body.map-active #view-map{display:flex;flex-direction:column;height:calc(100vh - 52px);overflow:hidden;box-sizing:border-box;}
 
 /* Header */
-.carousel-header{padding:14px 32px 0;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px;}
+.carousel-header{padding:12px 32px 0;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px;}
 .carousel-title{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.3rem;letter-spacing:-.03em;}
 .carousel-sub{font-size:.75rem;color:var(--ink-soft);font-weight:600;}
-.carousel-filters{display:flex;gap:6px;flex-wrap:wrap;padding:6px 32px 0;flex-shrink:0;}
+.carousel-filters{display:flex;gap:6px;flex-wrap:wrap;padding:4px 32px 0;flex-shrink:0;}
 .carousel-pill{font-size:.68rem;font-weight:700;padding:4px 12px;border-radius:100px;border:1.5px solid var(--line);background:transparent;cursor:pointer;transition:all .2s;letter-spacing:.04em;text-transform:uppercase;}
 .carousel-pill.active{background:var(--ink);color:#fff;border-color:var(--ink);}
 
@@ -560,7 +560,7 @@ body.map-active #view-map{display:flex;flex-direction:column;height:calc(100vh -
 .tcard-nope-badge{right:24px;color:#ff4d4d;border-color:#ff4d4d;transform:rotate(12deg);}
 
 /* Contrôles bas */
-.tinder-controls{display:flex;align-items:center;justify-content:center;gap:16px;padding:8px 32px 12px;flex-shrink:0;}
+.tinder-controls{display:flex;align-items:center;justify-content:center;gap:16px;padding:6px 32px 10px;flex-shrink:0;}
 .tinder-btn{width:52px;height:52px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.2rem;transition:all .2s;flex-shrink:0;}
 .tinder-btn-prev{background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.12);color:var(--ink-soft);}
 .tinder-btn-prev:hover{transform:scale(1.08);box-shadow:0 6px 20px rgba(0,0,0,.16);}
@@ -571,7 +571,7 @@ body.map-active #view-map{display:flex;flex-direction:column;height:calc(100vh -
 .tinder-counter{font-family:"Archivo",sans-serif;font-size:.78rem;font-weight:700;color:var(--ink-soft);min-width:60px;text-align:center;}
 
 /* Hint swipe */
-.swipe-hint{display:flex;align-items:center;justify-content:center;gap:8px;font-size:.72rem;color:var(--ink-soft);font-weight:600;letter-spacing:.04em;padding:2px 0;flex-shrink:0;}
+.swipe-hint{display:flex;align-items:center;justify-content:center;gap:8px;font-size:.72rem;color:var(--ink-soft);font-weight:600;letter-spacing:.04em;padding:1px 0;flex-shrink:0;}
 .swipe-hint-arrow{animation:swipeArrow 1.4s ease-in-out infinite;}
 @keyframes swipeArrow{0%,100%{transform:translateX(0)}50%{transform:translateX(8px)}}
 
@@ -589,10 +589,39 @@ body.map-active #view-map{display:flex;flex-direction:column;height:calc(100vh -
 .tinder-empty-reset:hover{background:var(--ink);color:#fff;}
 
 @media(max-width:767px){
-  .carousel-header,.carousel-filters{padding-left:16px;padding-right:16px;}
-  .tinder-stack{width:92vw;height:min(520px,calc(100vh - 260px));}
-  .tcard-headline{font-size:1.25rem;}
-  .tinder-controls{padding:8px 16px 16px;gap:12px;}
+  /* Header compact */
+  .carousel-header{padding:10px 16px 0;}
+  .carousel-title{font-size:1.1rem;}
+  
+  /* Filtres sur UNE ligne avec scroll horizontal — plus de wrap */
+  .carousel-filters{
+    padding:6px 16px 0;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    gap:6px;
+  }
+  .carousel-filters::-webkit-scrollbar{display:none;}
+  .carousel-pill{white-space:nowrap;flex-shrink:0;font-size:.65rem;padding:4px 10px;}
+
+  /* Stack adaptée : hauteur = tout ce qui reste */
+  .tinder-stack{width:calc(100vw - 24px);height:min(480px,calc(100vh - 230px));}
+
+  /* Carte : padding réduit */
+  .tcard-inner{padding:20px 20px 16px;}
+  .tcard-headline{font-size:1.2rem;margin-bottom:10px;}
+  .tcard-tag{margin-bottom:10px;}
+  .tcard-footer{padding:12px 20px 14px;}
+  .tcard-bg-num{font-size:10rem;}
+
+  /* Contrôles compacts */
+  .tinder-controls{padding:6px 16px 10px;gap:12px;}
+  .tinder-btn{width:44px;height:44px;font-size:1rem;}
+  .tinder-btn-read{width:52px;height:52px;font-size:.9rem;}
+
+  /* Hint minimaliste */
+  .swipe-hint{font-size:.65rem;padding:1px 0;}
 }
 .news-list{list-style:none;overflow-y:auto;-webkit-overflow-scrolling:touch;flex:1;padding:8px 0;}
 .news-list::-webkit-scrollbar{width:4px;}.news-list::-webkit-scrollbar-track{background:transparent;}.news-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px;}
