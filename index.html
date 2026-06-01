@@ -640,7 +640,8 @@ body.map-active #view-map{
   background:var(--paper);border-radius:20px;border:1px solid var(--line);
 }
 .tinder-empty-icon{font-size:3rem;}
-.tinder-empty-text{font-size:.9rem;}
+.tinder-empty-title{font-size:1.1rem;font-weight:900;font-family:"Archivo",sans-serif;margin-bottom:4px;}
+.tinder-empty-text{font-size:.85rem;color:var(--ink-soft);text-align:center;padding:0 12px;}
 .tinder-empty-reset{
   padding:10px 24px;border-radius:100px;
   border:2px solid var(--ink);background:transparent;
@@ -2129,6 +2130,40 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
   var stack, articles=[], currentIdx=0, currentRubricC='all', initialized=false;
   var isDragging=false, startX=0, startY=0, currentX=0, activeCard=null;
 
+  // ── MÉMOIRE DES ARTICLES VUS ─────────────────────────────────────────────
+  var STORAGE_KEY='difb_seen_v1';
+
+  function articleId(a){
+    // Identifiant stable basé sur le titre (slugifié)
+    return (a.headline||'').toLowerCase().replace(/[^a-z0-9]/g,'').substring(0,40);
+  }
+
+  function loadSeen(){
+    try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]'); }
+    catch(e){ return []; }
+  }
+
+  function saveSeen(arr){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
+    catch(e){}
+  }
+
+  function markSeen(a){
+    var seen=loadSeen();
+    var id=articleId(a);
+    if(!seen.includes(id)){ seen.push(id); saveSeen(seen); }
+  }
+
+  function resetSeen(){
+    try{ localStorage.removeItem(STORAGE_KEY); } catch(e){}
+  }
+
+  function getUnseen(arr){
+    var seen=loadSeen();
+    return arr.filter(function(a){ return !seen.includes(articleId(a)); });
+  }
+  // ─────────────────────────────────────────────────────────────────────────
+
   function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
   function getArticles(){
@@ -2139,8 +2174,11 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
 
   function getFiltered(){
     var all=getArticles();
-    if(currentRubricC==='all') return all;
-    return all.filter(function(a){return a.rubric===currentRubricC;});
+    var pool=currentRubricC==='all'?all:all.filter(function(a){return a.rubric===currentRubricC;});
+    // Ne garder que les articles non vus
+    var unseen=getUnseen(pool);
+    // S'il ne reste rien → retourner quand même vide (géré dans renderStack)
+    return unseen;
   }
 
   function buildCard(a, idx, total){
@@ -2203,14 +2241,23 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
 
     // Si on a tout vu
     if(currentIdx>=art.length){
+      var totalAll=getArticles().length;
+      var seenCount=loadSeen().length;
+      var allPool=currentRubricC==='all'?getArticles():getArticles().filter(function(a){return a.rubric===currentRubricC;});
+      var seenInRubric=allPool.length-art.length; // art était vide ou épuisé
       stack.innerHTML=
         '<div class="tinder-empty">'+
           '<div class="tinder-empty-icon">🎉</div>'+
-          '<div class="tinder-empty-text">Vous avez tout lu !</div>'+
-          '<button class="tinder-empty-reset" id="tinder-reset">Recommencer</button>'+
+          '<div class="tinder-empty-title">Vous êtes à jour !</div>'+
+          '<div class="tinder-empty-text">'+seenCount+' article'+(seenCount>1?'s':'')+' lus sur '+totalAll+' disponibles.</div>'+
+          '<div class="tinder-empty-text" style="margin-top:4px;font-size:.75rem;opacity:.7">Revenez demain pour de nouveaux articles.</div>'+
+          '<button class="tinder-empty-reset" id="tinder-reset">Tout revoir depuis le début</button>'+
         '</div>';
       document.getElementById('tinder-reset').addEventListener('click',function(){
-        currentIdx=0;renderStack();updateCounter();
+        resetSeen();
+        currentIdx=0;
+        renderStack();
+        updateCounter();
       });
     }
     updateCounter();
@@ -2243,6 +2290,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     var art=getFiltered();
     var a=art[currentIdx];
     if(!a) return;
+    markSeen(a);
     var allA=getArticles();
     var gIdx=allA.indexOf(a);
     if(window.innerWidth<768 && window._openImmersive){
@@ -2297,7 +2345,9 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
 
       var THRESHOLD=80;
       if(currentX<-THRESHOLD){
-        // swipe gauche → suivant (comme Tinder)
+        // swipe gauche → suivant (comme Tinder) → marquer comme vu
+        var artNow=getFiltered()[currentIdx];
+        if(artNow) markSeen(artNow);
         card.classList.add('swipe-left');
         setTimeout(function(){currentIdx++;renderStack();},380);
       } else if(currentX>THRESHOLD){
@@ -2372,11 +2422,34 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     stack=document.getElementById('tinder-stack');
     if(!stack) return;
     initialized=true;
+    // Afficher un toast discret "X nouveaux articles"
+    var unseen=getUnseen(getArticles()).length;
+    var total=getArticles().length;
+    if(unseen>0 && unseen<total){
+      showSeenToast(unseen, total);
+    }
     renderStack();
     initFilters();
     initBtns();
     initHint();
   };
+
+  function showSeenToast(unseen, total){
+    var existing=document.getElementById('seen-toast');
+    if(existing) existing.remove();
+    var t=document.createElement('div');
+    t.id='seen-toast';
+    t.style.cssText='position:absolute;top:12px;left:50%;transform:translateX(-50%);'+
+      'background:rgba(0,0,0,.75);color:#fff;font-family:"Archivo",sans-serif;'+
+      'font-size:.72rem;font-weight:700;padding:6px 14px;border-radius:100px;'+
+      'white-space:nowrap;z-index:100;pointer-events:none;'+
+      'opacity:0;transition:opacity .4s;';
+    t.textContent=unseen+' article'+(unseen>1?'s':'')+' non lu'+(unseen>1?'s':'')+' · '+(total-unseen)+' déjà vus';
+    stack.style.position='relative';
+    stack.appendChild(t);
+    setTimeout(function(){t.style.opacity='1';},50);
+    setTimeout(function(){t.style.opacity='0';setTimeout(function(){t.remove();},400);},3500);
+  }
 
   document.addEventListener('DOMContentLoaded',function(){
     if(document.body.classList.contains('map-active')) window._initCarousel();
