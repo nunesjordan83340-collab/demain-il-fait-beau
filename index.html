@@ -708,7 +708,8 @@ body.map-active #view-map{
 .nl-rubric{display:inline-block;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:100px;margin-top:6px;opacity:.85;}
 
 /* ── QUIZ POPUP ─────────────────────────────────────────────────── */
-.quiz-backdrop{position:fixed;inset:0;background:rgba(10,10,10,.6);backdrop-filter:blur(6px);z-index:3000;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;transition:opacity .4s ease;}
+.quiz-backdrop{position:fixed;inset:0;background:rgba(10,10,10,.6);backdrop-filter:blur(6px);z-index:3000;display:none;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .4s ease;}
+.quiz-backdrop.open{display:flex;pointer-events:auto;}
 .quiz-backdrop.open{opacity:1;}
 .quiz-box{background:#fff;border-radius:28px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 32px 80px -16px rgba(0,0,0,.35);transform:translateY(24px) scale(.97);transition:transform .4s cubic-bezier(.2,.8,.25,1);}
 .quiz-backdrop.open .quiz-box{transform:translateY(0) scale(1);}
@@ -3248,7 +3249,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
 <div class="quiz-sun-tooltip" id="quiz-sun-tooltip">Mon profil optimisme</div>
 
 <!-- ── QUIZ POPUP ──────────────────────────────────────────────── -->
-<div class="quiz-backdrop" id="quiz-backdrop" role="dialog" aria-modal="true" aria-label="Quiz mensuel">
+<div class="quiz-backdrop" id="quiz-backdrop" role="dialog" aria-modal="true" aria-label="Quiz mensuel" style="display:none;">
   <div class="quiz-box" id="quiz-box">
     <!-- Contenu injecté par JS -->
   </div>
@@ -3554,7 +3555,9 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
       mount(renderQuestion(0));
       bindQuestion(0);
     });
-    if(dismissBtn) dismissBtn.addEventListener('click', closeQuiz);
+    if(dismissBtn) dismissBtn.addEventListener('click', function(){ closeQuiz(); });
+    function onEsc(e){ if(e.key==='Escape'){ closeQuiz(); document.removeEventListener('keydown', onEsc); } }
+    document.addEventListener('keydown', onEsc);
   }
 
   function bindQuestion(idx){
@@ -3596,7 +3599,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
   function bindResult(){
     var finishBtn = document.getElementById('quiz-finish');
     var retryBtn = document.getElementById('quiz-retry');
-    var avg = state.total / QUESTIONS.length;
+    var avg = state.total > 0 ? state.total / QUESTIONS.length : 3;
     var profileResult = getProfile(avg);
     if(finishBtn) finishBtn.addEventListener('click', function(){ closeQuiz(profileResult); });
     if(retryBtn) retryBtn.addEventListener('click', function(){
@@ -3604,6 +3607,9 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
       mount(renderQuestion(0));
       bindQuestion(0);
     });
+    // Touche Échap pour fermer
+    function onEsc(e){ if(e.key==='Escape'){ closeQuiz(profileResult); document.removeEventListener('keydown', onEsc); } }
+    document.addEventListener('keydown', onEsc);
   }
 
   function openQuiz(showLastResult){
@@ -3631,18 +3637,32 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
       bindIntro();
     }
     backdrop.style.display = 'flex';
-    requestAnimationFrame(function(){ backdrop.classList.add('open'); });
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){ // double rAF pour forcer le reflow
+        backdrop.classList.add('open');
+      });
+    });
     document.body.style.overflow = 'hidden';
-    backdrop.addEventListener('click', function(e){
-      if(e.target === backdrop) closeQuiz();
-    }, {once:true});
+    // Clic en dehors → fermer proprement
+    function outsideClick(e){
+      if(e.target === backdrop){ closeQuiz(); backdrop.removeEventListener('click', outsideClick); }
+    }
+    backdrop.addEventListener('click', outsideClick);
   }
 
   function closeQuiz(profile){
     var backdrop = document.getElementById('quiz-backdrop');
     if(!backdrop) return;
+    // Libérer immédiatement le scroll et les clics
+    document.body.style.overflow = '';
+    backdrop.style.pointerEvents = 'none';
     backdrop.classList.remove('open');
-    setTimeout(function(){ backdrop.style.display = 'none'; document.body.style.overflow = ''; updateSunBtn(); }, 400);
+    // Masquer visuellement après la transition
+    setTimeout(function(){
+      backdrop.style.display = 'none';
+      backdrop.style.pointerEvents = '';
+      updateSunBtn();
+    }, 420);
     saveShown(profile);
   }
 
