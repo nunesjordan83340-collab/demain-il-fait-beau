@@ -11,6 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Archivo:wght@400;500;600;700;800;900&family=Lora:ital@0;1&display=swap" rel="stylesheet"/>
 <style>
 :root{
+  --sun-intensity:0.15;
   --bg:#f5f5f5;--ink:#0a0a0a;--ink-soft:#5a5a5a;--line:#ededed;
   --yellow:#ffd400;--coral:#ff4d4d;--pink:#ff5da2;--green:#00c46a;
   --blue:#1a6dff;--purple:#7b3ff2;--teal:#00c9c9;--orange:#ff7a00;
@@ -298,7 +299,7 @@ body.modal-open{overflow:hidden;}
 .reco-text{font-size:.8rem;font-weight:600;line-height:1.3;flex:1;}
 .reco-arrow{font-size:.75rem;color:var(--ink-soft);}
 /* ── ARTICLE DU JOUR HERO ── */
-.article-du-jour{background:linear-gradient(135deg,var(--purple) 0%,#3a0099 100%);border-radius:var(--radius);padding:24px 28px;margin-bottom:24px;color:#fff;cursor:pointer;transition:transform .2s,box-shadow .2s;}
+.article-du-jour{background:linear-gradient(135deg,var(--purple) 0%,#3a0099 100%);border-radius:var(--radius);padding:24px 28px;margin:0 auto 24px;max-width:var(--max-w,1200px);color:#fff;cursor:pointer;transition:transform .2s,box-shadow .2s;display:block;}
 .article-du-jour:hover{transform:translateY(-3px);box-shadow:0 12px 32px -8px rgba(123,63,242,.4);}
 .adj-eyebrow{font-family:"Archivo",sans-serif;font-size:.65rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;opacity:.75;margin-bottom:8px;}
 .adj-headline{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.25rem;line-height:1.15;letter-spacing:-.02em;margin-bottom:10px;}
@@ -460,21 +461,28 @@ footer .fbrand{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.4rem
 .hero.revealed .hero-counter{opacity:1;transform:translateY(0);}
 .hero-counter-num{font-weight:900;color:var(--green);font-size:.92rem;}
 .hero-counter-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
-/* ── HERO SCENE (soleil + arc-en-ciel) ── */
-.hero-deco-wrap{position:relative;display:inline-block;width:100%;}
-.hero-scene{display:block;width:100%;max-width:700px;margin:0 auto 8px;overflow:visible;opacity:0;transform:translateY(10px);transition:opacity .8s ease .4s,transform .8s ease .4s;}
-.hero.revealed .hero-scene{opacity:1;transform:translateY(0);}
-.hero.revealed .sun-rays{animation:sunRotate 20s linear infinite;}
-@keyframes sunRotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-.arc-rainbow{transform-origin:50% 100%;transform:scaleY(0);opacity:0;transition:transform .9s cubic-bezier(.2,.8,.25,1) .6s, opacity .6s ease .6s;}
-.hero.revealed .arc-rainbow{transform:scaleY(1);opacity:.75;}
-.sparkle{opacity:0;}
-.hero.revealed .sparkle:nth-child(1){animation:sparkleAnim .5s ease .75s forwards;}
-.hero.revealed .sparkle:nth-child(2){animation:sparkleAnim .5s ease .9s forwards;}
-.hero.revealed .sparkle:nth-child(3){animation:sparkleAnim .5s ease 1.05s forwards;}
-.hero.revealed .sparkle:nth-child(4){animation:sparkleAnim .5s ease 1.2s forwards;}
-.hero.revealed .sparkle:nth-child(5){animation:sparkleAnim .5s ease 1.35s forwards;}
-@keyframes sparkleAnim{0%{opacity:0;transform:scale(0) rotate(0deg);}55%{opacity:1;transform:scale(1.5) rotate(25deg);}100%{opacity:.8;transform:scale(1) rotate(0deg);}}
+/* ── HERO SOLEIL FLOU ── */
+.hero{position:relative;overflow:visible;}
+.hero-sun-bg{
+  position:absolute;
+  width:min(600px,90vw);
+  height:min(600px,90vw);
+  border-radius:50%;
+  background:radial-gradient(circle, #ffd400 0%, #ffb700 30%, transparent 70%);
+  filter:blur(80px);
+  opacity:0;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%) scale(0.3);
+  transition:opacity 1.2s ease .3s, transform 1.4s cubic-bezier(.2,.8,.25,1) .3s;
+  pointer-events:none;
+  z-index:0;
+}
+.hero.revealed .hero-sun-bg{
+  opacity:var(--sun-intensity, 0.18);
+  transform:translate(-50%,-50%) scale(1);
+}
+/* Tout le contenu du hero passe au-dessus du soleil */
+.hero h1,.hero p,.hero-counter,.article-du-jour{position:relative;z-index:1;}
 
 /* ── MODE LECTURE IMMERSIF ── */
 .immersive-overlay{position:fixed;inset:0;z-index:2000;opacity:0;pointer-events:none;transition:opacity .45s ease;display:flex;flex-direction:column;overflow:hidden;}
@@ -786,50 +794,23 @@ body.map-active #view-map{
 <!-- HERO -->
 <section class="hero journal-only" id="hero">
 
-<!-- 🌅 Scène décorative : arc-en-ciel + soleil horaire + sparkles -->
-<svg id="hero-scene" class="hero-scene" viewBox="0 0 700 160" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-
-  <!-- Arc-en-ciel en arrière-plan, ancré en bas de la scène -->
-  <g class="arc-rainbow">
-    <path d="M20,158 Q350,-80 680,158" fill="none" stroke="#ff4d4d" stroke-width="9" stroke-linecap="round" opacity=".85"/>
-    <path d="M38,158 Q350,-56 662,158" fill="none" stroke="#ff7a00" stroke-width="9" stroke-linecap="round" opacity=".85"/>
-    <path d="M56,158 Q350,-34 644,158" fill="none" stroke="#ffd400" stroke-width="9" stroke-linecap="round" opacity=".85"/>
-    <path d="M74,158 Q350,-14 626,158" fill="none" stroke="#00c46a" stroke-width="9" stroke-linecap="round" opacity=".85"/>
-    <path d="M92,158 Q350,4  608,158" fill="none" stroke="#1a6dff" stroke-width="9" stroke-linecap="round" opacity=".85"/>
-    <path d="M110,158 Q350,20 590,158" fill="none" stroke="#7b3ff2" stroke-width="9" stroke-linecap="round" opacity=".85"/>
-  </g>
-
-  <!-- Soleil positionné par JS selon l'heure -->
-  <g id="sun-group" opacity="0" style="transition:opacity .7s ease .5s;">
-    <g id="sun-rays">
-      <line x1="0" y1="-20" x2="0" y2="-30" stroke="#ffd400" stroke-width="3" stroke-linecap="round"/>
-      <line x1="0" y1="20"  x2="0" y2="30"  stroke="#ffd400" stroke-width="3" stroke-linecap="round"/>
-      <line x1="-20" y1="0" x2="-30" y2="0" stroke="#ffd400" stroke-width="3" stroke-linecap="round"/>
-      <line x1="20"  y1="0" x2="30"  y2="0" stroke="#ffd400" stroke-width="3" stroke-linecap="round"/>
-      <line x1="-14" y1="-14" x2="-21" y2="-21" stroke="#ffd400" stroke-width="3" stroke-linecap="round"/>
-      <line x1="14"  y1="14"  x2="21"  y2="21"  stroke="#ffd400" stroke-width="3" stroke-linecap="round"/>
-      <line x1="14"  y1="-14" x2="21"  y2="-21" stroke="#ffd400" stroke-width="3" stroke-linecap="round"/>
-      <line x1="-14" y1="14"  x2="-21" y2="21"  stroke="#ffd400" stroke-width="3" stroke-linecap="round"/>
-    </g>
-    <circle cx="0" cy="0" r="14" fill="#ffd400"/>
-    <circle cx="0" cy="0" r="14" fill="none" stroke="#ffec6e" stroke-width="3" opacity=".5"/>
-  </g>
-
-  <!-- Sparkles -->
-  <text class="sparkle" x="30"  y="40"  font-size="20" fill="#ffd400">✦</text>
-  <text class="sparkle" x="640" y="35"  font-size="16" fill="#ff5da2">✦</text>
-  <text class="sparkle" x="610" y="120" font-size="11" fill="#7b3ff2">✦</text>
-  <text class="sparkle" x="55"  y="125" font-size="14" fill="#00c46a">✦</text>
-  <text class="sparkle" x="350" y="18"  font-size="10" fill="#1a6dff">✦</text>
-</svg>
+<!-- ☀️ Grand soleil flou derrière le titre -->
+<div class="hero-sun-bg" id="hero-sun-bg" aria-hidden="true"></div>
 
 <h1 class="hero-animated">
   <span class="hero-line"><span class="hero-word">Demain,</span></span>
   <span class="hero-line"><span class="hero-word grad">il</span> <span class="hero-word grad">fait</span> <span class="hero-word grad">beau.</span></span>
 </h1>
 <p class="hero-sub">Chaque jour, nous parcourons le monde pour ne garder que les progrès, les avancées et les vraies raisons d'être optimiste.</p>
-<!-- ARTICLE DU JOUR -->
-<div class="article-du-jour journal-only" id="article-du-jour" role="button" tabindex="0" aria-label="Lire l'article du jour" style="display:none;">
+<div class="hero-counter" id="hero-counter">
+  <span class="hero-counter-dot"></span>
+  <span id="hero-counter-num" class="hero-counter-num">0</span>
+  <span>articles vérifiés disponibles</span>
+</div>
+</section>
+
+<!-- ARTICLE DU JOUR (hors section hero pour éviter journal-only) -->
+<div class="article-du-jour" id="article-du-jour" role="button" tabindex="0" aria-label="Lire l'article du jour" style="display:none;">
   <div class="adj-eyebrow">☀️ Article du jour</div>
   <div class="adj-headline" id="adj-headline"></div>
   <div class="adj-chapo" id="adj-chapo"></div>
@@ -838,12 +819,6 @@ body.map-active #view-map{
     <span>Lire l'article →</span>
   </div>
 </div>
-<div class="hero-counter" id="hero-counter">
-  <span class="hero-counter-dot"></span>
-  <span id="hero-counter-num" class="hero-counter-num">0</span>
-  <span>articles vérifiés disponibles</span>
-</div>
-</section>
 
 
 <!-- FILTRES -->
@@ -1665,7 +1640,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
       btn.classList.add('active');
       var rubric=btn.dataset.rubric||'all';
       currentRubric=rubric;
-      showSkeleton();
+      if(window._showSkeleton) window._showSkeleton();
       setTimeout(function(){
         var data=fallbackFor(rubric);
         render(data.articles,data.quote);
@@ -2298,41 +2273,61 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
   function saveReactions(r){ try{ localStorage.setItem(REACT_KEY,JSON.stringify(r)); }catch(e){} }
 
   function initReactions(aid){
+    var reacBar=document.getElementById('modal-reactions');
+    if(!reacBar) return;
+    // Cloner la barre pour supprimer tous les anciens listeners
+    var newBar=reacBar.cloneNode(true);
+    reacBar.parentNode.replaceChild(newBar, reacBar);
+
     var reactions=loadReactions();
     var ar=reactions[aid]||{surprising:0,important:0,inspiring:0};
     var myVote=ar._myVote||null;
+
+    // Mettre à jour les compteurs et états initiaux
     ['surprising','important','inspiring'].forEach(function(type){
-      var btn=document.querySelector('[data-reaction="'+type+'"]');
-      var cEl=document.getElementById('react-'+type);
+      var btn=newBar.querySelector('[data-reaction="'+type+'"]');
+      var cEl=newBar.querySelector('#react-'+type);
       if(!btn||!cEl) return;
       cEl.textContent=ar[type]||0;
       btn.classList.toggle('voted', myVote===type);
-      btn.onclick=function(){
+
+      btn.addEventListener('click', function(){
         var r=loadReactions();
         var a2=r[aid]||{surprising:0,important:0,inspiring:0};
-        if(a2._myVote===type){
+        var prevVote=a2._myVote||null;
+
+        // Si déjà voté pour ce type → annuler
+        if(prevVote===type){
           a2[type]=Math.max(0,(a2[type]||0)-1);
           a2._myVote=null;
           btn.classList.remove('voted');
+          cEl.textContent=a2[type];
         } else {
-          if(a2._myVote){
-            a2[a2._myVote]=Math.max(0,(a2[a2._myVote]||0)-1);
-            var ob=document.querySelector('[data-reaction="'+a2._myVote+'"]');
-            if(ob) ob.classList.remove('voted');
-            var oc=document.getElementById('react-'+a2._myVote);
-            if(oc) oc.textContent=a2[a2._myVote];
+          // Retirer l'ancien vote si existant
+          if(prevVote){
+            a2[prevVote]=Math.max(0,(a2[prevVote]||0)-1);
+            var oldBtn=newBar.querySelector('[data-reaction="'+prevVote+'"]');
+            var oldCount=newBar.querySelector('#react-'+prevVote);
+            if(oldBtn) oldBtn.classList.remove('voted');
+            if(oldCount) oldCount.textContent=a2[prevVote];
           }
+          // Voter pour le nouveau type
           a2[type]=(a2[type]||0)+1;
           a2._myVote=type;
           btn.classList.add('voted');
+          cEl.textContent=a2[type];
+          // Animation
           var icon=btn.querySelector('.rbtn-icon');
-          if(icon){ icon.style.transform='scale(1.4)'; setTimeout(function(){ icon.style.transform=''; },300); }
+          if(icon){
+            icon.style.transition='transform .3s cubic-bezier(.2,.8,.25,1)';
+            icon.style.transform='scale(1.5)';
+            setTimeout(function(){ icon.style.transform='scale(1)'; },300);
+          }
         }
         r[aid]=a2;
         saveReactions(r);
-        cEl.textContent=a2[type];
         if(window._buildPopular) window._buildPopular();
-      };
+      });
     });
   }
 
@@ -2386,7 +2381,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     div.id='popular-section';
     div.style.cssText='margin-top:32px;padding:0 32px 32px;';
     div.innerHTML=
-      '<h2 style="font-family:'Archivo',sans-serif;font-weight:900;font-size:1.1rem;letter-spacing:-.02em;margin-bottom:4px;">🏆 Les plus appréciés</h2>'+
+      '<h2 style="font-family:Archivo,sans-serif;font-weight:900;font-size:1.1rem;letter-spacing:-.02em;margin-bottom:4px;">🏆 Les plus appréciés</h2>'+
       '<p style="font-size:.75rem;color:var(--ink-soft);margin-bottom:14px;">Classement basé sur les réactions des lecteurs</p>'+
       '<div class="popular-list">'+
       scored.map(function(item,i){
@@ -2921,76 +2916,35 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
   window.addEventListener('load',function(){ setTimeout(checkNewArticles,1000); });
 })();
 
-// ── SOLEIL HORAIRE ──────────────────────────────────────────────────────────
-// Le soleil suit une trajectoire en arc dans le SVG hero (viewBox 700×160)
-// Est (gauche) → zénith (centre-haut) → Ouest (droite)
-// Jour solaire : 6h (lever) → 12h (zénith) → 20h (coucher)
+// ── SOLEIL HERO (animation d'apparition) ─────────────────────────────────────
+// Le grand soleil flou se glisse derrière le logo au chargement
+// Son opacité varie légèrement selon l'heure (plus intense à midi)
 (function(){
-  function positionSun(){
-    var now   = new Date();
-    var hours = now.getHours() + now.getMinutes()/60;
-
-    // Limites du jour visible : 6h → 20h (14h de trajet)
-    var RISE  = 6;   // lever
-    var SET   = 20;  // coucher
-    var SPAN  = SET - RISE;
-
-    // t ∈ [0,1] : progression dans la journée
-    var t = Math.max(0, Math.min(1, (hours - RISE) / SPAN));
-
-    // Trajectoire en demi-ellipse dans le SVG (700×160)
-    // x : de 30 (est) à 670 (ouest), centre 350
-    // y : suit une parabole, zénith à y=18, horizon à y=150
-    var cx = 700;  // largeur viewBox
-    var sunX = 30 + t * (670 - 30);                       // linéaire est→ouest
-    var sunY = 150 - Math.sin(t * Math.PI) * 132;         // arc parabolique
-
-    var sunGroup = document.getElementById('sun-group');
-    var sunRays  = document.getElementById('sun-rays');
-    if(!sunGroup) return;
-
-    sunGroup.setAttribute('transform','translate('+sunX+','+sunY+')');
-
-    // Nuit / tôt le matin / tard le soir : masquer le soleil
-    var isDay = hours >= RISE && hours <= SET;
-    sunGroup.style.opacity = isDay ? '1' : '0';
-
-    // Couleur selon la position : orangé au lever/coucher, jaune à midi
-    var proximity = Math.abs(t - 0.5) * 2; // 0=zénith, 1=horizon
-    var coreColor = proximity > 0.7
-      ? '#ff8c00'   // horizon : orangé
-      : proximity > 0.4
-        ? '#ffb700'  // mi-hauteur : doré
-        : '#ffd400'; // zénith : jaune vif
-    var coreEl = sunGroup.querySelector('circle');
-    var glowEl = sunGroup.querySelectorAll('circle')[1];
-    if(coreEl){ coreEl.setAttribute('fill', coreColor); }
-
-    // Les rayons héritent de la couleur
-    sunGroup.querySelectorAll('line').forEach(function(l){
-      l.setAttribute('stroke', coreColor);
-    });
-    if(glowEl){ glowEl.setAttribute('stroke', coreColor); }
-
-    // Animation rotation des rayons
-    if(isDay && sunRays && !sunRays._animStarted){
-      sunRays._animStarted = true;
-      sunRays.style.transformOrigin = '0 0'; // rotation autour du centre du groupe (0,0)
-      var angle = 0;
-      (function rotate(){
-        angle += 0.02;
-        sunRays.setAttribute('transform','rotate('+angle+')');
-        requestAnimationFrame(rotate);
-      })();
-    }
+  function animateSunBg(){
+    var sun=document.getElementById('hero-sun-bg');
+    if(!sun) return;
+    var hours=new Date().getHours()+new Date().getMinutes()/60;
+    // Intensité selon l'heure : max à 12h (midi), min la nuit
+    var RISE=6, SET=20;
+    var t=Math.max(0,Math.min(1,(hours-RISE)/(SET-RISE)));
+    var intensity=Math.sin(t*Math.PI); // 0 au lever, 1 à midi, 0 au coucher
+    var isDay=hours>=RISE&&hours<=SET;
+    // Teinte : chaud (orangé) au lever/coucher, jaune pur à midi
+    var proximity=Math.abs(t-0.5)*2;
+    var sunColor=proximity>0.6?'#ff8c00':proximity>0.35?'#ffb700':'#ffd400';
+    sun.style.background='radial-gradient(circle, '+sunColor+' 0%, rgba(255,200,0,0.4) 40%, transparent 70%)';
+    // Opacité finale selon l'heure (révélée par la classe revealed)
+    sun.style.setProperty('--sun-intensity', isDay ? (0.1+intensity*0.15).toFixed(2) : '0.05');
   }
-
-  // Lancer après que le hero soit révélé (délai ~600ms après load)
-  window.addEventListener('load', function(){
-    setTimeout(positionSun, 600);
+  window.addEventListener('load',function(){ setTimeout(animateSunBg,200); });
+  // Aussi après que revealed soit déclenché
+  document.addEventListener('DOMContentLoaded',function(){
+    var hero=document.getElementById('hero');
+    if(!hero) return;
+    var obs=new MutationObserver(function(){ animateSunBg(); });
+    obs.observe(hero,{attributes:true,attributeFilter:['class']});
   });
-  // Recalculer toutes les minutes (pour les longues sessions)
-  setInterval(positionSun, 60000);
+  setInterval(animateSunBg,60000);
 })();
 </script>
 </body>
