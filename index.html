@@ -113,7 +113,7 @@ body.trends-active footer{display:block;}
 .chiffre-text{font-family:"Archivo",sans-serif;font-weight:700;font-size:clamp(1rem,2.2vw,1.5rem);line-height:1.25;margin-bottom:8px;}
 .chiffre-source{font-size:.75rem;opacity:.5;font-weight:500;}
 /* HERO */
-.hero{max-width:1100px;margin:0 auto;padding:80px 24px 40px;text-align:center;position:relative;overflow:visible;}
+.hero{max-width:1100px;margin:0 auto;padding:80px 24px 40px;text-align:center;}
     .hero-animated{font-family:"Archivo",sans-serif;font-weight:900;font-size:clamp(2.8rem,8vw,6rem);line-height:1.0;letter-spacing:-.035em;margin-bottom:28px;}
     .hero-line{display:block;overflow:hidden;padding-bottom:.06em;}
     .hero-word{display:inline-block;opacity:0;transform:translateY(110%);transition:opacity .7s cubic-bezier(.2,.8,.25,1),transform .7s cubic-bezier(.2,.8,.25,1);}
@@ -440,6 +440,12 @@ footer .fbrand{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.4rem
     .toast-msg{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-family:"Archivo",sans-serif;font-weight:700;font-size:.9rem;padding:14px 28px;border-radius:100px;box-shadow:0 12px 30px rgba(0,0,0,.3);opacity:0;transition:all .35s;pointer-events:none;z-index:9999;white-space:nowrap;}
     .toast-msg.show{opacity:1;transform:translateX(-50%) translateY(0);}
     @media(max-width:560px){.editor-overlay{padding:0;align-items:flex-start;}.editor-panel{border-radius:0;min-height:100vh;}.editor-body{padding:20px 18px 40px;}}
+/* ── PAGINATION ── */
+.pagination{display:flex;align-items:center;justify-content:center;gap:16px;padding:28px 0 8px;margin-top:8px;}
+.page-arrow{width:44px;height:44px;border-radius:50%;border:2px solid var(--line);background:var(--paper);cursor:pointer;font-size:1.1rem;font-weight:700;transition:all .2s;display:flex;align-items:center;justify-content:center;color:var(--ink);}
+.page-arrow:hover:not([disabled]){border-color:var(--purple);background:var(--purple);color:#fff;transform:scale(1.08);}
+.page-arrow[disabled]{opacity:.35;cursor:default;}
+.page-info{font-family:"Archivo",sans-serif;font-size:.82rem;font-weight:700;color:var(--ink-soft);min-width:60px;text-align:center;}
 /* ── SKELETON LOADING ── */
 .skeleton-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:20px;}
 .skel-card{border-radius:var(--radius);overflow:hidden;background:#ebebeb;position:relative;}
@@ -462,26 +468,7 @@ footer .fbrand{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.4rem
 .hero.revealed .hero-counter{opacity:1;transform:translateY(0);}
 .hero-counter-num{font-weight:900;color:var(--green);font-size:.92rem;}
 .hero-counter-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
-/* ── HERO SOLEIL FLOU ── */
 
-.hero-sun-bg{
-  position:absolute;
-  width:min(600px,90vw);
-  height:min(600px,90vw);
-  border-radius:50%;
-  background:radial-gradient(circle, #ffd400 0%, #ffb700 30%, transparent 70%);
-  filter:blur(80px);
-  opacity:0;
-  top:50%;left:50%;
-  transform:translate(-50%,-50%) scale(0.3);
-  transition:opacity 1.2s ease .3s, transform 1.4s cubic-bezier(.2,.8,.25,1) .3s;
-  pointer-events:none;
-  z-index:0;
-}
-.hero.revealed .hero-sun-bg{
-  opacity:var(--sun-intensity, 0.18);
-  transform:translate(-50%,-50%) scale(1);
-}
 /* Tout le contenu du hero passe au-dessus du soleil */
 .hero h1,.hero p,.hero-counter,.article-du-jour{position:relative;z-index:1;}
 
@@ -605,6 +592,11 @@ body.map-active #view-map{
 .tcard.c-tech{background:linear-gradient(155deg,#7b3ff2 0%,#4a00cc 100%);}
 .tcard.c-science{background:linear-gradient(155deg,#00c9c9 0%,#007a7a 100%);}
 .tcard.c-society{background:linear-gradient(155deg,#ffd400 0%,#cc9900 100%);}
+.tcard.c-sport{background:linear-gradient(155deg,#ff6b35 0%,#cc4400 100%);}
+.tcard.c-culture{background:linear-gradient(155deg,#e040fb 0%,#9c00cc 100%);}
+.tcard.c-education{background:linear-gradient(155deg,#00bcd4 0%,#006980 100%);}
+.tcard.c-food{background:linear-gradient(155deg,#8bc34a 0%,#558b2f 100%);}
+.tcard.c-ocean{background:linear-gradient(155deg,#0288d1 0%,#01579b 100%);}
 
 /* Contenu */
 .tcard-inner{
@@ -795,9 +787,6 @@ body.map-active #view-map{
 <!-- HERO -->
 <section class="hero journal-only" id="hero">
 
-<!-- ☀️ Grand soleil flou derrière le titre -->
-<div class="hero-sun-bg" id="hero-sun-bg" aria-hidden="true"></div>
-
 <h1 class="hero-animated">
   <span class="hero-line"><span class="hero-word">Demain,</span></span>
   <span class="hero-line"><span class="hero-word grad">il</span> <span class="hero-word grad">fait</span> <span class="hero-word grad">beau.</span></span>
@@ -832,6 +821,11 @@ body.map-active #view-map{
 <button class="pill" data-rubric="tech">⚡ Tech</button>
 <button class="pill" data-rubric="science">🔬 Science</button>
 <button class="pill" data-rubric="society">🤝 Société</button>
+<button class="pill" data-rubric="sport">🏆 Sport</button>
+<button class="pill" data-rubric="culture">🎭 Culture</button>
+<button class="pill" data-rubric="education">📚 Éducation</button>
+<button class="pill" data-rubric="food">🌾 Alimentation</button>
+<button class="pill" data-rubric="ocean">🌊 Océans</button>
 </div>
 
 <!-- MAIN JOURNAL -->
@@ -1118,10 +1112,10 @@ ONU"></textarea>
 
 <script>
 // ── SCRIPT 0 : Données & Journal ──────────────────────────────────────────
-var TAG_CLASS={ecology:'c-ecology',climate:'c-climate',health:'c-health',economy:'c-economy',tech:'c-tech',science:'c-science',society:'c-society'};
-var TAG_LABEL={ecology:'🌿 Écologie',climate:'🌍 Climat',health:'💚 Santé',economy:'📈 Économie',tech:'⚡ Tech',science:'🔬 Science',society:'🤝 Société'};
+var TAG_CLASS={ecology:'c-ecology',climate:'c-climate',health:'c-health',economy:'c-economy',tech:'c-tech',science:'c-science',society:'c-society',sport:'c-sport',culture:'c-culture',education:'c-education',food:'c-food',ocean:'c-ocean'};
+var TAG_LABEL={ecology:'🌿 Écologie',climate:'🌍 Climat',health:'💚 Santé',economy:'📈 Économie',tech:'⚡ Tech',science:'🔬 Science',society:'🤝 Société',sport:'🏆 Sport',culture:'🎭 Culture',education:'📚 Éducation',food:'🌾 Alimentation',ocean:'🌊 Océans'};
 var SPAN=['span-feature','span-tall','span-half','span-third','span-third','span-third','span-third'];
-var RUBRIC_ORDER=['tech','health','society','ecology','climate','science','economy'];
+var RUBRIC_ORDER=['tech','health','society','ecology','climate','science','economy','sport','culture','education','food','ocean'];
 var currentRubric='all',currentArticles=[];
 var now=new Date();
 document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
@@ -1525,16 +1519,23 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
 
   function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
-  function render(articles,quote){
+  var _currentPage=0;
+  var PAGE_SIZE=7;
+
+  function renderPage(articles, quote, page){
     currentArticles=articles;
-    var mosaic=(currentRubric==='all'&&articles.length>=5);
+    _currentPage=page||0;
+    var totalPages=Math.ceil(articles.length/PAGE_SIZE);
+    var pageArticles=articles.slice(_currentPage*PAGE_SIZE, (_currentPage+1)*PAGE_SIZE);
+    var mosaic=(_currentPage===0&&currentRubric==='all'&&pageArticles.length>=5);
     var h='<div class="grid">';
-    articles.forEach(function(a,i){
+    pageArticles.forEach(function(a,i){
+      var realIdx=_currentPage*PAGE_SIZE+i;
       var cc=TAG_CLASS[a.rubric]||'c-society';
       var tl=TAG_LABEL[a.rubric]||'Société';
       var sp=mosaic?(SPAN[i]||'span-third'):'span-half';
       var ghost=(mosaic&&i===0)?'<div class="ghost-num">1</div>':'';
-      h+='<article class="card '+cc+' '+sp+'" data-idx="'+i+'" role="button" tabindex="0">'
+      h+='<article class="card '+cc+' '+sp+'" data-idx="'+realIdx+'" role="button" tabindex="0">'
         +'<span class="tag">'+tl+'</span>'
         +'<h2 class="headline">'+esc(a.headline)+'</h2>'
         +'<p class="summary">'+esc(a.summary)+'</p>'
@@ -1543,10 +1544,29 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
         +ghost+'</article>';
     });
     h+='</div>';
+    // Pagination
+    if(totalPages>1){
+      h+='<div class="pagination" id="pagination">';
+      h+='<button class="page-arrow" id="page-prev"'+(page===0?' disabled':'')+' aria-label="Page précédente">←</button>';
+      h+='<span class="page-info">'+(page+1)+' / '+totalPages+'</span>';
+      h+='<button class="page-arrow" id="page-next"'+(page>=totalPages-1?' disabled':'')+' aria-label="Page suivante">→</button>';
+      h+='</div>';
+    }
     if(quote){h+='<div class="quote"><div class="quote-mark">"</div><p class="quote-text">'+esc(quote.text)+'</p><p class="quote-author">\u2014 '+esc(quote.author)+'</p></div>';}
     document.getElementById('content').innerHTML=h;
     var cont=document.getElementById('content');
     if(cont){cont.classList.remove('view-fade');requestAnimationFrame(function(){cont.classList.add('view-fade');});}
+    // Listeners pagination
+    var prevBtn=document.getElementById('page-prev');
+    var nextBtn=document.getElementById('page-next');
+    if(prevBtn) prevBtn.addEventListener('click',function(){
+      if(_currentPage>0){ renderPage(currentArticles,null,_currentPage-1); window.scrollTo({top:0,behavior:'smooth'}); }
+    });
+    if(nextBtn) nextBtn.addEventListener('click',function(){
+      var tp=Math.ceil(currentArticles.length/PAGE_SIZE);
+      if(_currentPage<tp-1){ renderPage(currentArticles,null,_currentPage+1); window.scrollTo({top:0,behavior:'smooth'}); }
+    });
+
     document.querySelectorAll('.card').forEach(function(card){
       var open=function(){openDetail(parseInt(card.dataset.idx,10));};
       card.addEventListener('click',open);
@@ -2233,8 +2253,8 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
 <script>
 // ── NOUVELLES FONCTIONNALITÉS ────────────────────────────────────────────────
 (function(){
-  var TAG_COLORS={ecology:'#00c46a',climate:'#1a6dff',health:'#ff5da2',economy:'#ff7a00',tech:'#7b3ff2',science:'#00c9c9',society:'#ffd400'};
-  var TAG_LABELS={ecology:'🌿 Écologie',climate:'🌍 Climat',health:'💚 Santé',economy:'📈 Économie',tech:'⚡ Tech',science:'🔬 Science',society:'🤝 Société'};
+  var TAG_COLORS={ecology:'#00c46a',climate:'#1a6dff',health:'#ff5da2',economy:'#ff7a00',tech:'#7b3ff2',science:'#00c9c9',society:'#ffd400',sport:'#ff6b35',culture:'#e040fb',education:'#00bcd4',food:'#8bc34a',ocean:'#0288d1'};
+  var TAG_LABELS={ecology:'🌿 Écologie',climate:'🌍 Climat',health:'💚 Santé',economy:'📈 Économie',tech:'⚡ Tech',science:'🔬 Science',society:'🤝 Société',sport:'🏆 Sport',culture:'🎭 Culture',education:'📚 Éducation',food:'🌾 Alimentation',ocean:'🌊 Océans'};
   var REACT_KEY='difb_reactions_v1';
   var SEEN_KEY='difb_seen_v1';
 
@@ -2479,9 +2499,9 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
 <script>
 // ── TINDER ARTICLES ───────────────────────────────────────────────────────────
 (function(){
-  var TAG_COLORS={ecology:'#00c46a',climate:'#1a6dff',health:'#ff5da2',economy:'#ff7a00',tech:'#7b3ff2',science:'#00c9c9',society:'#ffd400'};
-  var TAG_LABELS={ecology:'🌿 Écologie',climate:'🌍 Climat',health:'💚 Santé',economy:'📈 Économie',tech:'⚡ Tech',science:'🔬 Science',society:'🤝 Société'};
-  var TAG_CLASS={ecology:'c-ecology',climate:'c-climate',health:'c-health',economy:'c-economy',tech:'c-tech',science:'c-science',society:'c-society'};
+  var TAG_COLORS={ecology:'#00c46a',climate:'#1a6dff',health:'#ff5da2',economy:'#ff7a00',tech:'#7b3ff2',science:'#00c9c9',society:'#ffd400',sport:'#ff6b35',culture:'#e040fb',education:'#00bcd4',food:'#8bc34a',ocean:'#0288d1'};
+  var TAG_LABELS={ecology:'🌿 Écologie',climate:'🌍 Climat',health:'💚 Santé',economy:'📈 Économie',tech:'⚡ Tech',science:'🔬 Science',society:'🤝 Société',sport:'🏆 Sport',culture:'🎭 Culture',education:'📚 Éducation',food:'🌾 Alimentation',ocean:'🌊 Océans'};
+  var TAG_CLASS={ecology:'c-ecology',climate:'c-climate',health:'c-health',economy:'c-economy',tech:'c-tech',science:'c-science',society:'c-society',sport:'c-sport',culture:'c-culture',education:'c-education',food:'c-food',ocean:'c-ocean'};
 
   var stack=null, initialized=false;
   var isDragging=false, startX=0, currentX=0, activeCard=null;
@@ -2981,36 +3001,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
   window.addEventListener('load',function(){ setTimeout(checkNewArticles,1000); });
 })();
 
-// ── SOLEIL HERO (animation d'apparition) ─────────────────────────────────────
-// Le grand soleil flou se glisse derrière le logo au chargement
-// Son opacité varie légèrement selon l'heure (plus intense à midi)
-(function(){
-  function animateSunBg(){
-    var sun=document.getElementById('hero-sun-bg');
-    if(!sun) return;
-    var hours=new Date().getHours()+new Date().getMinutes()/60;
-    // Intensité selon l'heure : max à 12h (midi), min la nuit
-    var RISE=6, SET=20;
-    var t=Math.max(0,Math.min(1,(hours-RISE)/(SET-RISE)));
-    var intensity=Math.sin(t*Math.PI); // 0 au lever, 1 à midi, 0 au coucher
-    var isDay=hours>=RISE&&hours<=SET;
-    // Teinte : chaud (orangé) au lever/coucher, jaune pur à midi
-    var proximity=Math.abs(t-0.5)*2;
-    var sunColor=proximity>0.6?'#ff8c00':proximity>0.35?'#ffb700':'#ffd400';
-    sun.style.background='radial-gradient(circle, '+sunColor+' 0%, rgba(255,200,0,0.4) 40%, transparent 70%)';
-    // Opacité finale selon l'heure (révélée par la classe revealed)
-    sun.style.setProperty('--sun-intensity', isDay ? (0.1+intensity*0.15).toFixed(2) : '0.05');
-  }
-  window.addEventListener('load',function(){ setTimeout(animateSunBg,200); });
-  // Aussi après que revealed soit déclenché
-  document.addEventListener('DOMContentLoaded',function(){
-    var hero=document.getElementById('hero');
-    if(!hero) return;
-    var obs=new MutationObserver(function(){ animateSunBg(); });
-    obs.observe(hero,{attributes:true,attributeFilter:['class']});
-  });
-  setInterval(animateSunBg,60000);
-})();
+
 </script>
 </body>
 </html>
