@@ -302,7 +302,7 @@ body.modal-open{overflow:hidden;}
 .reco-arrow{font-size:.75rem;color:var(--ink-soft);}
 /* ── ARTICLE DU JOUR HERO ── */
 .article-du-jour{background:linear-gradient(135deg,var(--purple) 0%,#3a0099 100%);border-radius:var(--radius);padding:24px 28px;margin:0 auto 24px;max-width:var(--max-w,1200px);color:#fff;cursor:pointer;transition:transform .2s,box-shadow .2s;display:block;}
-body.map-active .article-du-jour,body.trends-active .article-du-jour{display:none!important;}
+body.map-active .article-du-jour,body.trends-active .article-du-jour,body.assoc-active .article-du-jour{display:none!important;}
 .article-du-jour:hover{transform:translateY(-3px);box-shadow:0 12px 32px -8px rgba(123,63,242,.4);}
 .adj-eyebrow{font-family:"Archivo",sans-serif;font-size:.65rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;opacity:.75;margin-bottom:8px;}
 .adj-headline{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.25rem;line-height:1.15;letter-spacing:-.02em;margin-bottom:10px;}
@@ -846,6 +846,103 @@ body.map-active #view-map{
   .quiz-sun-btn{bottom:16px;left:16px;width:46px;height:46px;font-size:1.3rem;}
   .quiz-sun-tooltip{bottom:70px;left:16px;}
 }
+/* ── PAGE ASSOCIATIONS — Design magazine éditorial sombre ───────── */
+body.assoc-active .journal-only{display:none!important;}
+#view-assoc{display:none;}
+body.assoc-active #view-assoc{display:block;background:#0c0c0e;min-height:calc(100vh - 52px);color:#fff;}
+/* Masthead */
+.assoc-masthead{padding:56px 48px 36px;max-width:1200px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;border-bottom:1px solid rgba(255,255,255,.08);flex-wrap:wrap;}
+.assoc-issue{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:10px;}
+.assoc-title{font-family:"Archivo",sans-serif;font-weight:900;font-size:clamp(2.2rem,5vw,3.8rem);line-height:.95;letter-spacing:-.05em;color:#fff;margin-bottom:0;}
+.assoc-title em{font-style:normal;background:linear-gradient(90deg,#a78bfa,#f472b6);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.assoc-sub-right{max-width:300px;font-size:.8rem;line-height:1.65;color:rgba(255,255,255,.4);border-left:2px solid rgba(255,255,255,.1);padding-left:20px;}
+/* Filtres tabs */
+.assoc-filters{display:flex;gap:0;padding:0 48px;max-width:1200px;margin:0 auto;border-bottom:1px solid rgba(255,255,255,.08);overflow-x:auto;scrollbar-width:none;}
+.assoc-filters::-webkit-scrollbar{display:none;}
+.assoc-cat-pill{font-family:"Archivo",sans-serif;font-size:.68rem;font-weight:700;padding:14px 18px;border:none;border-bottom:2px solid transparent;background:transparent;cursor:pointer;color:rgba(255,255,255,.3);letter-spacing:.08em;text-transform:uppercase;transition:color .2s,border-color .2s;white-space:nowrap;}
+.assoc-cat-pill:hover{color:rgba(255,255,255,.7);}
+.assoc-cat-pill.active{color:#fff;border-bottom-color:#a78bfa;}
+/* Grille 4 colonnes */
+.assoc-grid{display:grid;grid-template-columns:repeat(4,1fr);max-width:1200px;margin:0 auto;padding:0 48px 80px;}
+/* Carte */
+.assoc-card{position:relative;padding:28px 24px 22px;border-right:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer;transition:background .2s;overflow:hidden;min-height:210px;display:flex;flex-direction:column;justify-content:space-between;}
+.assoc-card:hover{background:rgba(255,255,255,.03);}
+.assoc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;transform:scaleX(0);transform-origin:left;transition:transform .3s cubic-bezier(.2,.8,.25,1);}
+.assoc-card:hover::before{transform:scaleX(1);}
+.assoc-card:nth-child(4n){border-right:none;}
+.assoc-logo-wrap{font-size:1.5rem;margin-bottom:14px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;}
+.assoc-name{font-family:"Archivo",sans-serif;font-weight:900;font-size:1rem;letter-spacing:-.02em;color:#fff;margin-bottom:5px;line-height:1.1;}
+.assoc-tagline{font-size:.73rem;line-height:1.5;color:rgba(255,255,255,.38);margin-bottom:12px;}
+.assoc-tags{display:flex;gap:5px;flex-wrap:wrap;}
+.assoc-tag{font-size:.58rem;font-weight:700;padding:2px 8px;border-radius:3px;letter-spacing:.06em;text-transform:uppercase;border:1px solid;}
+.assoc-card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.06);}
+.assoc-stars{display:flex;gap:2px;}
+.assoc-star{font-size:.62rem;color:rgba(255,255,255,.18);}
+.assoc-star.lit{color:#fbbf24;}
+.assoc-score-label{font-family:"Archivo",sans-serif;font-size:.66rem;font-weight:700;color:rgba(255,255,255,.28);letter-spacing:.04em;}
+.assoc-arrow{font-size:.68rem;color:rgba(255,255,255,.18);transition:color .2s,transform .2s;}
+.assoc-card:hover .assoc-arrow{color:#fff;transform:translateX(3px);}
+/* Modal panneau latéral */
+.assoc-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(10px);z-index:2500;display:none;align-items:stretch;justify-content:flex-end;}
+.assoc-modal-overlay.open{display:flex;}
+.assoc-modal{background:#111113;width:min(660px,100vw);height:100vh;overflow-y:auto;position:relative;border-left:1px solid rgba(255,255,255,.07);display:flex;flex-direction:column;}
+.assoc-modal-band{height:3px;width:100%;flex-shrink:0;}
+.assoc-modal-close{position:absolute;top:16px;right:16px;width:32px;height:32px;background:rgba(255,255,255,.07);border:none;border-radius:50%;cursor:pointer;color:rgba(255,255,255,.4);font-size:.8rem;display:flex;align-items:center;justify-content:center;transition:all .2s;z-index:1;}
+.assoc-modal-close:hover{background:rgba(255,255,255,.15);color:#fff;}
+.assoc-modal-head{padding:36px 36px 24px;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.07);}
+.assoc-modal-eyebrow{font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:10px;}
+.assoc-modal-logo{font-size:2.2rem;margin-bottom:10px;}
+.assoc-modal-name{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.9rem;letter-spacing:-.04em;color:#fff;margin-bottom:8px;line-height:1;}
+.assoc-modal-meta{display:flex;gap:14px;flex-wrap:wrap;font-size:.7rem;color:rgba(255,255,255,.3);margin-bottom:12px;}
+.assoc-modal-meta span::before{content:'—';margin-right:5px;opacity:.35;}
+.assoc-modal-tags{display:flex;gap:6px;flex-wrap:wrap;}
+.assoc-modal-body{padding:0 36px 48px;flex:1;}
+.assoc-section{margin-top:32px;}
+.assoc-section-title{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.22);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.assoc-section-title::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.07);}
+.assoc-desc{font-size:.86rem;line-height:1.8;color:rgba(255,255,255,.55);}
+.assoc-actions-list{display:flex;flex-direction:column;}
+.assoc-action-item{display:flex;gap:14px;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.82rem;line-height:1.6;color:rgba(255,255,255,.55);}
+.assoc-action-icon{font-size:.85rem;flex-shrink:0;margin-top:2px;opacity:.6;}
+.assoc-controversy{padding:14px 0;border-bottom:1px solid rgba(255,255,255,.05);}
+.assoc-controversy strong{display:block;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(251,113,133,.65);margin-bottom:4px;}
+.assoc-controversy p{font-size:.82rem;line-height:1.6;color:rgba(255,255,255,.45);margin:0;}
+.assoc-gw-wrap{margin-top:4px;}
+.assoc-gw-label{font-size:.7rem;color:rgba(255,255,255,.35);display:flex;justify-content:space-between;margin-bottom:8px;}
+.assoc-gw-bar{height:2px;background:rgba(255,255,255,.08);border-radius:1px;overflow:hidden;}
+.assoc-gw-fill{height:100%;border-radius:1px;transition:width 1.2s cubic-bezier(.2,.8,.25,1);}
+.assoc-bilan-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:rgba(255,255,255,.05);}
+.assoc-bilan-item{padding:18px;background:#111113;}
+.assoc-bilan-value{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.5rem;letter-spacing:-.04em;color:#fff;margin-bottom:3px;}
+.assoc-bilan-desc{font-size:.7rem;color:rgba(255,255,255,.3);line-height:1.4;}
+.assoc-rating-wrap{display:flex;align-items:center;gap:20px;padding:18px 0;border-top:1px solid rgba(255,255,255,.07);border-bottom:1px solid rgba(255,255,255,.07);}
+.assoc-rating-big{font-family:"Archivo",sans-serif;font-weight:900;font-size:2.8rem;letter-spacing:-.06em;color:#fff;line-height:1;}
+.assoc-rating-stars-big{display:flex;gap:3px;margin-bottom:3px;}
+.assoc-rating-stars-big span{font-size:.85rem;}
+.assoc-rating-label{font-size:.68rem;color:rgba(255,255,255,.28);}
+.assoc-link-btn{display:inline-flex;align-items:center;gap:8px;margin-top:24px;padding:11px 22px;border:1px solid rgba(255,255,255,.12);background:transparent;color:rgba(255,255,255,.6);font-family:"Archivo",sans-serif;font-weight:700;font-size:.76rem;letter-spacing:.04em;text-decoration:none;transition:all .2s;border-radius:3px;cursor:pointer;}
+.assoc-link-btn:hover{background:rgba(255,255,255,.07);color:#fff;}
+@media(max-width:1024px){
+  .assoc-masthead,.assoc-filters,.assoc-grid{padding-left:24px;padding-right:24px;}
+  .assoc-grid{grid-template-columns:repeat(3,1fr);}
+  .assoc-card:nth-child(4n){border-right:1px solid rgba(255,255,255,.06);}
+  .assoc-card:nth-child(3n){border-right:none;}
+}
+@media(max-width:767px){
+  .assoc-masthead{padding:28px 16px 20px;flex-direction:column;align-items:flex-start;gap:14px;}
+  .assoc-sub-right{border-left:none;padding-left:0;border-top:1px solid rgba(255,255,255,.08);padding-top:12px;max-width:100%;}
+  .assoc-filters,.assoc-grid{padding-left:16px;padding-right:16px;}
+  .assoc-title{font-size:2rem;}
+  .assoc-grid{grid-template-columns:repeat(2,1fr);}
+  .assoc-card:nth-child(3n){border-right:1px solid rgba(255,255,255,.06);}
+  .assoc-card:nth-child(2n){border-right:none;}
+  .assoc-modal{width:100vw;}
+  .assoc-modal-head,.assoc-modal-body{padding-left:20px;padding-right:20px;}
+}
+@media(max-width:400px){
+  .assoc-grid{grid-template-columns:1fr;}
+  .assoc-card{border-right:none!important;}
+}
 </style>
 </head>
 <body>
@@ -870,6 +967,7 @@ body.map-active #view-map{
 <button class="page-btn active" id="btn-journal">Le journal</button>
 <button class="page-btn" id="btn-map">📚 Articles</button>
 <button class="page-btn" id="btn-trends">📈 Tendances</button>
+<button class="page-btn" id="btn-assoc">🤝 Associations</button>
 </nav>
 <div class="topbar-date" id="topbar-date">—</div>
 </div>
@@ -1887,10 +1985,11 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
   document.addEventListener('keydown',function(e){if(e.key==='Escape'&&document.getElementById('modal').classList.contains('open'))closeDetail();});
 
   function setPage(page){
-    document.body.classList.remove('map-active','trends-active');
-    ['btn-journal','btn-map','btn-trends'].forEach(function(id){var b=document.getElementById(id);if(b)b.classList.remove('active');});
+    document.body.classList.remove('map-active','trends-active','assoc-active');
+    ['btn-journal','btn-map','btn-trends','btn-assoc'].forEach(function(id){var b=document.getElementById(id);if(b)b.classList.remove('active');});
     document.getElementById('view-map').setAttribute('aria-hidden','true');
     document.getElementById('view-trends').setAttribute('aria-hidden','true');
+    if(document.getElementById('view-assoc')) document.getElementById('view-assoc').setAttribute('aria-hidden','true');
     // Toujours remonter en haut sans effet de saut
     window.scrollTo({top:0,behavior:'instant'});
     if(page==='map'){
@@ -1898,6 +1997,11 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
       var bm=document.getElementById('btn-map');if(bm)bm.classList.add('active');
       document.getElementById('view-map').setAttribute('aria-hidden','false');
       if(window._initCarousel) window._initCarousel();
+    } else if(page==='assoc'){
+      document.body.classList.add('assoc-active');
+      var ba=document.getElementById('btn-assoc');if(ba)ba.classList.add('active');
+      if(document.getElementById('view-assoc')) document.getElementById('view-assoc').setAttribute('aria-hidden','false');
+      if(window._initAssoc) window._initAssoc();
     } else if(page==='trends'){
       document.body.classList.add('trends-active');
       var bt=document.getElementById('btn-trends');if(bt)bt.classList.add('active');
@@ -1933,6 +2037,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
   document.getElementById('btn-journal').addEventListener('click',function(){setPage('journal');});
   document.getElementById('btn-map').addEventListener('click',function(){setPage('map');});
   document.getElementById('btn-trends').addEventListener('click',function(){setPage('trends');});
+  document.getElementById('btn-assoc').addEventListener('click',function(){setPage('assoc');});
   window._setPage=setPage;
 
   // ── Filtres de rubriques ──
@@ -3242,6 +3347,44 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
 
 </script>
 
+
+<!-- ── PAGE ASSOCIATIONS ──────────────────────────────────────── -->
+<section id="view-assoc" aria-hidden="true">
+  <div class="assoc-masthead">
+    <div>
+      <div class="assoc-issue">Demain, il fait beau · Dossier</div>
+      <h2 class="assoc-title">Les acteurs<br>du <em>changement</em></h2>
+    </div>
+    <p class="assoc-sub-right">Actions, scandales, greenwashing, bilan chiffré. Une analyse indépendante des organisations qui façonnent l'avenir de la planète.</p>
+  </div>
+  <div class="assoc-filters" id="assoc-filters">
+    <button class="assoc-cat-pill active" data-cat="all">Toutes</button>
+    <button class="assoc-cat-pill" data-cat="environment">🌿 Environnement</button>
+    <button class="assoc-cat-pill" data-cat="health">💊 Santé</button>
+    <button class="assoc-cat-pill" data-cat="humanitarian">🆘 Humanitaire</button>
+    <button class="assoc-cat-pill" data-cat="rights">⚖️ Droits humains</button>
+    <button class="assoc-cat-pill" data-cat="development">🌍 Développement</button>
+    <button class="assoc-cat-pill" data-cat="animal">🐾 Animaux</button>
+  </div>
+  <div class="assoc-grid" id="assoc-grid"></div>
+</section>
+
+<!-- ── MODAL ASSOCIATION ──────────────────────────────────────── -->
+<div class="assoc-modal-overlay" id="assoc-modal-overlay">
+  <div class="assoc-modal" id="assoc-modal">
+    <div class="assoc-modal-band" id="assoc-modal-band"></div>
+    <button class="assoc-modal-close" id="assoc-modal-close" aria-label="Fermer">✕</button>
+    <div class="assoc-modal-head">
+      <div class="assoc-modal-eyebrow" id="assoc-modal-eyebrow"></div>
+      <div class="assoc-modal-logo" id="assoc-modal-logo"></div>
+      <div class="assoc-modal-name" id="assoc-modal-name"></div>
+      <div class="assoc-modal-meta" id="assoc-modal-meta"></div>
+      <div class="assoc-modal-tags" id="assoc-modal-tags"></div>
+    </div>
+    <div class="assoc-modal-body" id="assoc-modal-body"></div>
+  </div>
+</div>
+
 <!-- ── BOUTON SOLEIL QUIZ ── -->
 <button class="quiz-sun-btn" id="quiz-sun-btn" aria-label="Ouvrir le quiz mensuel" title="Quiz mensuel">
   ☀️
@@ -3254,6 +3397,565 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     <!-- Contenu injecté par JS -->
   </div>
 </div>
+
+
+<script>
+// ── PAGE ASSOCIATIONS ─────────────────────────────────────────────────────────
+(function(){
+// Données des associations
+var ASSOCIATIONS = [
+  {
+    id:'wwf', name:'WWF', emoji:'🐼', color:'#2e7d32', category:'environment',
+    tagline:"Fonds mondial pour la nature. L\'une des plus grandes ONG environnementales.",
+    founded:'1961', hq:'Gland, Suisse', budget:'~700 M$/an', members:'35 millions',
+    tags:['Biodiversité','Climat','Forêts','Océans'],
+    tagColors:['#2e7d32','#1565c0','#5d4037','#01579b'],
+    rating:3.8,
+    desc:"Le WWF (World Wildlife Fund) est l\'une des organisations de conservation les plus reconnues au monde. Créée en 1961, elle mène des programmes dans plus de 100 pays pour protéger la biodiversité, lutter contre le dérèglement climatique et promouvoir une utilisation durable des ressources naturelles.",
+    actions:[
+      {icon:'🌲', text:"Protection de plus de 2 milliards d\'hectares de forêts via des accords avec gouvernements et entreprises."},
+      {icon:'🐋', text:"Programme de protection des espèces menacées : tigres, rhinocéros, baleines, pandas — avec des résultats mesurables."},
+      {icon:'🌊', text:"Campagnes pour la création de zones marines protégées, désormais à 8 % des océans mondiaux."},
+      {icon:'♻️', text:"Partenariats avec des entreprises pour réduire leur empreinte carbone et adopter des pratiques durables."},
+    ],
+    controversies:[
+      {title:'Greenwashing corporate', text:"Des partenariats avec Coca-Cola, Shell et des entreprises pétrolières ont suscité de vives critiques sur la cohérence des engagements."},
+      {title:'Violations des droits humains (2019)', text:"Une enquête de Buzzfeed News a révélé que des gardes financés par le WWF auraient commis des abus contre des communautés locales en Asie et en Afrique."},
+      {title:'Marchandisation de la nature', text:"Critiques d\'experts sur l\'approche 'financiarisation' de la biodiversité, qui peut favoriser les grandes entreprises au détriment des communautés locales."},
+    ],
+    greenwashing:55,
+    gwLabel:'Risque modéré à élevé',
+    gwColor:'#ff7a00',
+    bilan:[
+      {value:'100+', desc:'pays où le WWF est actif'},
+      {value:'3 000', desc:'espèces protégées par des programmes actifs'},
+      {value:'35 M', desc:'membres et sympathisants dans le monde'},
+      {value:'1961', desc:'année de création'},
+    ],
+    website:'https://www.wwf.fr'
+  },
+  {
+    id:'greenpeace', name:'Greenpeace', emoji:'☮️', color:'#00897b', category:'environment',
+    tagline:"Actions directes et non-violentes pour défendre l\'environnement.",
+    founded:'1971', hq:'Amsterdam, Pays-Bas', budget:'~380 M$/an', members:'3 millions',
+    tags:['Militant','Climat','Nucléaire','Océans'],
+    tagColors:['#e53935','#1565c0','#6a1b9a','#01579b'],
+    rating:3.5,
+    desc:"Greenpeace est connue pour ses actions directes spectaculaires — bateaux face aux baleiniers japonais, militants escaladant des plateformes pétrolières — qui ont contribué à mettre l\'environnement dans l\'agenda politique mondial. Son indépendance financière (refus de subventions gouvernementales et d\'entreprises) est l\'une de ses forces principales.",
+    actions:[
+      {icon:'🚢', text:"Campagnes maritimes contre la chasse à la baleine, les essais nucléaires et la pêche illégale depuis les années 1970."},
+      {icon:'⚡', text:"Plaidoyer mondial pour les énergies renouvelables. Greenpeace a contribué à l\'adoption de lois sur les énergies vertes dans plusieurs dizaines de pays."},
+      {icon:'🌊', text:"Campagne 'Protection des océans' ayant contribué au Traité de la Haute Mer adopté à l\'ONU en 2023."},
+      {icon:'🌾', text:"Opposition aux OGM et à l\'agriculture intensive, bien que cette position soit controversée au sein de la communauté scientifique."},
+    ],
+    controversies:[
+      {title:'Destruction d\'OGM (récurrente)', text:"Des militants ont détruit des cultures d\'OGM expérimentales, des actes qualifiés de vandalism par des scientifiques défenseurs de la recherche agricole."},
+      {title:'Affaire des figures de Nazca (2014)', text:"Des militants ont endommagé le site archéologique péruvien lors d\'une opération de communication. Greenpeace a présenté ses excuses."},
+      {title:'Position sur le nucléaire', text:"Le refus catégorique du nucléaire est critiqué par des experts climatiques qui y voient une énergie bas-carbone indispensable à la transition."},
+    ],
+    greenwashing:20,
+    gwLabel:'Faible (modèle indépendant)',
+    gwColor:'#00897b',
+    bilan:[
+      {value:'55', desc:'bureaux dans le monde'},
+      {value:'1971', desc:'fondée à Vancouver, Canada'},
+      {value:'3 M', desc:'donateurs actifs'},
+      {value:'0', desc:'subventions gouvernementales ou d\'entreprises'},
+    ],
+    website:'https://www.greenpeace.fr'
+  },
+  {
+    id:'msf', name:'Médecins Sans Frontières', emoji:'🏥', color:'#e53935', category:'health',
+    tagline:"Soins médicaux d\'urgence pour les populations en danger, partout dans le monde.",
+    founded:'1971', hq:'Genève, Suisse', budget:'~2 Md$/an', members:'65 000 personnes',
+    tags:['Urgences','Chirurgie','Épidémies','Conflits'],
+    tagColors:['#e53935','#1565c0','#e65100','#c62828'],
+    rating:4.8,
+    desc:"MSF (Médecins Sans Frontières) est l\'organisation humanitaire médicale la plus reconnue au monde. Prix Nobel de la paix 1999. Elle intervient dans les zones de conflit, lors d\'épidémies et de catastrophes naturelles, souvent là où aucune autre organisation ne peut ou ne veut aller. Son indépendance vis-à-vis des gouvernements est un principe fondateur.",
+    actions:[
+      {icon:'🩺', text:"Plus de 10 millions de consultations médicales par an dans plus de 70 pays, dont des zones de conflit actif."},
+      {icon:'💉', text:"Campagnes de vaccination massives — rougeole, choléra, méningite — dans les zones à risque."},
+      {icon:'🔬', text:"Programme d\'accès aux médicaments essentiels : pression sur les laboratoires pharmaceutiques pour réduire les prix en zones défavorisées."},
+      {icon:'🚨', text:"Témoignage public et dénonciation des violations du droit international humanitaire, même au risque de perdre des accès."},
+    ],
+    controversies:[
+      {title:'Tensions avec les gouvernements locaux', text:"L\'indépendance de MSF crée parfois des frictions avec les gouvernements qui veulent contrôler l\'aide humanitaire."},
+      {title:'Burnout et conditions du personnel', text:"Des enquêtes internes ont révélé des problèmes de harcèlement et d\'épuisement des équipes sur le terrain."},
+      {title:'Accusations de partialité', text:"Dans certains conflits, MSF a été accusée de parti pris dans ses témoignages, notamment en Syrie et au Yémen."},
+    ],
+    greenwashing:5,
+    gwLabel:'Risque très faible',
+    gwColor:'#2e7d32',
+    bilan:[
+      {value:'70+', desc:'pays d\'intervention'},
+      {value:'10 M+', desc:'consultations médicales par an'},
+      {value:'1999', desc:'Prix Nobel de la paix'},
+      {value:'90 %', desc:'des fonds proviennent de donateurs privés'},
+    ],
+    website:'https://www.msf.fr'
+  },
+  {
+    id:'unicef', name:'UNICEF', emoji:'🧒', color:'#1565c0', category:'humanitarian',
+    tagline:"Le Fonds des Nations Unies pour l\'enfance. Nutrition, éducation, protection des droits.",
+    founded:'1946', hq:'New York, États-Unis', budget:'~8 Md$/an', members:'Programme ONU',
+    tags:['Enfance','Éducation','Santé','Nutrition'],
+    tagColors:['#1565c0','#2e7d32','#e53935','#f57f17'],
+    rating:4.2,
+    desc:"L\'UNICEF est l\'agence des Nations Unies dédiée à la protection et au développement des enfants dans le monde. Créée juste après la Seconde Guerre mondiale, elle travaille dans 190 pays et territoires pour améliorer les conditions de vie des enfants les plus vulnérables.",
+    actions:[
+      {icon:'💉', text:"Vaccination de centaines de millions d\'enfants par an via GAVI et des programmes nationaux. Contribution majeure à la réduction de la mortalité infantile."},
+      {icon:'📚', text:"Programmes d\'éducation d\'urgence pour les enfants réfugiés et en zone de conflit."},
+      {icon:'🥛', text:"Alimentation thérapeutique pour enfants malnutris : distribution de plus de 3 millions de kits de réhabilitation nutritionnelle par an."},
+      {icon:'🛡️', text:"Protection contre les violences, les mariages forcés et le travail des enfants, via des plaidoyers et des programmes de terrain."},
+    ],
+    controversies:[
+      {title:'Scandales de corruption locaux', text:"Dans plusieurs pays, des fonds ont été détournés par des intermédiaires locaux. L\'UNICEF a renforcé ses contrôles internes."},
+      {title:'Lenteurs bureaucratiques', text:"En tant qu\'agence onusienne, l\'UNICEF est critiquée pour sa bureaucratie qui ralentit parfois les réponses d\'urgence."},
+      {title:'Communication vs impact', text:"Certains critiques estiment que les budgets communication sont disproportionnés par rapport à l\'impact direct sur le terrain."},
+    ],
+    greenwashing:18,
+    gwLabel:'Faible',
+    gwColor:'#2e7d32',
+    bilan:[
+      {value:'190', desc:'pays et territoires'},
+      {value:'8 Md$', desc:'budget annuel'},
+      {value:'1946', desc:'fondée après la 2ème Guerre mondiale'},
+      {value:'100 M+', desc:'enfants atteints chaque année'},
+    ],
+    website:'https://www.unicef.fr'
+  },
+  {
+    id:'amnesty', name:'Amnesty International', emoji:'🕯️', color:'#ffd400', category:'rights',
+    tagline:"Défense des droits humains partout dans le monde depuis 1961.",
+    founded:'1961', hq:'Londres, Royaume-Uni', budget:'~350 M$/an', members:'10 millions',
+    tags:['Droits humains','Prisonniers','Justice','Liberté'],
+    tagColors:['#e53935','#1565c0','#6a1b9a','#e65100'],
+    rating:4.4,
+    desc:"Amnesty International est l\'une des organisations de défense des droits humains les plus influentes au monde. Elle documente les violations, mobilise l\'opinion publique et fait pression sur les gouvernements. Son modèle basé sur le témoignage individuel ('prisonniers de conscience') a été révolutionnaire dans le plaidoyer pour les droits humains.",
+    actions:[
+      {icon:'✍️', text:"Campagnes de lettres massives ayant contribué à libérer des milliers de prisonniers politiques dans le monde."},
+      {icon:'📋', text:"Documentation rigoureuse de violations des droits humains dans plus de 150 pays, utilisée par les tribunaux internationaux."},
+      {icon:'⚖️', text:"Plaidoyer pour l\'abolition de la peine de mort : contribution à son recul dans plus de 50 pays."},
+      {icon:'🔍', text:"Enquêtes sur les crimes de guerre, les disparitions forcées et la torture."},
+    ],
+    controversies:[
+      {title:'Biais perçus dans les rapports', text:"Des gouvernements et ONG reprochent à Amnesty un traitement inégal selon les pays, notamment sur le conflit israélo-palestinien."},
+      {title:'Problèmes internes (2018-2022)', text:"Un rapport indépendant a révélé une culture toxique au siège londonien, incluant du harcèlement et du racisme."},
+      {title:'Financement opaque', text:"Des questions ont été soulevées sur certains financements venant d'États ou de fondations avec des agendas politiques."},
+    ],
+    greenwashing:12,
+    gwLabel:'Faible',
+    gwColor:'#2e7d32',
+    bilan:[
+      {value:'150+', desc:'pays documentés chaque année'},
+      {value:'10 M', desc:'membres et supporters'},
+      {value:'1961', desc:'fondée par Peter Benenson'},
+      {value:'1977', desc:'Prix Nobel de la paix'},
+    ],
+    website:'https://www.amnesty.fr'
+  },
+  {
+    id:'oxfam', name:'Oxfam', emoji:'⚖️', color:'#e65100', category:'development',
+    tagline:"Lutte contre la pauvreté et les inégalités mondiales.",
+    founded:'1942', hq:'Nairobi, Kenya / Oxford, UK', budget:'~1.2 Md$/an', members:'20 confédérations',
+    tags:['Pauvreté','Inégalités','Commerce équitable','Genre'],
+    tagColors:['#e65100','#c62828','#1565c0','#6a1b9a'],
+    rating:3.2,
+    desc:"Oxfam est une confédération de 21 organisations qui travaillent ensemble dans plus de 90 pays pour trouver des solutions durables à la pauvreté et à l\'injustice. Elle combine aide d\'urgence, développement à long terme et plaidoyer politique.",
+    actions:[
+      {icon:'🌾', text:"Programmes d\'aide alimentaire et agricole dans 70 pays, aidant les petits producteurs à devenir autonomes."},
+      {icon:'💧', text:"Projets d\'accès à l\'eau potable et à l\'assainissement pour des millions de personnes."},
+      {icon:'📊', text:"Rapports annuels influents sur les inégalités mondiales (rapport Davos) qui influencent les politiques internationales."},
+      {icon:'🤝', text:"Programmes de commerce équitable et de défense des droits des travailleurs agricoles."},
+    ],
+    controversies:[
+      {title:'Scandale Haïti (2018)', text:"Des travailleurs humanitaires d\'Oxfam GB ont eu recours à des prostituées en Haïti après le séisme de 2010. La direction était au courant. Scandale majeur qui a ébranlé le secteur."},
+      {title:'Couverture insuffisante', text:"Oxfam a été accusé d\'avoir minimisé et tardé à révéler les faits aux autorités britanniques."},
+      {title:'Écarts salariaux internes', text:"Des études ont pointé des écarts importants entre les salaires des dirigeants et des travailleurs de terrain."},
+    ],
+    greenwashing:30,
+    gwLabel:'Modéré',
+    gwColor:'#ff7a00',
+    bilan:[
+      {value:'90+', desc:'pays d\'intervention'},
+      {value:'1942', desc:'fondée à Oxford, Angleterre'},
+      {value:'21', desc:'organisations membres de la confédération'},
+      {value:'1.2 Md$', desc:'budget annuel consolidé'},
+    ],
+    website:'https://www.oxfamfrance.org'
+  },
+  {
+    id:'croix-rouge', name:'Croix-Rouge', emoji:'🔴', color:'#c62828', category:'humanitarian',
+    tagline:"Protection des victimes de conflits armés et aide humanitaire d\'urgence.",
+    founded:'1863', hq:'Genève, Suisse', budget:'~2.5 Md$/an', members:'100 millions',
+    tags:['Urgences','Conflits','Sang','Secours'],
+    tagColors:['#c62828','#1565c0','#e65100','#2e7d32'],
+    rating:4.5,
+    desc:"Le Mouvement international de la Croix-Rouge et du Croissant-Rouge est la plus ancienne et la plus grande organisation humanitaire au monde. Fondée par Henry Dunant après la bataille de Solférino en 1859, elle est composée du CICR, de la Fédération internationale et de 191 sociétés nationales.",
+    actions:[
+      {icon:'🏥', text:"Assistance médicale et protection des prisonniers de guerre dans les conflits armés — mandat unique basé sur les Conventions de Genève."},
+      {icon:'🩸', text:"Collecte de sang et gestion des stocks de produits sanguins dans des dizaines de pays."},
+      {icon:'🌊', text:"Réponse aux catastrophes naturelles : séismes, inondations, sécheresses dans plus de 100 pays par an."},
+      {icon:'👨‍👩‍👧', text:"Rétablissement des liens familiaux entre personnes séparées par les conflits ou catastrophes."},
+    ],
+    controversies:[
+      {title:'Silence sur l\'Holocauste', text:"Le CICR a été critiqué pour ne pas avoir dénoncé publiquement les camps d\'extermination nazis durant la Seconde Guerre mondiale."},
+      {title:'Opacité financière', text:"La structure décentralisée (sociétés nationales indépendantes) crée des disparités importantes dans la transparence financière."},
+      {title:'Neutralité controversée', text:"La neutralité absolue est parfois perçue comme une complicité passive face à des crimes graves."},
+    ],
+    greenwashing:10,
+    gwLabel:'Très faible',
+    gwColor:'#2e7d32',
+    bilan:[
+      {value:'191', desc:'sociétés nationales dans le monde'},
+      {value:'1863', desc:'fondée par Henry Dunant'},
+      {value:'100 M', desc:'volontaires et membres'},
+      {value:'3×', desc:'Prix Nobel de la paix (1917, 1944, 1963)'},
+    ],
+    website:'https://www.croix-rouge.fr'
+  },
+  {
+    id:'gfw', name:'Global Forest Watch', emoji:'🌲', color:'#1b5e20', category:'environment',
+    tagline:"Surveillance satellitaire en temps réel de la déforestation mondiale.",
+    founded:'2014', hq:'Washington D.C., États-Unis', budget:'Projet du WRI', members:'Réseau mondial',
+    tags:['Forêts','Données','Satellite','Transparence'],
+    tagColors:['#1b5e20','#0277bd','#f57f17','#00897b'],
+    rating:4.6,
+    desc:"Global Forest Watch est une plateforme de surveillance des forêts mondiales utilisant des données satellitaires disponibles gratuitement. Gérée par le World Resources Institute, elle permet à n\'importe qui d\'observer en quasi-temps réel l\'évolution du couvert forestier mondial.",
+    actions:[
+      {icon:'🛰️', text:"Alertes de déforestation en temps quasi-réel dans tous les pays tropicaux, utilisées par des gouvernements et des ONG."},
+      {icon:'📊', text:"Données ouvertes utilisées par des journalistes, des chercheurs et des gouvernements pour lutter contre la déforestation illégale."},
+      {icon:'⚖️', text:"Outil de vérification des engagements 'zéro déforestation' des entreprises et des États."},
+      {icon:'🌏', text:"Couverture de plus de 190 pays avec des données actualisées hebdomadairement."},
+    ],
+    controversies:[
+      {title:'Limites des données satellites', text:"Les alertes peuvent avoir des faux positifs (nuages, brûlis agricoles légaux) qui compliquent l\'interprétation."},
+      {title:'Dépendance aux financements privés', text:"Financé en partie par des fondations privées, ce qui soulève des questions sur l\'indépendance à long terme."},
+    ],
+    greenwashing:8,
+    gwLabel:'Très faible (données ouvertes)',
+    gwColor:'#2e7d32',
+    bilan:[
+      {value:'190+', desc:'pays couverts'},
+      {value:'2014', desc:'lancement de la plateforme'},
+      {value:'Gratuit', desc:'accès libre à toutes les données'},
+      {value:'Hebdo', desc:'fréquence de mise à jour des alertes'},
+    ],
+    website:'https://www.globalforestwatch.org'
+  },
+  {
+    id:'wfp', name:'Programme Alimentaire Mondial', emoji:'🌾', color:'#f57f17', category:'humanitarian',
+    tagline:"La plus grande organisation humanitaire d\'aide alimentaire au monde.",
+    founded:'1961', hq:'Rome, Italie', budget:'~14 Md$/an', members:'Programme ONU',
+    tags:['Faim','Urgences','Nutrition','Résilience'],
+    tagColors:['#f57f17','#c62828','#2e7d32','#1565c0'],
+    rating:4.3,
+    desc:"Le PAM (Programme Alimentaire Mondial) est l\'agence onusienne de lutte contre la faim. Prix Nobel de la paix 2020. Il opère dans plus de 80 pays, aidant plus de 100 millions de personnes par an. Il combine aide d\'urgence et programmes de développement pour renforcer la résilience alimentaire.",
+    actions:[
+      {icon:'🍚', text:"Distribution de nourriture et de bons alimentaires à plus de 100 millions de personnes par an dans les zones de crise."},
+      {icon:'✈️', text:"Logistique humanitaire mondiale : le PAM gère le service aérien humanitaire (UNHAS) pour tout le système ONU."},
+      {icon:'🎓', text:"Cantines scolaires pour 18 millions d\'enfants par an, combinant alimentation et maintien en scolarité."},
+      {icon:'📲', text:"Transferts monétaires digitaux permettant aux bénéficiaires d\'acheter localement, soutenant les économies locales."},
+    ],
+    controversies:[
+      {title:'Détournements de fonds (Haïti, Éthiopie)', text:"Des cas de détournement de l\'aide alimentaire par des acteurs armés ou des fonctionnaires locaux ont été documentés."},
+      {title:'Dépendance aux États donateurs', text:"Plus de 50 % du financement vient des États-Unis, créant une dépendance qui peut influencer les priorités géographiques."},
+      {title:'Paradoxe du Nobel', text:"Le Nobel de la paix 2020 a été attribué durant une année où la faim mondiale augmentait significativement."},
+    ],
+    greenwashing:15,
+    gwLabel:'Faible',
+    gwColor:'#2e7d32',
+    bilan:[
+      {value:'80+', desc:'pays d\'opération'},
+      {value:'100 M+', desc:'personnes aidées par an'},
+      {value:'2020', desc:'Prix Nobel de la paix'},
+      {value:'14 Md$', desc:'budget annuel'},
+    ],
+    website:'https://fr.wfp.org'
+  },
+  {
+    id:'wwanother', name:'Sea Shepherd', emoji:'🐬', color:'#1565c0', category:'animal',
+    tagline:"Conservation marine directe et non-violente par l\'action en mer.",
+    founded:'1977', hq:'Friday Harbor, États-Unis', budget:'~50 M$/an', members:'500 bénévoles actifs',
+    tags:['Océans','Braconnage','Action directe','Faune marine'],
+    tagColors:['#1565c0','#00897b','#e53935','#1b5e20'],
+    rating:3.9,
+    desc:"Sea Shepherd est connue pour ses interventions directes en mer contre la pêche illégale, la chasse à la baleine et le braconnage marin. Fondée par Paul Watson (ancien de Greenpeace), elle adopte une approche plus radicale, n\'hésitant pas à s\'interposer physiquement entre les chasseurs et leurs proies.",
+    actions:[
+      {icon:'🚢', text:"Patrouilles maritimes ayant contribué à réduire la chasse à la baleine commerciale en Antarctique de plus de 90 % entre 2005 et 2017."},
+      {icon:'🎣', text:"Opérations contre la pêche illégale dans les zones marines protégées d\'Afrique de l\'Ouest et d\'Asie du Sud-Est."},
+      {icon:'🐟', text:"Protection des dauphins dans la baie de Taiji, Japon, documentant et perturbant les chasses annuelles."},
+      {icon:'🔍', text:"Documentation vidéo des pratiques de pêche illégale, utilisée dans des procédures judiciaires."},
+    ],
+    controversies:[
+      {title:'Méthodes limites', text:"Des tactiques comme l\'obstruction volontaire de navires de pêche sont controversées sur le plan légal et sécuritaire."},
+      {title:'Fracture avec Greenpeace', text:"Paul Watson a quitté Greenpeace en désaccord avec son approche non-confrontationnelle — les deux organisations sont restées rivales."},
+      {title:'Arrestation de Paul Watson (2024)', text:"Fondateur arrêté au Groenland sur mandat d\'arrêt japonais, relançant le débat sur les limites de l\'activisme."},
+    ],
+    greenwashing:15,
+    gwLabel:'Faible',
+    gwColor:'#2e7d32',
+    bilan:[
+      {value:'1977', desc:'fondée par Paul Watson'},
+      {value:'-90 %', desc:'de chasse à la baleine en Antarctique (2005-2017)'},
+      {value:'50+', desc:'opérations maritimes'},
+      {value:'500', desc:'bénévoles actifs en mer'},
+    ],
+    website:'https://www.seashepherd.fr'
+  },
+  {
+    id:'gfwatch', name:'Transparency International', emoji:'🔍', color:'#6a1b9a', category:'rights',
+    tagline:"Lutte contre la corruption à l\'échelle mondiale.",
+    founded:'1993', hq:'Berlin, Allemagne', budget:'~90 M$/an', members:'100 sections nationales',
+    tags:['Anti-corruption','Gouvernance','Transparence','Démocratie'],
+    tagColors:['#6a1b9a','#1565c0','#e65100','#2e7d32'],
+    rating:4.1,
+    desc:"Transparency International est la principale organisation mondiale de lutte contre la corruption. Elle publie chaque année l\'Indice de Perception de la Corruption (IPC), devenu la référence mondiale pour mesurer la corruption dans 180 pays.",
+    actions:[
+      {icon:'📊', text:"Indice de Perception de la Corruption annuel couvrant 180 pays — outil de référence utilisé par gouvernements, investisseurs et médias."},
+      {icon:'🏛️', text:"Plaidoyer pour des lois anti-corruption dans des dizaines de pays, avec des succès mesurables."},
+      {icon:'📱', text:"Lignes d\'alerte éthique (whistleblowing) dans des pays où la corruption est endémique."},
+      {icon:'🎓', text:"Formation de journalistes d\'investigation et de fonctionnaires sur les mécanismes de détection de la corruption."},
+    ],
+    controversies:[
+      {title:'Financement par des entreprises', text:"Des critiques pointent des conflits d\'intérêts potentiels liés au financement de l\'organisation par des grandes multinationales."},
+      {title:'Limites méthodologiques de l\'IPC', text:"L\'indice mesure la perception et non la corruption réelle, ce qui peut biaiser les comparaisons entre pays."},
+    ],
+    greenwashing:22,
+    gwLabel:'Faible à modéré',
+    gwColor:'#2e7d32',
+    bilan:[
+      {value:'180', desc:'pays dans l\'Indice de Corruption annuel'},
+      {value:'100', desc:'sections nationales'},
+      {value:'1993', desc:'fondée à Berlin'},
+      {value:'90 M$', desc:'budget annuel'},
+    ],
+    website:'https://www.transparency-france.org'
+  },
+  {
+    id:'hiv', name:'ONUSIDA', emoji:'🎗️', color:'#e53935', category:'health',
+    tagline:"Lutte mondiale contre le VIH/SIDA depuis 1994.",
+    founded:'1994', hq:'Genève, Suisse', budget:'~680 M$/an', members:'Programme ONU',
+    tags:['VIH/SIDA','Prévention','Traitement','Droits'],
+    tagColors:['#e53935','#6a1b9a','#1565c0','#2e7d32'],
+    rating:4.0,
+    desc:"ONUSIDA coordonne la riposte mondiale au VIH/SIDA sous l\'égide des Nations Unies. Depuis sa création, la mortalité liée au SIDA a baissé de 69 % et les nouvelles infections ont reculé de 59 % dans les pays à forte prévalence.",
+    actions:[
+      {icon:'💊', text:"Coordination du déploiement des antirétroviraux dans les pays à faibles revenus — plus de 30 millions de personnes traitées."},
+      {icon:'🔬', text:"Financement de la recherche et des essais cliniques pour de nouveaux médicaments et vaccins."},
+      {icon:'⚖️', text:"Plaidoyer pour les droits des personnes vivant avec le VIH et contre la discrimination."},
+      {icon:'📊', text:"Production des données épidémiologiques mondiales de référence sur le VIH."},
+    ],
+    controversies:[
+      {title:'Déni de la crise (années 1990)', text:"L\'ONU a été critiquée pour avoir mis du temps à reconnaître et répondre à l\'urgence du SIDA dans les années 1980-90."},
+      {title:'Scandales de gouvernance interne', text:"Des problèmes de management, harcèlement et inégalités salariales ont été documentés en interne."},
+    ],
+    greenwashing:12,
+    gwLabel:'Faible',
+    gwColor:'#2e7d32',
+    bilan:[
+      {value:'-69 %', desc:'de mortalité liée au SIDA depuis 1994'},
+      {value:'30 M+', desc:'personnes sous antirétroviraux'},
+      {value:'-59 %', desc:'de nouvelles infections depuis le pic'},
+      {value:'2030', desc:'objectif : mettre fin au SIDA comme menace'},
+    ],
+    website:'https://www.unaids.org/fr'
+  },
+];
+
+
+  var currentCat = 'all';
+
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function renderStars(rating){
+    var html = '';
+    for(var i=1;i<=5;i++){
+      if(rating >= i) html += '<span class="assoc-star">★</span>';
+      else if(rating >= i-0.5) html += '<span class="assoc-star" style="opacity:.4">★</span>';
+      else html += '<span class="assoc-star" style="opacity:.15">★</span>';
+    }
+    return html;
+  }
+
+  function buildCard(a){
+    var el = document.createElement('div');
+    el.className = 'assoc-card';
+    el.setAttribute('data-id', a.id);
+    // Accent coloré ::before via inline style
+    el.setAttribute('style','--accent:'+a.color);
+    // On injecte une règle inline pour ::before (workaround)
+    var styleTag = document.createElement('style');
+    styleTag.textContent = '.assoc-card[data-id="'+a.id+'"]:before{background:'+a.color+';}';
+    document.head.appendChild(styleTag);
+
+    var starsHtml = '';
+    for(var s=1;s<=5;s++){
+      starsHtml += '<span class="assoc-star'+(s<=Math.round(a.rating)?' lit':'')+'">★</span>';
+    }
+    el.innerHTML =
+      '<div style="display:flex;flex-direction:column;gap:0">'+
+        '<div class="assoc-logo-wrap">'+a.emoji+'</div>'+
+        '<div class="assoc-name">'+esc(a.name)+'</div>'+
+        '<div class="assoc-tagline">'+esc(a.tagline)+'</div>'+
+        '<div class="assoc-tags">'+
+          a.tags.slice(0,2).map(function(t,i){
+            return '<span class="assoc-tag" style="color:'+a.tagColors[i]+';border-color:'+a.tagColors[i]+'44;background:'+a.tagColors[i]+'12;">'+esc(t)+'</span>';
+          }).join('')+
+        '</div>'+
+      '</div>'+
+      '<div class="assoc-card-footer">'+
+        '<div class="assoc-stars">'+starsHtml+'</div>'+
+        '<span class="assoc-score-label">'+a.rating.toFixed(1)+'</span>'+
+        '<span class="assoc-arrow">→</span>'+
+      '</div>';
+    el.addEventListener('click', function(){ openModal(a); });
+    return el;
+  }
+
+  function renderGrid(cat){
+    var grid = document.getElementById('assoc-grid');
+    if(!grid) return;
+    grid.innerHTML = '';
+    ASSOCIATIONS.filter(function(a){
+      return cat === 'all' || a.category === cat;
+    }).forEach(function(a){
+      grid.appendChild(buildCard(a));
+    });
+  }
+
+  function openModal(a){
+    var overlay = document.getElementById('assoc-modal-overlay');
+    var band    = document.getElementById('assoc-modal-band');
+    var logo    = document.getElementById('assoc-modal-logo');
+    var name    = document.getElementById('assoc-modal-name');
+    var meta    = document.getElementById('assoc-modal-meta');
+    var tags    = document.getElementById('assoc-modal-tags');
+    var body    = document.getElementById('assoc-modal-body');
+    if(!overlay) return;
+
+    band.style.background = a.color;
+    logo.textContent = a.emoji;
+    logo.style.background = 'transparent';
+    name.textContent = a.name;
+    name.style.color = '#fff';
+    var eyebrow = document.getElementById('assoc-modal-eyebrow');
+    if(eyebrow) eyebrow.textContent = a.tags[0].toUpperCase()+' · DEPUIS '+a.founded;
+
+    meta.innerHTML =
+      '<span>📅 Fondée en '+esc(a.founded)+'</span>'+
+      '<span>📍 '+esc(a.hq)+'</span>'+
+      '<span>💰 '+esc(a.budget)+'</span>'+
+      '<span>👥 '+esc(a.members)+'</span>';
+
+    tags.innerHTML = a.tags.map(function(t,i){
+      return '<span class="assoc-tag" style="background:'+a.tagColors[i]+'22;color:'+a.tagColors[i]+';border:1px solid '+a.tagColors[i]+'33;font-size:.7rem;padding:4px 10px;">'+esc(t)+'</span>';
+    }).join('');
+
+    // Construire le corps de la modal
+    var html = '';
+
+    // Description
+    html += '<div class="assoc-section">';
+    html += '<div class="assoc-section-title">À propos</div>';
+    html += '<p class="assoc-desc">'+esc(a.desc)+'</p>';
+    html += '</div>';
+
+    // Actions & avancées
+    html += '<div class="assoc-section">';
+    html += '<div class="assoc-section-title">✅ Actions & avancées</div>';
+    html += '<div class="assoc-actions-list">';
+    a.actions.forEach(function(act){
+      html += '<div class="assoc-action-item"><span class="assoc-action-icon">'+act.icon+'</span><span>'+esc(act.text)+'</span></div>';
+    });
+    html += '</div></div>';
+
+    // Controverses
+    html += '<div class="assoc-section">';
+    html += '<div class="assoc-section-title">⚠️ Controverses & scandales</div>';
+    a.controversies.forEach(function(c){
+      html += '<div class="assoc-controversy"><strong>'+esc(c.title)+'</strong>'+esc(c.text)+'</div>';
+    });
+    html += '</div>';
+
+    // Greenwashing meter
+    html += '<div class="assoc-section">';
+    html += '<div class="assoc-section-title">🌿 Risque de greenwashing / communication abusive</div>';
+    html += '<div class="assoc-gw-wrap">';
+    html += '<div class="assoc-gw-label"><span>'+esc(a.gwLabel)+'</span><span>'+a.greenwashing+' / 100</span></div>';
+    html += '<div class="assoc-gw-bar"><div class="assoc-gw-fill" id="gw-fill-'+a.id+'" style="width:0%;background:'+a.gwColor+'"></div></div>';
+    html += '</div></div>';
+
+    // Bilan chiffré
+    html += '<div class="assoc-section">';
+    html += '<div class="assoc-section-title">📊 Bilan chiffré</div>';
+    html += '<div class="assoc-bilan-grid">';
+    a.bilan.forEach(function(b){
+      html += '<div class="assoc-bilan-item"><div class="assoc-bilan-value">'+esc(b.value)+'</div><div class="assoc-bilan-desc">'+esc(b.desc)+'</div></div>';
+    });
+    html += '</div></div>';
+
+    // Note globale
+    html += '<div class="assoc-section">';
+    html += '<div class="assoc-section-title">⭐ Évaluation globale</div>';
+    html += '<div class="assoc-rating-wrap">';
+    html += '<div class="assoc-rating-big">'+a.rating.toFixed(1)+'</div>';
+    html += '<div><div class="assoc-rating-stars-big">'+renderStars(a.rating)+'</div>';
+    html += '<div class="assoc-rating-label">Note sur 5 · Transparence, impact, gouvernance</div></div>';
+    html += '</div></div>';
+
+    // Lien site officiel
+    html += '<a href="'+esc(a.website)+'" target="_blank" rel="noopener" class="assoc-link-btn">🌐 Site officiel : '+esc(a.name)+' →</a>';
+
+    body.innerHTML = html;
+
+    // Ouvrir
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('assoc-modal').scrollTop = 0;
+
+    // Animer la barre greenwashing
+    setTimeout(function(){
+      var fill = document.getElementById('gw-fill-'+a.id);
+      if(fill) fill.style.width = a.greenwashing+'%';
+    }, 200);
+
+    // Fermeture
+    document.getElementById('assoc-modal-close').onclick = closeModal;
+    overlay.onclick = function(e){ if(e.target === overlay) closeModal(); };
+    function onEsc(e){ if(e.key==='Escape'){ closeModal(); document.removeEventListener('keydown',onEsc); } }
+    document.addEventListener('keydown', onEsc);
+  }
+
+  function closeModal(){
+    var overlay = document.getElementById('assoc-modal-overlay');
+    if(!overlay) return;
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // Filtres
+  function initFilters(){
+    var container = document.getElementById('assoc-filters');
+    if(!container) return;
+    container.querySelectorAll('.assoc-cat-pill').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        container.querySelectorAll('.assoc-cat-pill').forEach(function(b){ b.classList.remove('active'); });
+        btn.classList.add('active');
+        currentCat = btn.dataset.cat || 'all';
+        renderGrid(currentCat);
+      });
+    });
+  }
+
+  // Init quand la page s\'active
+  window._initAssoc = function(){
+    renderGrid(currentCat);
+    initFilters();
+  };
+
+})();
+</script>
 
 <script>
 // ── QUIZ MENSUEL : OPTIMISTE OU PESSIMISTE ? ─────────────────────────────────
