@@ -829,9 +829,9 @@ body.map-active #view-map{
 </h1>
 <p class="hero-sub">Chaque jour, nous parcourons le monde pour ne garder que les progrès, les avancées et les vraies raisons d'être optimiste.</p>
 <!-- ARTICLE DU JOUR -->
-<div class="article-du-jour journal-only" id="article-du-jour" role="button" tabindex="0" aria-label="Lire l'article du jour">
+<div class="article-du-jour journal-only" id="article-du-jour" role="button" tabindex="0" aria-label="Lire l'article du jour" style="display:none;">
   <div class="adj-eyebrow">☀️ Article du jour</div>
-  <div class="adj-headline" id="adj-headline">Chargement…</div>
+  <div class="adj-headline" id="adj-headline"></div>
   <div class="adj-chapo" id="adj-chapo"></div>
   <div class="adj-footer">
     <span id="adj-rubrique"></span>
@@ -996,6 +996,30 @@ ONU"></textarea>
 <div class="factbox-title">📊 Les faits, vérifiés</div>
 <ul id="modal-facts"></ul>
 </div>
+<!-- Réactions -->
+<div class="reaction-bar" id="modal-reactions">
+  <button class="reaction-btn" data-reaction="surprising" aria-label="Surprenant">
+    <span class="rbtn-icon">😮</span>
+    <span class="rbtn-label">Surprenant</span>
+    <span class="rbtn-count" id="react-surprising">0</span>
+  </button>
+  <button class="reaction-btn" data-reaction="important" aria-label="Important">
+    <span class="rbtn-icon">🌍</span>
+    <span class="rbtn-label">Important</span>
+    <span class="rbtn-count" id="react-important">0</span>
+  </button>
+  <button class="reaction-btn" data-reaction="inspiring" aria-label="Inspirant">
+    <span class="rbtn-icon">💚</span>
+    <span class="rbtn-label">Inspirant</span>
+    <span class="rbtn-count" id="react-inspiring">0</span>
+  </button>
+</div>
+<!-- Recommandations -->
+<div class="reco-section" id="modal-reco" style="display:none;">
+  <div class="reco-title">📖 Vous aimerez aussi</div>
+  <div class="reco-list" id="reco-list"></div>
+</div>
+<!-- Sources -->
 <div class="sources">
 <div class="sources-title">🔎 Sources &amp; références</div>
 <div id="modal-sources"></div>
@@ -2225,13 +2249,15 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     var el=document.getElementById('article-du-jour');
     if(!el) return;
     var all=getAllArticles();
-    if(!all.length) return;
+    if(!all.length){ el.style.display='none'; return; }
     var d=new Date();
     var dayOfYear=Math.floor((d-new Date(d.getFullYear(),0,0))/86400000);
     var a=all[dayOfYear%all.length];
-    document.getElementById('adj-headline').textContent=a.headline;
-    document.getElementById('adj-chapo').textContent=a.chapo||a.summary;
+    var hEl=document.getElementById('adj-headline');
+    var cEl=document.getElementById('adj-chapo');
     var rEl=document.getElementById('adj-rubrique');
+    if(hEl) hEl.textContent=a.headline;
+    if(cEl) cEl.textContent=a.chapo||a.summary;
     if(rEl) rEl.textContent=TAG_LABELS[a.rubric]||a.rubric;
     el.style.display='block';
     function openAdj(){
@@ -2389,24 +2415,39 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
   };
 
   // ── HOOK MODAL ────────────────────────────────────────────────────────────
-  document.addEventListener('DOMContentLoaded',function(){
+  function tryInit(){
+    var all=getAllArticles();
+    if(!all.length){ setTimeout(tryInit,200); return; }
+    initArticleDuJour();
+    updateReaderProgress();
+    // Hook modal pour réactions + recommandations
     var modal=document.getElementById('modal');
     if(modal){
+      var lastOpen=false;
       var obs=new MutationObserver(function(){
-        if(modal.classList.contains('open')){
-          var idx=window._currentModalIdx;
-          var all=getAllArticles();
-          var a=all[idx];
-          if(!a) return;
-          initReactions(articleId(a));
-          buildRecommendations(a);
-        }
+        var isOpen=modal.classList.contains('open');
+        if(isOpen && !lastOpen){
+          lastOpen=true;
+          // Petit délai pour que _currentModalIdx soit assigné
+          setTimeout(function(){
+            var idx=window._currentModalIdx;
+            var allA=getAllArticles();
+            var a=allA[idx];
+            if(!a) return;
+            initReactions(articleId(a));
+            buildRecommendations(a);
+          },50);
+        } else if(!isOpen){ lastOpen=false; }
       });
       obs.observe(modal,{attributes:true,attributeFilter:['class']});
     }
-    initArticleDuJour();
-    setTimeout(updateReaderProgress,600);
-  });
+  }
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',function(){ setTimeout(tryInit,300); });
+  } else {
+    setTimeout(tryInit,300);
+  }
 
   window._updateReaderProgress=updateReaderProgress;
 })();
