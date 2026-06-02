@@ -271,6 +271,49 @@ body.modal-open{overflow:hidden;}
 .cal-day.has-news .cal-dot{opacity:1;}
 .cal-legend{padding:12px 20px 20px;font-size:.72rem;color:var(--ink-soft);display:flex;align-items:center;gap:8px;border-top:1px solid var(--line);}
 .cal-legend-dot{width:8px;height:8px;border-radius:50%;background:var(--purple);flex-shrink:0;}
+/* ── PROGRESSION LECTEUR ── */
+.reader-progress-bar{background:var(--paper);border-radius:var(--radius-sm);padding:14px 20px;margin:12px 0 20px;border:1px solid var(--line);}
+.rp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.rp-label{font-family:"Archivo",sans-serif;font-size:.72rem;font-weight:800;color:var(--ink-soft);letter-spacing:.06em;text-transform:uppercase;}
+.rp-count{font-family:"Archivo",sans-serif;font-size:.8rem;font-weight:900;color:var(--green);}
+.rp-bar-bg{height:6px;background:var(--line);border-radius:3px;overflow:hidden;}
+.rp-bar-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--teal));border-radius:3px;transition:width 1s cubic-bezier(.2,.8,.25,1);}
+.rp-sub{font-size:.7rem;color:var(--ink-soft);margin-top:6px;}
+/* ── RÉACTIONS ARTICLES ── */
+.reaction-bar{display:flex;gap:8px;margin-top:20px;padding-top:18px;border-top:1px solid var(--line);}
+.reaction-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;border-radius:var(--radius-sm);border:1.5px solid var(--line);background:transparent;cursor:pointer;transition:all .2s;font-family:"Sora",sans-serif;}
+.reaction-btn:hover{border-color:var(--purple);background:rgba(123,63,242,.05);}
+.reaction-btn.voted{border-color:var(--purple);background:rgba(123,63,242,.08);}
+.reaction-btn.voted .rbtn-icon{transform:scale(1.2);}
+.rbtn-icon{font-size:1.3rem;transition:transform .3s cubic-bezier(.2,.8,.25,1);}
+.rbtn-label{font-size:.65rem;font-weight:600;color:var(--ink-soft);}
+.rbtn-count{font-size:.72rem;font-weight:900;font-family:"Archivo",sans-serif;color:var(--purple);}
+/* ── RECOMMANDATIONS ── */
+.reco-section{margin-top:28px;padding-top:20px;border-top:1px solid var(--line);}
+.reco-title{font-family:"Archivo",sans-serif;font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:12px;}
+.reco-list{display:flex;flex-direction:column;gap:8px;}
+.reco-card{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:var(--radius-sm);border:1px solid var(--line);cursor:pointer;transition:all .2s;}
+.reco-card:hover{border-color:var(--purple);background:rgba(123,63,242,.04);}
+.reco-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.reco-text{font-size:.8rem;font-weight:600;line-height:1.3;flex:1;}
+.reco-arrow{font-size:.75rem;color:var(--ink-soft);}
+/* ── ARTICLE DU JOUR HERO ── */
+.article-du-jour{background:linear-gradient(135deg,var(--purple) 0%,#3a0099 100%);border-radius:var(--radius);padding:24px 28px;margin-bottom:24px;color:#fff;cursor:pointer;transition:transform .2s,box-shadow .2s;}
+.article-du-jour:hover{transform:translateY(-3px);box-shadow:0 12px 32px -8px rgba(123,63,242,.4);}
+.adj-eyebrow{font-family:"Archivo",sans-serif;font-size:.65rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;opacity:.75;margin-bottom:8px;}
+.adj-headline{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.25rem;line-height:1.15;letter-spacing:-.02em;margin-bottom:10px;}
+.adj-chapo{font-family:"Lora",serif;font-style:italic;font-size:.88rem;line-height:1.55;opacity:.85;margin-bottom:14px;}
+.adj-footer{display:flex;justify-content:space-between;align-items:center;font-size:.72rem;font-weight:700;opacity:.7;}
+/* ── CLASSEMENT POPULAIRE ── */
+.popular-list{display:flex;flex-direction:column;gap:6px;margin-top:12px;}
+.pop-item{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--paper);border-radius:var(--radius-sm);border:1px solid var(--line);cursor:pointer;transition:all .2s;}
+.pop-item:hover{border-color:var(--purple);transform:translateX(3px);}
+.pop-rank{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.1rem;color:var(--line);min-width:24px;}
+.pop-rank.gold{color:#ffd400;}
+.pop-rank.silver{color:#c0c0c0;}
+.pop-rank.bronze{color:#cd7f32;}
+.pop-text{font-size:.82rem;font-weight:600;line-height:1.3;flex:1;}
+.pop-reactions{font-size:.72rem;color:var(--ink-soft);}
 /* NEWSLETTER */
 .newsletter{background:#0a0a0a;color:#fff;padding:80px 24px;margin-top:64px;}
 .nl-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
@@ -785,6 +828,16 @@ body.map-active #view-map{
   <span class="hero-line"><span class="hero-word grad">il</span> <span class="hero-word grad">fait</span> <span class="hero-word grad">beau.</span></span>
 </h1>
 <p class="hero-sub">Chaque jour, nous parcourons le monde pour ne garder que les progrès, les avancées et les vraies raisons d'être optimiste.</p>
+<!-- ARTICLE DU JOUR -->
+<div class="article-du-jour journal-only" id="article-du-jour" role="button" tabindex="0" aria-label="Lire l'article du jour">
+  <div class="adj-eyebrow">☀️ Article du jour</div>
+  <div class="adj-headline" id="adj-headline">Chargement…</div>
+  <div class="adj-chapo" id="adj-chapo"></div>
+  <div class="adj-footer">
+    <span id="adj-rubrique"></span>
+    <span>Lire l'article →</span>
+  </div>
+</div>
 <div class="hero-counter" id="hero-counter">
   <span class="hero-counter-dot"></span>
   <span id="hero-counter-num" class="hero-counter-num">0</span>
@@ -1571,6 +1624,8 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
       buildTrends();
       if(window._buildTrendsExtras)window._buildTrendsExtras();
       var vt=document.getElementById('view-trends');
+      if(vt && window._buildPopular) window._buildPopular();
+      var vt=document.getElementById('view-trends');
       if(vt){vt.classList.remove('view-fade');requestAnimationFrame(function(){vt.classList.add('view-fade');});}
     } else {
       var bj=document.getElementById('btn-journal');if(bj)bj.classList.add('active');
@@ -2152,6 +2207,211 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
 })();
 </script>
 
+<script>
+// ── NOUVELLES FONCTIONNALITÉS ────────────────────────────────────────────────
+(function(){
+  var TAG_COLORS={ecology:'#00c46a',climate:'#1a6dff',health:'#ff5da2',economy:'#ff7a00',tech:'#7b3ff2',science:'#00c9c9',society:'#ffd400'};
+  var TAG_LABELS={ecology:'🌿 Écologie',climate:'🌍 Climat',health:'💚 Santé',economy:'📈 Économie',tech:'⚡ Tech',science:'🔬 Science',society:'🤝 Société'};
+  var REACT_KEY='difb_reactions_v1';
+  var SEEN_KEY='difb_seen_v1';
+
+  function getAllArticles(){ return (window.TODAY_ARTICLES||[]).concat(window._fallback||[]); }
+  function loadSeen(){ try{ return JSON.parse(localStorage.getItem(SEEN_KEY)||'[]'); }catch(e){ return []; } }
+  function articleId(a){ return (a.headline||'').toLowerCase().replace(/[^a-z0-9]/g,'').substring(0,40); }
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  // ── ARTICLE DU JOUR ───────────────────────────────────────────────────────
+  function initArticleDuJour(){
+    var el=document.getElementById('article-du-jour');
+    if(!el) return;
+    var all=getAllArticles();
+    if(!all.length) return;
+    var d=new Date();
+    var dayOfYear=Math.floor((d-new Date(d.getFullYear(),0,0))/86400000);
+    var a=all[dayOfYear%all.length];
+    document.getElementById('adj-headline').textContent=a.headline;
+    document.getElementById('adj-chapo').textContent=a.chapo||a.summary;
+    var rEl=document.getElementById('adj-rubrique');
+    if(rEl) rEl.textContent=TAG_LABELS[a.rubric]||a.rubric;
+    el.style.display='block';
+    function openAdj(){
+      var allA=getAllArticles();
+      var idx=allA.indexOf(a);
+      if(window.innerWidth<768&&window._openImmersive){ window._openImmersive(a); }
+      else{ window.currentArticles=allA; window._currentModalIdx=idx>=0?idx:0; if(typeof openDetail==='function') openDetail(idx>=0?idx:0); }
+    }
+    el.addEventListener('click',openAdj);
+    el.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' ') openAdj(); });
+  }
+
+  // ── BARRE DE PROGRESSION ─────────────────────────────────────────────────
+  function updateReaderProgress(){
+    var wrap=document.getElementById('reader-progress-wrap');
+    var fill=document.getElementById('rp-fill');
+    var count=document.getElementById('rp-count');
+    var sub=document.getElementById('rp-sub');
+    if(!wrap) return;
+    var seen=loadSeen().length;
+    var total=getAllArticles().length;
+    if(seen===0){ wrap.style.display='none'; return; }
+    wrap.style.display='block';
+    var pct=Math.round(seen/total*100);
+    fill.style.width=pct+'%';
+    count.textContent=seen+' / '+total;
+    var msg='';
+    if(pct>=100) msg='🎉 Vous avez tout lu ! Revenez demain pour de nouveaux articles.';
+    else if(pct>=75) msg='🔥 Presque à jour ! Plus que '+(total-seen)+' articles.';
+    else if(pct>=50) msg='⚡ À mi-parcours — vous êtes dans le top des lecteurs !';
+    else if(pct>=25) msg='👍 Bonne progression ! '+(total-seen)+' articles vous attendent.';
+    else msg='Vous avez lu '+seen+' article'+(seen>1?'s':'')+'. Continuez à explorer !';
+    sub.textContent=msg;
+  }
+
+  // ── RÉACTIONS ─────────────────────────────────────────────────────────────
+  function loadReactions(){ try{ return JSON.parse(localStorage.getItem(REACT_KEY)||'{}'); }catch(e){ return {}; } }
+  function saveReactions(r){ try{ localStorage.setItem(REACT_KEY,JSON.stringify(r)); }catch(e){} }
+
+  function initReactions(aid){
+    var reactions=loadReactions();
+    var ar=reactions[aid]||{surprising:0,important:0,inspiring:0};
+    var myVote=ar._myVote||null;
+    ['surprising','important','inspiring'].forEach(function(type){
+      var btn=document.querySelector('[data-reaction="'+type+'"]');
+      var cEl=document.getElementById('react-'+type);
+      if(!btn||!cEl) return;
+      cEl.textContent=ar[type]||0;
+      btn.classList.toggle('voted', myVote===type);
+      btn.onclick=function(){
+        var r=loadReactions();
+        var a2=r[aid]||{surprising:0,important:0,inspiring:0};
+        if(a2._myVote===type){
+          a2[type]=Math.max(0,(a2[type]||0)-1);
+          a2._myVote=null;
+          btn.classList.remove('voted');
+        } else {
+          if(a2._myVote){
+            a2[a2._myVote]=Math.max(0,(a2[a2._myVote]||0)-1);
+            var ob=document.querySelector('[data-reaction="'+a2._myVote+'"]');
+            if(ob) ob.classList.remove('voted');
+            var oc=document.getElementById('react-'+a2._myVote);
+            if(oc) oc.textContent=a2[a2._myVote];
+          }
+          a2[type]=(a2[type]||0)+1;
+          a2._myVote=type;
+          btn.classList.add('voted');
+          var icon=btn.querySelector('.rbtn-icon');
+          if(icon){ icon.style.transform='scale(1.4)'; setTimeout(function(){ icon.style.transform=''; },300); }
+        }
+        r[aid]=a2;
+        saveReactions(r);
+        cEl.textContent=a2[type];
+        if(window._buildPopular) window._buildPopular();
+      };
+    });
+  }
+
+  // ── RECOMMANDATIONS ───────────────────────────────────────────────────────
+  function buildRecommendations(currentA){
+    var list=document.getElementById('reco-list');
+    var section=document.getElementById('modal-reco');
+    if(!list||!section) return;
+    var all=getAllArticles();
+    var sameRubric=all.filter(function(a){ return a.rubric===currentA.rubric&&a.headline!==currentA.headline; });
+    var picks=sameRubric.sort(function(){ return Math.random()-.5; }).slice(0,3);
+    if(!picks.length){ section.style.display='none'; return; }
+    section.style.display='block';
+    list.innerHTML=picks.map(function(a){
+      var color=TAG_COLORS[a.rubric]||'#999';
+      return '<div class="reco-card" data-headline="'+esc(a.headline)+'">'+
+        '<div class="reco-dot" style="background:'+color+'"></div>'+
+        '<div class="reco-text">'+esc(a.headline)+'</div>'+
+        '<span class="reco-arrow">→</span>'+
+      '</div>';
+    }).join('');
+    list.querySelectorAll('.reco-card').forEach(function(card){
+      card.addEventListener('click',function(){
+        var h=card.dataset.headline;
+        var a=all.find(function(x){ return x.headline===h; });
+        if(!a) return;
+        var idx=all.indexOf(a);
+        if(window.innerWidth<768&&window._openImmersive){ window._openImmersive(a); }
+        else{ window.currentArticles=all; window._currentModalIdx=idx; if(typeof openDetail==='function') openDetail(idx); }
+      });
+    });
+  }
+
+  // ── CLASSEMENT POPULAIRE ─────────────────────────────────────────────────
+  window._buildPopular=function(){
+    var container=document.getElementById('view-trends');
+    if(!container) return;
+    var existing=document.getElementById('popular-section');
+    if(existing) existing.remove();
+    var reactions=loadReactions();
+    var all=getAllArticles();
+    var scored=all.map(function(a){
+      var id=articleId(a);
+      var r=reactions[id]||{};
+      var score=(r.surprising||0)+(r.important||0)+(r.inspiring||0);
+      return {a:a,score:score,r:r};
+    }).filter(function(x){ return x.score>0; }).sort(function(a,b){ return b.score-a.score; }).slice(0,8);
+    if(!scored.length) scored=all.slice(0,5).map(function(a){ return {a:a,score:0,r:{}}; });
+    var ranks=['🥇','🥈','🥉'];
+    var div=document.createElement('div');
+    div.id='popular-section';
+    div.style.cssText='margin-top:32px;padding:0 32px 32px;';
+    div.innerHTML=
+      '<h2 style="font-family:'Archivo',sans-serif;font-weight:900;font-size:1.1rem;letter-spacing:-.02em;margin-bottom:4px;">🏆 Les plus appréciés</h2>'+
+      '<p style="font-size:.75rem;color:var(--ink-soft);margin-bottom:14px;">Classement basé sur les réactions des lecteurs</p>'+
+      '<div class="popular-list">'+
+      scored.map(function(item,i){
+        var a=item.a;
+        var rank=ranks[i]||(i+1)+'';
+        var rankClass=i===0?'gold':i===1?'silver':i===2?'bronze':'';
+        var reacStr=item.score>0?'😮'+(item.r.surprising||0)+' 🌍'+(item.r.important||0)+' 💚'+(item.r.inspiring||0):'À découvrir';
+        return '<div class="pop-item" data-headline="'+esc(a.headline)+'">'+
+          '<span class="pop-rank '+rankClass+'">'+rank+'</span>'+
+          '<div class="pop-text">'+esc(a.headline)+'</div>'+
+          '<span class="pop-reactions">'+reacStr+'</span>'+
+        '</div>';
+      }).join('')+
+      '</div>';
+    container.appendChild(div);
+    div.querySelectorAll('.pop-item').forEach(function(item){
+      item.addEventListener('click',function(){
+        var h=item.dataset.headline;
+        var a=all.find(function(x){ return x.headline===h; });
+        if(!a) return;
+        var idx=all.indexOf(a);
+        if(window.innerWidth<768&&window._openImmersive){ window._openImmersive(a); }
+        else{ window.currentArticles=all; window._currentModalIdx=idx; if(typeof openDetail==='function') openDetail(idx); }
+      });
+    });
+  };
+
+  // ── HOOK MODAL ────────────────────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded',function(){
+    var modal=document.getElementById('modal');
+    if(modal){
+      var obs=new MutationObserver(function(){
+        if(modal.classList.contains('open')){
+          var idx=window._currentModalIdx;
+          var all=getAllArticles();
+          var a=all[idx];
+          if(!a) return;
+          initReactions(articleId(a));
+          buildRecommendations(a);
+        }
+      });
+      obs.observe(modal,{attributes:true,attributeFilter:['class']});
+    }
+    initArticleDuJour();
+    setTimeout(updateReaderProgress,600);
+  });
+
+  window._updateReaderProgress=updateReaderProgress;
+})();
+</script>
+
 
 <script>
 // ── TINDER ARTICLES ───────────────────────────────────────────────────────────
@@ -2160,290 +2420,220 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
   var TAG_LABELS={ecology:'🌿 Écologie',climate:'🌍 Climat',health:'💚 Santé',economy:'📈 Économie',tech:'⚡ Tech',science:'🔬 Science',society:'🤝 Société'};
   var TAG_CLASS={ecology:'c-ecology',climate:'c-climate',health:'c-health',economy:'c-economy',tech:'c-tech',science:'c-science',society:'c-society'};
 
-  var stack, articles=[], currentIdx=0, currentRubricC='all', initialized=false;
-  var isDragging=false, startX=0, startY=0, currentX=0, activeCard=null;
+  var stack=null, initialized=false;
+  var isDragging=false, startX=0, currentX=0, activeCard=null;
+  var currentRubricC='all';
 
-  // ── MÉMOIRE DES ARTICLES VUS ─────────────────────────────────────────────
+  // ── DECK STABLE ──────────────────────────────────────────────────────────
+  // Le deck est calculé UNE FOIS au chargement/filtre et ne change plus
+  // jusqu'au prochain changement de filtre ou reset.
+  var deck=[];      // tableau ordonné d'articles à afficher
+  var deckPos=0;    // position courante dans le deck
+
+  // ── MÉMOIRE ───────────────────────────────────────────────────────────────
   var STORAGE_KEY='difb_seen_v1';
   var IDX_KEY='difb_idx_v1';
+  var RUBRIC_KEY='difb_rubric_v1';
 
-  function articleId(a){
-    return (a.headline||'').toLowerCase().replace(/[^a-z0-9]/g,'').substring(0,40);
-  }
+  function articleId(a){ return (a.headline||'').toLowerCase().replace(/[^a-z0-9]/g,'').substring(0,40); }
+  function loadSeen(){ try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]'); }catch(e){ return []; } }
+  function saveSeen(arr){ try{ localStorage.setItem(STORAGE_KEY,JSON.stringify(arr)); }catch(e){} }
+  function savePos(p){ try{ localStorage.setItem(IDX_KEY,String(p)); }catch(e){} }
+  function loadPos(){ try{ return parseInt(localStorage.getItem(IDX_KEY)||'0',10)||0; }catch(e){ return 0; } }
+  function saveRubric(r){ try{ localStorage.setItem(RUBRIC_KEY,r); }catch(e){} }
+  function loadRubric(){ try{ return localStorage.getItem(RUBRIC_KEY)||'all'; }catch(e){ return 'all'; } }
+  function markSeen(a){ var seen=loadSeen(); var id=articleId(a); if(!seen.includes(id)){ seen.push(id); saveSeen(seen); } }
+  function resetSeen(){ try{ localStorage.removeItem(STORAGE_KEY); localStorage.removeItem(IDX_KEY); localStorage.removeItem(RUBRIC_KEY); }catch(e){} }
+  function getUnseen(arr){ var seen=loadSeen(); return arr.filter(function(a){ return !seen.includes(articleId(a)); }); }
 
-  function loadSeen(){
-    try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]'); }
-    catch(e){ return []; }
-  }
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-  function saveSeen(arr){
-    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
-    catch(e){}
-  }
+  function getAllArticles(){ return (window.TODAY_ARTICLES||[]).concat(window._fallback||[]); }
 
-  function saveIdx(idx){
-    try{ localStorage.setItem(IDX_KEY, String(idx)); }
-    catch(e){}
-  }
-
-  function loadIdx(){
-    try{ return parseInt(localStorage.getItem(IDX_KEY)||'0', 10)||0; }
-    catch(e){ return 0; }
-  }
-
-  function markSeen(a){
-    var seen=loadSeen();
-    var id=articleId(a);
-    if(!seen.includes(id)){ seen.push(id); saveSeen(seen); }
-  }
-
-  function resetSeen(){
-    try{
-      localStorage.removeItem(STORAGE_KEY);
-      localStorage.removeItem(IDX_KEY);
-    } catch(e){}
-  }
-
-  function getUnseen(arr){
-    var seen=loadSeen();
-    return arr.filter(function(a){ return !seen.includes(articleId(a)); });
-  }
-  // ─────────────────────────────────────────────────────────────────────────
-
-  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-
-  function getArticles(){
-    var fb=window._fallback||[];
-    var td=window.TODAY_ARTICLES||[];
-    return td.concat(fb);
-  }
-
-  function getFiltered(){
-    var all=getArticles();
-    var pool=currentRubricC==='all'?all:all.filter(function(a){return a.rubric===currentRubricC;});
-    // Ne garder que les articles non vus
+  // Construire le deck stable selon le filtre
+  function buildDeck(rubric){
+    var all=getAllArticles();
+    var pool=rubric==='all'?all:all.filter(function(a){ return a.rubric===rubric; });
     var unseen=getUnseen(pool);
-    // S'il ne reste rien → retourner quand même vide (géré dans renderStack)
+    // Si tout vu, on retourne un deck vide (géré séparément)
     return unseen;
   }
 
-  function buildCard(a, idx, total){
+  function buildCard(a, pos, total){
     var cc=TAG_CLASS[a.rubric]||'c-society';
     var label=TAG_LABELS[a.rubric]||a.rubric;
     var el=document.createElement('article');
     el.className='tcard '+cc;
     el.setAttribute('role','button');
     el.setAttribute('tabindex','0');
-    el.setAttribute('data-idx', idx);
+    el.setAttribute('data-pos', pos);
     el.innerHTML=
       '<div class="tcard-inner">'+
         '<span class="tcard-tag">'+esc(label)+'</span>'+
         '<h3 class="tcard-headline">'+esc(a.headline)+'</h3>'+
         '<p class="tcard-chapo">'+esc(a.chapo||a.summary)+'</p>'+
         '<div style="flex:1"></div>'+
-        '<div class="tcard-bg-num">'+(idx+1)+'</div>'+
-        '<span class="tcard-like-badge" aria-hidden="true">← RETOUR</span>'+
-        '<span class="tcard-nope-badge" aria-hidden="true">SUIVANT →</span>'+
+        '<div class="tcard-bg-num">'+(pos+1)+'</div>'+
+        '<span class="tcard-like-badge" aria-hidden="true">SUIVANT →</span>'+
+        '<span class="tcard-nope-badge" aria-hidden="true">← RETOUR</span>'+
       '</div>'+
       '<div class="tcard-footer">'+
         '<span class="tcard-source">'+esc(a.source)+' · '+esc(a.date)+'</span>'+
-        '<span class="tcard-read">'+(idx+1)+' / '+total+' · Lire →</span>'+
+        '<span class="tcard-read">'+(pos+1)+' / '+total+' · Lire →</span>'+
       '</div>';
     return el;
   }
 
   function updateCounter(){
-    var art=getFiltered();
-    var total=art.length;
-    var posEl=document.getElementById('carr-pos');
-    var lblEl=document.getElementById('carousel-count-label');
-    if(posEl) posEl.textContent=(currentIdx+1)+' / '+total;
-    if(lblEl) lblEl.textContent=total+' article'+(total>1?'s':'');
+    var el=document.getElementById('carr-pos');
+    if(el) el.textContent=(deckPos+1)+' / '+deck.length;
   }
 
   function renderStack(){
     if(!stack) return;
     stack.innerHTML='';
-    var art=getFiltered();
-    if(!art.length){
-      // Vérifier s'il y a des articles vus dans cette rubrique
-      var allPool=currentRubricC==='all'?getArticles():getArticles().filter(function(a){return a.rubric===currentRubricC;});
-      var seenHere=allPool.length-art.length;
-      var seenTotal=loadSeen().length;
-      var grandTotal=getArticles().length;
-      if(seenHere>0){
-        // Tout vu → écran de fin
-        stack.innerHTML=
-          '<div class="tinder-empty">'+
-            '<div class="tinder-empty-icon">🎉</div>'+
-            '<div class="tinder-empty-title">Vous êtes à jour !</div>'+
-            '<div class="tinder-empty-text">'+seenTotal+' article'+(seenTotal>1?'s':'')+' lus sur '+grandTotal+' disponibles.</div>'+
-            '<div class="tinder-empty-text" style="margin-top:4px;font-size:.75rem;opacity:.7">Revenez demain pour de nouveaux articles.</div>'+
-            '<button class="tinder-empty-reset" id="tinder-reset">Tout revoir depuis le début</button>'+
-          '</div>';
-        document.getElementById('tinder-reset').addEventListener('click',function(){
-          resetSeen(); currentIdx=0; saveIdx(0); renderStack();
-        });
+
+    if(!deck.length){
+      // Vérifier si tout a été vu
+      var all=getAllArticles();
+      var pool=currentRubricC==='all'?all:all.filter(function(a){ return a.rubric===currentRubricC; });
+      var seenCount=loadSeen().length;
+      var grandTotal=all.length;
+      if(pool.length > deck.length || loadSeen().length > 0){
+        showEndScreen(seenCount, grandTotal);
       } else {
         stack.innerHTML='<div class="tinder-empty"><div class="tinder-empty-icon">✨</div><div class="tinder-empty-text">Aucun article dans cette rubrique</div></div>';
       }
       return;
     }
 
-    // Afficher max 3 cartes (la courante + 2 derrière)
-    for(var i=Math.min(currentIdx+2, art.length-1); i>=currentIdx; i--){
-      if(i>=art.length) continue;
-      var card=buildCard(art[i], i, art.length);
-      if(i===currentIdx){
+    if(deckPos >= deck.length){
+      var sc=loadSeen().length;
+      showEndScreen(sc, getAllArticles().length);
+      return;
+    }
+
+    // Afficher 3 cartes : courante + 2 suivantes (empilées derrière)
+    var maxBehind=Math.min(2, deck.length - deckPos - 1);
+    for(var offset=maxBehind; offset>=0; offset--){
+      var idx=deckPos+offset;
+      if(idx>=deck.length) continue;
+      var card=buildCard(deck[idx], idx, deck.length);
+      if(offset===0){
         card.classList.add('active-card');
-        attachDrag(card, i);
-      } else if(i===currentIdx+1){
+        attachDrag(card);
+      } else if(offset===1){
         card.classList.add('behind-1');
       } else {
         card.classList.add('behind-2');
       }
       stack.appendChild(card);
     }
-
-    // currentIdx >= art.length → géré par l'écran de fin ci-dessus via getFiltered()
     updateCounter();
   }
 
+  function showEndScreen(seenCount, grandTotal){
+    stack.innerHTML=
+      '<div class="tinder-empty">'+
+        '<div class="tinder-empty-icon">🎉</div>'+
+        '<div class="tinder-empty-title">Vous êtes à jour !</div>'+
+        '<div class="tinder-empty-text">'+seenCount+' article'+(seenCount>1?'s':'')+' lus sur '+grandTotal+' disponibles.</div>'+
+        '<div class="tinder-empty-text" style="margin-top:4px;font-size:.75rem;opacity:.7">Revenez demain pour de nouveaux articles.</div>'+
+        '<button class="tinder-empty-reset" id="tinder-reset">Tout revoir depuis le début</button>'+
+      '</div>';
+    document.getElementById('tinder-reset').addEventListener('click',function(){
+      resetSeen(); currentRubricC='all'; deck=buildDeck('all'); deckPos=0;
+      savePos(0); saveRubric('all');
+      document.querySelectorAll('#carousel-filters .carousel-pill').forEach(function(b){ b.classList.toggle('active', b.dataset.rubric==='all'); });
+      renderStack();
+    });
+  }
+
   function goNext(){
-    var art=getFiltered();
-    if(currentIdx>=art.length-1){ currentIdx=art.length; renderStack(); updateCounter(); return; }
+    if(deckPos>=deck.length-1){ deckPos=deck.length; savePos(deckPos); renderStack(); return; }
     var topCard=stack.querySelector('.active-card');
     if(!topCard) return;
-    topCard.classList.add('swipe-right');
-    setTimeout(function(){
-      currentIdx++;
-      renderStack();
-    },380);
+    markSeen(deck[deckPos]);
+    topCard.classList.add('swipe-left');
+    setTimeout(function(){ deckPos++; savePos(deckPos); renderStack(); }, 360);
   }
 
   function goPrev(){
-    if(currentIdx<=0) return;
+    if(deckPos<=0) return;
     var topCard=stack.querySelector('.active-card');
     if(!topCard) return;
-    topCard.classList.add('swipe-left');
-    setTimeout(function(){
-      currentIdx--;
-      renderStack();
-    },380);
+    topCard.classList.add('swipe-right');
+    setTimeout(function(){ deckPos--; savePos(deckPos); renderStack(); }, 360);
   }
 
   function openCurrentArticle(){
-    var art=getFiltered();
-    var a=art[currentIdx];
+    var a=deck[deckPos];
     if(!a) return;
     markSeen(a);
-    var allA=getArticles();
+    var allA=getAllArticles();
     var gIdx=allA.indexOf(a);
     if(window.innerWidth<768 && window._openImmersive){
       window._openImmersive(a);
     } else {
       window.currentArticles=allA;
-      window._currentModalIdx=gIdx>=0?gIdx:currentIdx;
-      if(typeof openDetail==='function') openDetail(gIdx>=0?gIdx:currentIdx);
+      window._currentModalIdx=gIdx>=0?gIdx:deckPos;
+      if(typeof openDetail==='function') openDetail(gIdx>=0?gIdx:deckPos);
     }
   }
 
-  // ── DRAG / SWIPE ──────────────────────────────────────────────────
-  function attachDrag(card, idx){
-    var startRotation=0;
-
+  // ── DRAG / SWIPE ──────────────────────────────────────────────────────────
+  function attachDrag(card){
     function onStart(e){
-      if(e.target.closest('.tcard-read')) return; // clic sur "Lire →" → ouvrir
-      isDragging=true;
-      activeCard=card;
+      if(e.target.closest && e.target.closest('.tcard-read')) return;
+      isDragging=true; activeCard=card;
       var p=e.touches?e.touches[0]:e;
-      startX=p.clientX;
-      startY=p.clientY;
-      currentX=0;
+      startX=p.clientX; currentX=0;
       card.style.transition='none';
     }
-
     function onMove(e){
       if(!isDragging||activeCard!==card) return;
       var p=e.touches?e.touches[0]:e;
       currentX=p.clientX-startX;
-      var rot=currentX*0.08;
-      var lift=Math.min(Math.abs(currentX)*0.04, 12);
+      var rot=currentX*0.07;
+      var lift=Math.min(Math.abs(currentX)*0.04,10);
       card.style.transform='translateX('+currentX+'px) rotate('+rot+'deg) translateY(-'+lift+'px)';
-
-      // Badges like/nope
       var like=card.querySelector('.tcard-like-badge');
       var nope=card.querySelector('.tcard-nope-badge');
-      var ratio=Math.min(Math.abs(currentX)/120, 1);
+      var ratio=Math.min(Math.abs(currentX)/100,1);
       if(currentX<-20){ if(like)like.style.opacity=ratio; if(nope)nope.style.opacity=0; }
       else if(currentX>20){ if(nope)nope.style.opacity=ratio; if(like)like.style.opacity=0; }
-      else{ if(like)like.style.opacity=0; if(nope)nope.style.opacity=0; }
+      else { if(like)like.style.opacity=0; if(nope)nope.style.opacity=0; }
     }
-
-    function onEnd(e){
+    function onEnd(){
       if(!isDragging||activeCard!==card) return;
       isDragging=false;
-      card.style.transition='transform .35s cubic-bezier(.2,.8,.25,1)';
       var like=card.querySelector('.tcard-like-badge');
       var nope=card.querySelector('.tcard-nope-badge');
-      if(like)like.style.opacity=0;
-      if(nope)nope.style.opacity=0;
-
-      var THRESHOLD=80;
+      if(like) like.style.opacity=0;
+      if(nope) nope.style.opacity=0;
+      card.style.transition='transform .3s cubic-bezier(.2,.8,.25,1)';
+      var THRESHOLD=75;
       if(currentX<-THRESHOLD){
-        // swipe gauche → suivant (comme Tinder) → marquer comme vu
-        var artNow=getFiltered()[currentIdx];
-        if(artNow) markSeen(artNow);
-        card.classList.add('swipe-left');
-        setTimeout(function(){currentIdx++;saveIdx(currentIdx);renderStack();},380);
+        goNext();
       } else if(currentX>THRESHOLD){
-        // swipe droite → précédent
-        if(currentIdx>0){
-          card.classList.add('swipe-right');
-          setTimeout(function(){currentIdx--;saveIdx(currentIdx);renderStack();},380);
-        } else {
-          card.style.transform='';
-        }
+        goPrev();
       } else {
-        // Pas assez loin → retour
         card.style.transform='';
-        // Tap court → ouvrir l'article
-        if(Math.abs(currentX)<10){
-          openCurrentArticle();
-        }
+        if(Math.abs(currentX)<10) openCurrentArticle();
       }
       activeCard=null;
     }
-
     card.addEventListener('mousedown',onStart);
     document.addEventListener('mousemove',onMove);
     document.addEventListener('mouseup',onEnd);
     card.addEventListener('touchstart',onStart,{passive:true});
-    document.addEventListener('touchmove',onMove,{passive:true});
+    document.addEventListener('touchmove',onMove,{passive:false});
     document.addEventListener('touchend',onEnd);
-
-    // Keyboard
     card.addEventListener('keydown',function(e){
       if(e.key==='ArrowRight'||e.key===' ') goNext();
       if(e.key==='ArrowLeft') goPrev();
       if(e.key==='Enter') openCurrentArticle();
     });
-  }
-
-  // Masquer le hint au premier swipe
-  function initHint(){
-    var hint=document.getElementById('swipe-hint');
-    if(!hint) return;
-    var removed=false;
-    function hide(){
-      if(removed) return;
-      removed=true;
-      hint.style.transition='opacity .5s';
-      hint.style.opacity='0';
-      setTimeout(function(){hint.style.display='none';},500);
-    }
-    document.addEventListener('mousedown',function(e){if(e.target.closest('.tcard'))hide();},{once:true});
-    document.addEventListener('touchstart',function(e){if(e.target.closest('.tcard'))hide();},{once:true});
   }
 
   // Filtres
@@ -2452,55 +2642,60 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     if(!container) return;
     container.querySelectorAll('.carousel-pill').forEach(function(btn){
       btn.addEventListener('click',function(){
-        container.querySelectorAll('.carousel-pill').forEach(function(b){b.classList.remove('active');});
+        container.querySelectorAll('.carousel-pill').forEach(function(b){ b.classList.remove('active'); });
         btn.classList.add('active');
         currentRubricC=btn.dataset.rubric||'all';
-        currentIdx=0;
+        saveRubric(currentRubricC);
+        deck=buildDeck(currentRubricC);
+        deckPos=0; savePos(0);
         renderStack();
       });
     });
   }
-
-  function initBtns(){ /* boutons supprimés */ }
-
-  window._initCarousel=function(){
-    if(initialized) return;
-    stack=document.getElementById('tinder-stack');
-    if(!stack) return;
-    initialized=true;
-    // Restaurer l'index sauvegardé
-    currentIdx=loadIdx();
-    renderStack();
-    initFilters();
-    initBtns();
-    initHint();
-    // Toast après le rendu (stack peuplée)
-    setTimeout(function(){
-      var seen=loadSeen().length;
-      var total=getArticles().length;
-      var unseen=getUnseen(getArticles()).length;
-      if(seen>0 && unseen>0){
-        showSeenToast(unseen, seen, total);
-      }
-    }, 600);
-  };
 
   function showSeenToast(unseen, seen, total){
     var existing=document.getElementById('seen-toast');
     if(existing) existing.remove();
     var t=document.createElement('div');
     t.id='seen-toast';
-    t.style.cssText='position:absolute;top:12px;left:50%;transform:translateX(-50%);'+
-      'background:rgba(0,0,0,.75);color:#fff;font-family:"Archivo",sans-serif;'+
-      'font-size:.72rem;font-weight:700;padding:6px 14px;border-radius:100px;'+
+    t.style.cssText='position:absolute;top:14px;left:50%;transform:translateX(-50%);'+
+      'background:rgba(0,0,0,.78);color:#fff;font-family:"Archivo",sans-serif;'+
+      'font-size:.72rem;font-weight:700;padding:7px 16px;border-radius:100px;'+
       'white-space:nowrap;z-index:100;pointer-events:none;'+
       'opacity:0;transition:opacity .4s;';
     t.textContent=unseen+' article'+(unseen>1?'s':'')+' non lu'+(unseen>1?'s':'')+' · '+seen+' déjà '+(seen>1?'vus':'vu');
-    stack.style.position='relative';
     stack.appendChild(t);
-    setTimeout(function(){t.style.opacity='1';},50);
-    setTimeout(function(){t.style.opacity='0';setTimeout(function(){t.remove();},400);},3500);
+    requestAnimationFrame(function(){ t.style.opacity='1'; });
+    setTimeout(function(){ t.style.opacity='0'; setTimeout(function(){ if(t.parentNode) t.remove(); },400); },3500);
   }
+
+  window._initCarousel=function(){
+    if(initialized) return;
+    stack=document.getElementById('tinder-stack');
+    if(!stack) return;
+    initialized=true;
+    // Restaurer rubrique et position
+    currentRubricC=loadRubric();
+    // Activer le bon filtre visuellement
+    var container=document.getElementById('carousel-filters');
+    if(container){
+      container.querySelectorAll('.carousel-pill').forEach(function(b){
+        b.classList.toggle('active', b.dataset.rubric===currentRubricC);
+      });
+    }
+    // Construire le deck stable
+    deck=buildDeck(currentRubricC);
+    deckPos=Math.min(loadPos(), Math.max(0, deck.length-1));
+    renderStack();
+    initFilters();
+    // Toast
+    setTimeout(function(){
+      var seen=loadSeen().length;
+      var total=getAllArticles().length;
+      var unseen=getUnseen(getAllArticles()).length;
+      if(seen>0 && unseen>0) showSeenToast(unseen, seen, total);
+    }, 700);
+  };
 
   document.addEventListener('DOMContentLoaded',function(){
     if(document.body.classList.contains('map-active')) window._initCarousel();
@@ -2651,6 +2846,38 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     if(entries[0].isIntersecting)animCount();
   },{threshold:.3});
   obs.observe(hero);
+})();
+
+// ── BADGE ONGLET ─────────────────────────────────────────────────────────────
+(function(){
+  function checkNewArticles(){
+    try{
+      var seen=JSON.parse(localStorage.getItem('difb_seen_v1')||'[]');
+      var allTitles=(window.TODAY_ARTICLES||[]).concat(window._fallback||[]);
+      var unseen=allTitles.filter(function(a){
+        var id=(a.headline||'').toLowerCase().replace(/[^a-z0-9]/g,'').substring(0,40);
+        return !seen.includes(id);
+      }).length;
+      var origTitle=document.title;
+      if(unseen>0 && seen.length>0){
+        // Faire clignoter le titre de l'onglet
+        var blinkCount=0, blinking=false;
+        document.addEventListener('visibilitychange',function(){
+          if(!document.hidden) return;
+          if(blinking) return;
+          blinking=true;
+          var interval=setInterval(function(){
+            document.title=document.title===origTitle?'✨ '+unseen+' nouveaux':'Demain, il fait beau';
+            blinkCount++;
+            if(blinkCount>8||!document.hidden){ clearInterval(interval); document.title=origTitle; blinking=false; blinkCount=0; }
+          },800);
+        });
+        // Badge dans le titre immédiatement si l'onglet est actif
+        if(unseen>0) document.title='('+unseen+') Demain, il fait beau';
+      }
+    }catch(e){}
+  }
+  window.addEventListener('load',function(){ setTimeout(checkNewArticles,1000); });
 })();
 
 // ── SOLEIL HORAIRE ──────────────────────────────────────────────────────────
