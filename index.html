@@ -113,7 +113,7 @@ body.trends-active footer{display:block;}
 .chiffre-text{font-family:"Archivo",sans-serif;font-weight:700;font-size:clamp(1rem,2.2vw,1.5rem);line-height:1.25;margin-bottom:8px;}
 .chiffre-source{font-size:.75rem;opacity:.5;font-weight:500;}
 /* HERO */
-.hero{max-width:1100px;margin:0 auto;padding:80px 24px 40px;text-align:center;}
+.hero{max-width:1100px;margin:0 auto;padding:80px 24px 40px;text-align:center;position:relative;overflow:visible;}
     .hero-animated{font-family:"Archivo",sans-serif;font-weight:900;font-size:clamp(2.8rem,8vw,6rem);line-height:1.0;letter-spacing:-.035em;margin-bottom:28px;}
     .hero-line{display:block;overflow:hidden;padding-bottom:.06em;}
     .hero-word{display:inline-block;opacity:0;transform:translateY(110%);transition:opacity .7s cubic-bezier(.2,.8,.25,1),transform .7s cubic-bezier(.2,.8,.25,1);}
@@ -300,6 +300,7 @@ body.modal-open{overflow:hidden;}
 .reco-arrow{font-size:.75rem;color:var(--ink-soft);}
 /* ── ARTICLE DU JOUR HERO ── */
 .article-du-jour{background:linear-gradient(135deg,var(--purple) 0%,#3a0099 100%);border-radius:var(--radius);padding:24px 28px;margin:0 auto 24px;max-width:var(--max-w,1200px);color:#fff;cursor:pointer;transition:transform .2s,box-shadow .2s;display:block;}
+body.map-active .article-du-jour,body.trends-active .article-du-jour{display:none!important;}
 .article-du-jour:hover{transform:translateY(-3px);box-shadow:0 12px 32px -8px rgba(123,63,242,.4);}
 .adj-eyebrow{font-family:"Archivo",sans-serif;font-size:.65rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;opacity:.75;margin-bottom:8px;}
 .adj-headline{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.25rem;line-height:1.15;letter-spacing:-.02em;margin-bottom:10px;}
@@ -462,7 +463,7 @@ footer .fbrand{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.4rem
 .hero-counter-num{font-weight:900;color:var(--green);font-size:.92rem;}
 .hero-counter-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
 /* ── HERO SOLEIL FLOU ── */
-.hero{position:relative;overflow:visible;}
+
 .hero-sun-bg{
   position:absolute;
   width:min(600px,90vw);
@@ -1030,6 +1031,29 @@ ONU"></textarea>
       <div class="imm-factbox" id="imm-factbox" style="display:none;">
         <div class="imm-factbox-title">📊 Les faits, vérifiés</div>
         <ul id="imm-facts"></ul>
+      </div>
+      <!-- Réactions immersif -->
+      <div class="reaction-bar" id="imm-reactions" style="margin-top:24px;">
+        <button class="reaction-btn" data-reaction="surprising" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);">
+          <span class="rbtn-icon">😮</span>
+          <span class="rbtn-label" style="color:rgba(255,255,255,.7)">Surprenant</span>
+          <span class="rbtn-count" id="imm-react-surprising" style="color:#fff">0</span>
+        </button>
+        <button class="reaction-btn" data-reaction="important" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);">
+          <span class="rbtn-icon">🌍</span>
+          <span class="rbtn-label" style="color:rgba(255,255,255,.7)">Important</span>
+          <span class="rbtn-count" id="imm-react-important" style="color:#fff">0</span>
+        </button>
+        <button class="reaction-btn" data-reaction="inspiring" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);">
+          <span class="rbtn-icon">💚</span>
+          <span class="rbtn-label" style="color:rgba(255,255,255,.7)">Inspirant</span>
+          <span class="rbtn-count" id="imm-react-inspiring" style="color:#fff">0</span>
+        </button>
+      </div>
+      <!-- Recommandations immersif -->
+      <div id="imm-reco" style="margin-top:20px;display:none;">
+        <div class="reco-title" style="color:rgba(255,255,255,.6);">📖 Vous aimerez aussi</div>
+        <div id="imm-reco-list" class="reco-list" style="margin-top:8px;"></div>
       </div>
     </div>
   </div>
@@ -2272,21 +2296,20 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
   function loadReactions(){ try{ return JSON.parse(localStorage.getItem(REACT_KEY)||'{}'); }catch(e){ return {}; } }
   function saveReactions(r){ try{ localStorage.setItem(REACT_KEY,JSON.stringify(r)); }catch(e){} }
 
-  function initReactions(aid){
-    var reacBar=document.getElementById('modal-reactions');
-    if(!reacBar) return;
-    // Cloner la barre pour supprimer tous les anciens listeners
-    var newBar=reacBar.cloneNode(true);
-    reacBar.parentNode.replaceChild(newBar, reacBar);
+  // Initialise les réactions pour un container donné (modal ou immersif)
+  function initReactionsInContainer(container, aid){
+    if(!container) return;
+    // Cloner pour supprimer les anciens listeners
+    var newBar=container.cloneNode(true);
+    container.parentNode.replaceChild(newBar, container);
 
     var reactions=loadReactions();
     var ar=reactions[aid]||{surprising:0,important:0,inspiring:0};
     var myVote=ar._myVote||null;
 
-    // Mettre à jour les compteurs et états initiaux
     ['surprising','important','inspiring'].forEach(function(type){
       var btn=newBar.querySelector('[data-reaction="'+type+'"]');
-      var cEl=newBar.querySelector('#react-'+type);
+      var cEl=newBar.querySelector('[id$="react-'+type+'"]'); // match react-surprising ET imm-react-surprising
       if(!btn||!cEl) return;
       cEl.textContent=ar[type]||0;
       btn.classList.toggle('voted', myVote===type);
@@ -2295,28 +2318,23 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
         var r=loadReactions();
         var a2=r[aid]||{surprising:0,important:0,inspiring:0};
         var prevVote=a2._myVote||null;
-
-        // Si déjà voté pour ce type → annuler
         if(prevVote===type){
           a2[type]=Math.max(0,(a2[type]||0)-1);
           a2._myVote=null;
           btn.classList.remove('voted');
           cEl.textContent=a2[type];
         } else {
-          // Retirer l'ancien vote si existant
           if(prevVote){
             a2[prevVote]=Math.max(0,(a2[prevVote]||0)-1);
-            var oldBtn=newBar.querySelector('[data-reaction="'+prevVote+'"]');
-            var oldCount=newBar.querySelector('#react-'+prevVote);
-            if(oldBtn) oldBtn.classList.remove('voted');
-            if(oldCount) oldCount.textContent=a2[prevVote];
+            var ob=newBar.querySelector('[data-reaction="'+prevVote+'"]');
+            var oc=newBar.querySelector('[id$="react-'+prevVote+'"]');
+            if(ob) ob.classList.remove('voted');
+            if(oc) oc.textContent=a2[prevVote];
           }
-          // Voter pour le nouveau type
           a2[type]=(a2[type]||0)+1;
           a2._myVote=type;
           btn.classList.add('voted');
           cEl.textContent=a2[type];
-          // Animation
           var icon=btn.querySelector('.rbtn-icon');
           if(icon){
             icon.style.transition='transform .3s cubic-bezier(.2,.8,.25,1)';
@@ -2329,7 +2347,16 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
         if(window._buildPopular) window._buildPopular();
       });
     });
+    return newBar; // retourner le nouveau container
   }
+
+  function initReactions(aid){
+    var bar=document.getElementById('modal-reactions');
+    if(bar) initReactionsInContainer(bar, aid);
+  }
+
+  // Exposer pour l'immersif
+  window._initReactionsInContainer=initReactionsInContainer;
 
   // ── RECOMMANDATIONS ───────────────────────────────────────────────────────
   function buildRecommendations(currentA){
@@ -2763,6 +2790,7 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
   function openImmersive(a){
     // exposé sur window via l'init ci-dessous
     currentArticle=a;
+    var aid_local=(a.headline||'').toLowerCase().replace(/[^a-z0-9]/g,'').substring(0,40);
     var rcolor=RUBRIC_COLORS[a.rubric]||'#7b3ff2';
     // Tag
     var tagEl=document.getElementById('imm-tag');
@@ -2798,6 +2826,16 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
     }
     // Reset scroll
     scroll.scrollTop=0;
+    // Réactions dans l'immersif
+    setTimeout(function(){
+      var immReacBar=document.getElementById('imm-reactions');
+      if(immReacBar && window._initReactionsInContainer){
+        window._initReactionsInContainer(immReacBar, aid_local);
+      }
+      // Recommandations dans l'immersif
+      buildImmReco(a);
+    }, 100);
+
     // Ouvrir
     overlay.classList.add('open');
     overlay.setAttribute('aria-hidden','false');
@@ -2806,6 +2844,33 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
   }
 
   window._openImmersive = openImmersive;
+
+  function buildImmReco(currentA){
+    var section=document.getElementById('imm-reco');
+    var list=document.getElementById('imm-reco-list');
+    if(!section||!list) return;
+    var TAG_COLORS_LOCAL={ecology:'#00c46a',climate:'#1a6dff',health:'#ff5da2',economy:'#ff7a00',tech:'#7b3ff2',science:'#00c9c9',society:'#ffd400'};
+    var all=(window.TODAY_ARTICLES||[]).concat(window._fallback||[]);
+    var same=all.filter(function(a){ return a.rubric===currentA.rubric&&a.headline!==currentA.headline; });
+    var picks=same.sort(function(){ return Math.random()-.5; }).slice(0,3);
+    if(!picks.length){ section.style.display='none'; return; }
+    section.style.display='block';
+    list.innerHTML=picks.map(function(a){
+      var color=TAG_COLORS_LOCAL[a.rubric]||'#999';
+      return '<div class="reco-card" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);" data-hl="'+a.headline.replace(/"/g,'')+'">'
+        +'<div class="reco-dot" style="background:'+color+'"></div>'
+        +'<div class="reco-text" style="color:rgba(255,255,255,.9)">'+a.headline+'</div>'
+        +'<span class="reco-arrow" style="color:rgba(255,255,255,.5)">→</span>'
+        +'</div>';
+    }).join('');
+    list.querySelectorAll('.reco-card').forEach(function(card){
+      card.addEventListener('click',function(){
+        var hl=card.dataset.hl;
+        var found=all.find(function(x){ return x.headline.replace(/"/g,'')===hl; });
+        if(found) openImmersive(found);
+      });
+    });
+  }
 
   function closeImmersive(){
     overlay.classList.remove('open');
