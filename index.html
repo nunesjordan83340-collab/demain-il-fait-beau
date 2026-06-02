@@ -707,6 +707,58 @@ body.map-active #view-map{
 .nl-title{font-family:"Archivo",sans-serif;font-weight:700;font-size:.92rem;color:#fff;line-height:1.25;}
 .nl-rubric{display:inline-block;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:100px;margin-top:6px;opacity:.85;}
 
+/* ── QUIZ POPUP ─────────────────────────────────────────────────── */
+.quiz-backdrop{position:fixed;inset:0;background:rgba(10,10,10,.6);backdrop-filter:blur(6px);z-index:3000;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;transition:opacity .4s ease;}
+.quiz-backdrop.open{opacity:1;}
+.quiz-box{background:#fff;border-radius:28px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 32px 80px -16px rgba(0,0,0,.35);transform:translateY(24px) scale(.97);transition:transform .4s cubic-bezier(.2,.8,.25,1);}
+.quiz-backdrop.open .quiz-box{transform:translateY(0) scale(1);}
+/* Header */
+.quiz-header{padding:32px 32px 0;text-align:center;}
+.quiz-emoji{font-size:2.8rem;margin-bottom:12px;display:block;}
+.quiz-title{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.5rem;letter-spacing:-.03em;margin-bottom:8px;}
+.quiz-subtitle{font-size:.88rem;color:var(--ink-soft);line-height:1.5;margin-bottom:24px;}
+/* Progress */
+.quiz-progress-wrap{padding:0 32px;margin-bottom:4px;}
+.quiz-progress-bar-bg{height:4px;background:var(--line);border-radius:2px;overflow:hidden;}
+.quiz-progress-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--pink));border-radius:2px;transition:width .4s cubic-bezier(.2,.8,.25,1);}
+.quiz-progress-label{font-size:.7rem;font-weight:700;color:var(--ink-soft);text-align:right;margin-top:4px;letter-spacing:.04em;}
+/* Question */
+.quiz-question-wrap{padding:20px 32px 16px;}
+.quiz-q{font-family:"Archivo",sans-serif;font-weight:800;font-size:1.05rem;line-height:1.3;letter-spacing:-.01em;margin-bottom:16px;}
+/* Options */
+.quiz-options{display:flex;flex-direction:column;gap:10px;margin-bottom:8px;}
+.quiz-option{display:flex;align-items:center;gap:12px;padding:14px 16px;border:2px solid var(--line);border-radius:16px;cursor:pointer;transition:all .2s;background:transparent;text-align:left;font-family:"Sora",sans-serif;font-size:.88rem;font-weight:500;color:var(--ink);width:100%;}
+.quiz-option:hover{border-color:var(--purple);background:rgba(123,63,242,.04);}
+.quiz-option.selected{border-color:var(--purple);background:rgba(123,63,242,.08);color:var(--purple);}
+.quiz-option.selected .qopt-check{background:var(--purple);border-color:var(--purple);color:#fff;}
+.qopt-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;transition:all .2s;}
+.qopt-emoji{font-size:1.1rem;flex-shrink:0;}
+/* Footer */
+.quiz-footer{padding:16px 32px 28px;display:flex;justify-content:space-between;align-items:center;}
+.quiz-btn-next{font-family:"Archivo",sans-serif;font-weight:800;font-size:.85rem;padding:12px 28px;border-radius:100px;border:none;background:var(--purple);color:#fff;cursor:pointer;transition:all .2s;opacity:.4;pointer-events:none;}
+.quiz-btn-next.active{opacity:1;pointer-events:auto;}
+.quiz-btn-next.active:hover{transform:scale(1.04);box-shadow:0 6px 20px -4px rgba(123,63,242,.45);}
+.quiz-skip{font-size:.75rem;color:var(--ink-soft);cursor:pointer;background:none;border:none;font-family:"Sora",sans-serif;padding:4px 8px;border-radius:8px;transition:color .2s;}
+.quiz-skip:hover{color:var(--ink);}
+/* Résultat */
+.quiz-result{padding:32px;text-align:center;}
+.quiz-result-orb{width:100px;height:100px;border-radius:50%;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:3rem;}
+.quiz-result-title{font-family:"Archivo",sans-serif;font-weight:900;font-size:1.6rem;letter-spacing:-.03em;margin-bottom:10px;}
+.quiz-result-score{font-size:.82rem;font-weight:700;color:var(--ink-soft);margin-bottom:20px;letter-spacing:.04em;text-transform:uppercase;}
+.quiz-result-desc{font-family:"Lora",serif;font-style:italic;font-size:1rem;line-height:1.7;color:var(--ink-soft);margin-bottom:20px;text-align:left;}
+.quiz-result-traits{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:24px;}
+.quiz-trait{padding:6px 14px;border-radius:100px;font-size:.75rem;font-weight:700;letter-spacing:.04em;}
+.quiz-result-cta{width:100%;padding:14px;border-radius:100px;border:none;font-family:"Archivo",sans-serif;font-weight:800;font-size:.9rem;cursor:pointer;transition:all .2s;}
+.quiz-result-cta:hover{transform:scale(1.03);}
+.quiz-spectrum{margin:20px 0;position:relative;}
+.quiz-spectrum-bar{height:10px;border-radius:5px;background:linear-gradient(90deg,#1a6dff,#7b3ff2,#ff5da2);margin-bottom:8px;position:relative;}
+.quiz-spectrum-cursor{position:absolute;top:-4px;width:18px;height:18px;border-radius:50%;background:#fff;border:3px solid var(--purple);transform:translateX(-50%);transition:left .8s cubic-bezier(.2,.8,.25,1);}
+.quiz-spectrum-labels{display:flex;justify-content:space-between;font-size:.68rem;font-weight:700;color:var(--ink-soft);letter-spacing:.04em;text-transform:uppercase;}
+@media(max-width:560px){
+  .quiz-box{border-radius:20px;}
+  .quiz-header,.quiz-question-wrap,.quiz-footer,.quiz-result{padding-left:20px;padding-right:20px;}
+  .quiz-title{font-size:1.25rem;}
+}
 </style>
 </head>
 <body>
@@ -3102,5 +3154,370 @@ document.getElementById('topbar-date').textContent=now.toLocaleDateString('fr-FR
 
 
 </script>
+
+<!-- ── QUIZ POPUP ──────────────────────────────────────────────── -->
+<div class="quiz-backdrop" id="quiz-backdrop" role="dialog" aria-modal="true" aria-label="Quiz mensuel">
+  <div class="quiz-box" id="quiz-box">
+    <!-- Contenu injecté par JS -->
+  </div>
+</div>
+
+<script>
+// ── QUIZ MENSUEL : OPTIMISTE OU PESSIMISTE ? ─────────────────────────────────
+(function(){
+  var QUIZ_KEY = 'difb_quiz_v1';
+
+  // Vérifier si le quiz doit s'afficher (une fois par mois)
+  function shouldShow(){
+    try{
+      var data = JSON.parse(localStorage.getItem(QUIZ_KEY) || '{}');
+      var last = data.lastShown || 0;
+      var now = Date.now();
+      var ONE_MONTH = 30 * 24 * 60 * 60 * 1000;
+      return (now - last) > ONE_MONTH;
+    } catch(e){ return true; }
+  }
+
+  function saveShown(){
+    try{
+      var data = JSON.parse(localStorage.getItem(QUIZ_KEY) || '{}');
+      data.lastShown = Date.now();
+      localStorage.setItem(QUIZ_KEY, JSON.stringify(data));
+    } catch(e){}
+  }
+
+  // ── QUESTIONS ────────────────────────────────────────────────────────────
+  // Score : chaque option a une valeur de 1 (très pessimiste) à 5 (très optimiste)
+  var QUESTIONS = [
+    {
+      q: "Vous lisez une mauvaise nouvelle dans les médias. Quelle est votre première pensée ?",
+      opts: [
+        { emoji: "😩", text: "Le monde court à sa perte, c'est de pire en pire.", score: 1 },
+        { emoji: "😟", text: "C'est inquiétant, les problèmes semblent sans solution.", score: 2 },
+        { emoji: "🤔", text: "C'est grave, mais les humains ont toujours trouvé des solutions.", score: 3 },
+        { emoji: "💪", text: "Ça me donne envie de m'informer sur les initiatives positives.", score: 4 },
+        { emoji: "🌱", text: "Chaque crise est une opportunité de changement profond.", score: 5 }
+      ]
+    },
+    {
+      q: "Un ami vous demande : 'Comment tu vois le monde dans 20 ans ?' Vous répondez :",
+      opts: [
+        { emoji: "💀", text: "Franchement ? Beaucoup moins bien qu'aujourd'hui.", score: 1 },
+        { emoji: "😔", text: "Je crains qu'on ait raté nos chances de vraiment changer les choses.", score: 2 },
+        { emoji: "⚖️", text: "Ça dépendra de nos choix collectifs. Les deux scénarios sont possibles.", score: 3 },
+        { emoji: "🌟", text: "Je pense qu'on est au début d'une grande transformation positive.", score: 4 },
+        { emoji: "🚀", text: "Le meilleur reste à venir — les solutions arrivent plus vite que les problèmes.", score: 5 }
+      ]
+    },
+    {
+      q: "Vous apprenez qu'une technologie pourrait résoudre un grand problème mondial. Votre réaction ?",
+      opts: [
+        { emoji: "🙄", text: "On entend ça tous les dix ans. Ça ne changera rien au fond.", score: 1 },
+        { emoji: "😒", text: "Intéressant, mais les lobbies feront en sorte que ça ne se déploie pas.", score: 2 },
+        { emoji: "🧐", text: "Prometteur, mais attendons de voir les preuves réelles.", score: 3 },
+        { emoji: "😊", text: "C'est exactement ce genre de nouvelles qui me donne de l'énergie.", score: 4 },
+        { emoji: "🎉", text: "Génial ! L'ingéniosité humaine n'a pas de limites.", score: 5 }
+      ]
+    },
+    {
+      q: "Vous croisez un inconnu qui sourit et vous dit bonjour. Que pensez-vous ?",
+      opts: [
+        { emoji: "😠", text: "Qu'est-ce qu'il veut ? Les gens ne font jamais ça pour rien.", score: 1 },
+        { emoji: "😕", text: "Un peu bizarre... les gens sont généralement indifférents.", score: 2 },
+        { emoji: "😐", text: "Sympa. Ça m'est indifférent, mais c'est agréable.", score: 3 },
+        { emoji: "😄", text: "Ces petits moments de connexion humaine illuminent la journée.", score: 4 },
+        { emoji: "🤝", text: "La gentillesse ordinaire est partout — on ne la remarque juste pas assez.", score: 5 }
+      ]
+    },
+    {
+      q: "Vous regardez les informations. Quel est votre état après 30 minutes ?",
+      opts: [
+        { emoji: "😰", text: "Angoissé(e). Le monde est en feu et personne ne fait rien.", score: 1 },
+        { emoji: "😞", text: "Déprimé(e). Il n'y a que des mauvaises nouvelles.", score: 2 },
+        { emoji: "😑", text: "Neutre. C'est la réalité du monde, ni meilleure ni pire qu'avant.", score: 3 },
+        { emoji: "🧠", text: "Informé(e) et motivé(e) à contribuer à ma façon.", score: 4 },
+        { emoji: "🌈", text: "Je cherche activement les bonnes nouvelles que les médias sous-couvrent.", score: 5 }
+      ]
+    },
+    {
+      q: "Face à un obstacle personnel inattendu, votre réflexe est :",
+      opts: [
+        { emoji: "😩", text: "Me dire que de toute façon les choses ne marchent jamais pour moi.", score: 1 },
+        { emoji: "😣", text: "M'inquiéter beaucoup avant de pouvoir agir.", score: 2 },
+        { emoji: "🤷", text: "Accepter la situation et chercher pragmatiquement une solution.", score: 3 },
+        { emoji: "😤", text: "Voir ça comme un défi à relever qui me rendra plus fort(e).", score: 4 },
+        { emoji: "✨", text: "Être curieux(se) de découvrir ce que cette situation va m'apporter.", score: 5 }
+      ]
+    },
+    {
+      q: "Si vous pouviez résumer votre vision de la nature humaine en une phrase :",
+      opts: [
+        { emoji: "🐺", text: "L'homme est un loup pour l'homme. La coopération, c'est une façade.", score: 1 },
+        { emoji: "😟", text: "Les gens sont surtout guidés par l'intérêt personnel.", score: 2 },
+        { emoji: "⚖️", text: "Les humains ont autant de bon que de mauvais en eux.", score: 3 },
+        { emoji: "🤗", text: "La générosité et la solidarité sont plus fréquentes qu'on ne le croit.", score: 4 },
+        { emoji: "💫", text: "Les humains sont fondamentalement capables de grandeur quand ils s'y mettent.", score: 5 }
+      ]
+    },
+    {
+      q: "Quelqu'un partage avec vous une bonne nouvelle mondiale (vaccin, accord de paix...). Vous pensez :",
+      opts: [
+        { emoji: "🙄", text: "Il y a toujours un revers à la médaille qu'on ne nous dit pas.", score: 1 },
+        { emoji: "😒", text: "C'est bien, mais ça ne compensera pas tous les problèmes.", score: 2 },
+        { emoji: "😊", text: "Bonne nouvelle, espérons que ça dure.", score: 3 },
+        { emoji: "🌟", text: "C'est exactement pour ça qu'il faut continuer à s'informer et agir.", score: 4 },
+        { emoji: "🎯", text: "La preuve que les humains peuvent résoudre les problèmes qu'ils créent.", score: 5 }
+      ]
+    }
+  ];
+
+  // ── PROFILS DE RÉSULTATS ─────────────────────────────────────────────────
+  function getProfile(avg){
+    if(avg <= 1.8) return {
+      emoji: '⛈️',
+      title: 'Le Sentinelle Sombre',
+      subtitle: 'SCORE PESSIMISTE PROFOND',
+      color: '#1a6dff',
+      bgColor: 'rgba(26,109,255,.1)',
+      traits: ['Vigilant', 'Lucide', 'Critique', 'Protecteur'],
+      traitColors: ['#1a6dff','#7b3ff2','#ff5da2','#00c9c9'],
+      desc: "Vous portez un regard particulièrement sombre sur le monde et ses évolutions. Ce pessimisme profond n'est pas une faiblesse — il peut être le signe d'une sensibilité aiguë aux injustices et d'une exigence élevée envers l'humanité. Vous êtes difficile à manipuler par des promesses creuses et vous voyez souvent ce que d'autres refusent d'admettre.
+
+Cependant, ce filtre très sombre peut aussi vous priver de la capacité à agir et à trouver de la joie dans le présent. Les données montrent que le monde, malgré ses nombreux défauts, a objectivement progressé sur des dizaines d'indicateurs en quelques décennies. Peut-être que s'exposer régulièrement à ces preuves concrètes pourrait enrichir votre vision sans trahir votre lucidité.",
+      cta: "Découvrir les preuves que le monde progresse →",
+      ctaBg: 'linear-gradient(135deg,#1a6dff,#7b3ff2)'
+    };
+    if(avg <= 2.5) return {
+      emoji: '🌧️',
+      title: 'Le Réaliste Inquiet',
+      subtitle: 'SCORE PLUTÔT PESSIMISTE',
+      color: '#7b3ff2',
+      bgColor: 'rgba(123,63,242,.1)',
+      traits: ['Prudent', 'Analytique', 'Honnête', 'Réfléchi'],
+      traitColors: ['#7b3ff2','#1a6dff','#ff7a00','#00c9c9'],
+      desc: "Vous avez tendance à voir les problèmes en face, parfois au point de douter des solutions. Cette prudence intellectuelle est précieuse : vous ne vous laissez pas bercer d'illusions et vous posez les bonnes questions. Vos inquiétudes sont souvent fondées sur des observations réelles.
+
+Mais votre radar est peut-être calibré pour capter les signaux négatifs plus que les positifs — un biais que les neurosciences appellent 'negativity bias'. Ce filtre cognitif est universel, mais il peut être rééquilibré. Le défi pour vous n'est pas d'ignorer les problèmes, mais d'accorder autant d'attention aux solutions qu'aux obstacles.",
+      cta: "Explorer les solutions qui changent le monde →",
+      ctaBg: 'linear-gradient(135deg,#7b3ff2,#ff5da2)'
+    };
+    if(avg <= 3.5) return {
+      emoji: '⛅',
+      title: 'L'Équilibriste Nuancé',
+      subtitle: 'SCORE CENTRISTE NUANCÉ',
+      color: '#ff7a00',
+      bgColor: 'rgba(255,122,0,.1)',
+      traits: ['Équilibré', 'Nuancé', 'Pragmatique', 'Adaptable'],
+      traitColors: ['#ff7a00','#00c46a','#1a6dff','#ffd400'],
+      desc: "Vous avez une vision équilibrée du monde — ni naïvement optimiste ni paralysé par le pessimisme. Vous reconnaissez la complexité des situations et évitez les jugements définitifs. Cette nuance est une force réelle : elle vous permet de naviguer dans l'incertitude sans vous laisser submerger.
+
+Votre défi est peut-être de trouver votre positionnement dans les moments où l'action est nécessaire — il faut parfois choisir un camp. Mais votre capacité à voir les deux faces de chaque médaille est une qualité rare dans un monde qui récompense les certitudes.",
+      cta: "Les données complexes du progrès mondial →",
+      ctaBg: 'linear-gradient(135deg,#ff7a00,#ffd400)'
+    };
+    if(avg <= 4.3) return {
+      emoji: '🌤️',
+      title: 'L'Optimiste Engagé',
+      subtitle: 'SCORE PLUTÔT OPTIMISTE',
+      color: '#00c46a',
+      bgColor: 'rgba(0,196,106,.1)',
+      traits: ['Confiant', 'Dynamique', 'Généreux', 'Inspirant'],
+      traitColors: ['#00c46a','#ffd400','#1a6dff','#ff5da2'],
+      desc: "Vous croyez en la capacité des humains à surmonter les défis — et les preuves vous donnent raison. Votre optimisme n'est pas naïf : il est nourri par une attention active aux avancées réelles du monde. Vous êtes probablement une source d'énergie positive pour votre entourage, capable de transformer les problèmes en projets.
+
+Votre point de vigilance : l'optimisme peut parfois conduire à sous-estimer les risques réels ou à baisser la garde trop tôt. Les meilleurs optimistes combinent confiance et exigence — ils croient que les choses peuvent aller bien tout en restant attentifs aux signaux d'alerte.",
+      cta: "Continuer à découvrir les bonnes nouvelles →",
+      ctaBg: 'linear-gradient(135deg,#00c46a,#00c9c9)'
+    };
+    return {
+      emoji: '☀️',
+      title: 'Le Soleil Incandescent',
+      subtitle: 'SCORE OPTIMISTE PROFOND',
+      color: '#ffd400',
+      bgColor: 'rgba(255,212,0,.15)',
+      traits: ['Rayonnant', 'Moteur', 'Visionnaire', 'Contagieux'],
+      traitColors: ['#ffd400','#ff7a00','#00c46a','#ff5da2'],
+      desc: "Vous portez en vous une lumière rare : la conviction profonde que le monde est fondamentalement bon et que les humains sont capables de grandeur. Cet optimisme profond est souvent le carburant des grandes réalisations — les personnes qui changent le monde commencent par croire que c'est possible.
+
+Votre seul point d'attention : un optimisme très intense peut parfois vous amener à minimiser des douleurs réelles ou à décevoir des proches qui ont besoin qu'on valide leurs inquiétudes avant de les inspirer. L'optimisme le plus puissant est celui qui reconnaît d'abord la difficulté avant de proposer l'espoir.",
+      cta: "Partager cet optimisme avec le monde →",
+      ctaBg: 'linear-gradient(135deg,#ffd400,#ff7a00)'
+    };
+  }
+
+  // ── ÉTAT DU QUIZ ─────────────────────────────────────────────────────────
+  var state = { step: 0, scores: [], total: 0 };
+
+  function renderIntro(){
+    return '<div class="quiz-header">'
+      +'<span class="quiz-emoji">🧠</span>'
+      +'<div class="quiz-title">Êtes-vous plutôt optimiste ou pessimiste ?</div>'
+      +'<div class="quiz-subtitle">8 questions pour découvrir votre vision du monde — et comprendre ce qui la forge. Répondez instinctivement, il n'y a pas de bonne réponse.</div>'
+      +'</div>'
+      +'<div style="padding:0 32px 28px;display:flex;flex-direction:column;gap:12px;">'
+      +'<button class="quiz-btn-next active" id="quiz-start" style="width:100%;opacity:1;pointer-events:auto;padding:16px;">Commencer le quiz →</button>'
+      +'<button class="quiz-skip" id="quiz-dismiss">Peut-être plus tard</button>'
+      +'</div>';
+  }
+
+  function renderQuestion(idx){
+    var q = QUESTIONS[idx];
+    var pct = Math.round((idx / QUESTIONS.length) * 100);
+    return '<div class="quiz-header" style="padding-bottom:0;">'
+      +'<div style="display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:16px;">'
+      +'<span style="font-family:'Archivo',sans-serif;font-weight:900;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);">Question '+(idx+1)+' / '+QUESTIONS.length+'</span>'
+      +'</div>'
+      +'</div>'
+      +'<div class="quiz-progress-wrap"><div class="quiz-progress-bar-bg"><div class="quiz-progress-fill" style="width:'+pct+'%"></div></div></div>'
+      +'<div class="quiz-question-wrap">'
+      +'<div class="quiz-q">'+q.q+'</div>'
+      +'<div class="quiz-options">'
+      +q.opts.map(function(opt,i){
+        return '<button class="quiz-option" data-score="'+opt.score+'" data-idx="'+i+'">'
+          +'<span class="qopt-check">'+( state.scores[idx]===opt.score ? '✓' : '' )+'</span>'
+          +'<span class="qopt-emoji">'+opt.emoji+'</span>'
+          +'<span>'+opt.text+'</span>'
+          +'</button>';
+      }).join('')
+      +'</div>'
+      +'</div>'
+      +'<div class="quiz-footer">'
+      +'<button class="quiz-skip" id="quiz-close-btn">Fermer</button>'
+      +'<button class="quiz-btn-next'+(state.scores[idx]?' active':'')+'" id="quiz-next">'
+      +(idx===QUESTIONS.length-1 ? 'Voir mon profil →' : 'Question suivante →')+'</button>'
+      +'</div>';
+  }
+
+  function renderResult(){
+    var avg = state.total / QUESTIONS.length;
+    var profile = getProfile(avg);
+    var pct = Math.round(((avg - 1) / 4) * 100);
+    var traitsHtml = profile.traits.map(function(t,i){
+      return '<span class="quiz-trait" style="background:'+profile.traitColors[i]+'22;color:'+profile.traitColors[i]+';border:1.5px solid '+profile.traitColors[i]+'44;">'+t+'</span>';
+    }).join('');
+    var descLines = profile.desc.split('
+
+').map(function(p){
+      return '<p style="margin-bottom:14px;">'+p+'</p>';
+    }).join('');
+
+    return '<div class="quiz-result">'
+      +'<div class="quiz-result-orb" style="background:'+profile.bgColor+';">'+profile.emoji+'</div>'
+      +'<div class="quiz-result-title">'+profile.title+'</div>'
+      +'<div class="quiz-result-score">'+profile.subtitle+'</div>'
+      +'<div class="quiz-spectrum">'
+      +'<div class="quiz-spectrum-bar"><div class="quiz-spectrum-cursor" id="quiz-cursor" style="left:0%"></div></div>'
+      +'<div class="quiz-spectrum-labels"><span>Pessimiste</span><span>Neutre</span><span>Optimiste</span></div>'
+      +'</div>'
+      +'<div class="quiz-result-traits">'+traitsHtml+'</div>'
+      +'<div class="quiz-result-desc" style="font-size:.88rem;line-height:1.7;">'+descLines+'</div>'
+      +'<button class="quiz-result-cta" style="background:'+profile.ctaBg+';color:#fff;margin-bottom:10px;" id="quiz-finish">'+profile.cta+'</button>'
+      +'<button class="quiz-result-cta" style="background:transparent;color:var(--ink-soft);border:1.5px solid var(--line);" id="quiz-retry">Refaire le quiz</button>'
+      +'</div>';
+  }
+
+  // ── RENDU & INTERACTIONS ─────────────────────────────────────────────────
+  function mount(html){
+    var box = document.getElementById('quiz-box');
+    if(!box) return;
+    box.innerHTML = html;
+    box.scrollTop = 0;
+  }
+
+  function bindIntro(){
+    var startBtn = document.getElementById('quiz-start');
+    var dismissBtn = document.getElementById('quiz-dismiss');
+    if(startBtn) startBtn.addEventListener('click', function(){
+      state = { step: 0, scores: [], total: 0 };
+      mount(renderQuestion(0));
+      bindQuestion(0);
+    });
+    if(dismissBtn) dismissBtn.addEventListener('click', closeQuiz);
+  }
+
+  function bindQuestion(idx){
+    var opts = document.querySelectorAll('.quiz-option');
+    var nextBtn = document.getElementById('quiz-next');
+    var closeBtn = document.getElementById('quiz-close-btn');
+    if(closeBtn) closeBtn.addEventListener('click', closeQuiz);
+    opts.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        opts.forEach(function(b){ b.classList.remove('selected'); b.querySelector('.qopt-check').textContent=''; });
+        btn.classList.add('selected');
+        btn.querySelector('.qopt-check').textContent='✓';
+        var score = parseInt(btn.dataset.score, 10);
+        state.scores[idx] = score;
+        if(nextBtn){ nextBtn.classList.add('active'); }
+      });
+    });
+    if(nextBtn) nextBtn.addEventListener('click', function(){
+      if(!state.scores[idx]) return;
+      state.total += state.scores[idx];
+      var next = idx + 1;
+      if(next >= QUESTIONS.length){
+        mount(renderResult());
+        bindResult();
+        // Animer le curseur après rendu
+        setTimeout(function(){
+          var avg = state.total / QUESTIONS.length;
+          var pct = Math.round(((avg - 1) / 4) * 100);
+          var cursor = document.getElementById('quiz-cursor');
+          if(cursor) cursor.style.left = pct + '%';
+        }, 100);
+      } else {
+        mount(renderQuestion(next));
+        bindQuestion(next);
+      }
+    });
+  }
+
+  function bindResult(){
+    var finishBtn = document.getElementById('quiz-finish');
+    var retryBtn = document.getElementById('quiz-retry');
+    if(finishBtn) finishBtn.addEventListener('click', function(){ closeQuiz(); });
+    if(retryBtn) retryBtn.addEventListener('click', function(){
+      state = { step: 0, scores: [], total: 0 };
+      mount(renderQuestion(0));
+      bindQuestion(0);
+    });
+  }
+
+  function openQuiz(){
+    var backdrop = document.getElementById('quiz-backdrop');
+    if(!backdrop) return;
+    mount(renderIntro());
+    bindIntro();
+    backdrop.style.display = 'flex';
+    requestAnimationFrame(function(){ backdrop.classList.add('open'); });
+    document.body.style.overflow = 'hidden';
+    // Clic en dehors pour fermer
+    backdrop.addEventListener('click', function(e){
+      if(e.target === backdrop) closeQuiz();
+    });
+  }
+
+  function closeQuiz(){
+    var backdrop = document.getElementById('quiz-backdrop');
+    if(!backdrop) return;
+    backdrop.classList.remove('open');
+    setTimeout(function(){ backdrop.style.display = 'none'; document.body.style.overflow = ''; }, 400);
+    saveShown();
+  }
+
+  // ── DÉCLENCHEMENT ────────────────────────────────────────────────────────
+  window.addEventListener('load', function(){
+    // Délai de 4 secondes pour laisser la page se charger et l'utilisateur s'installer
+    setTimeout(function(){
+      if(shouldShow()){
+        openQuiz();
+      }
+    }, 4000);
+  });
+
+  // Exposer pour tests
+  window._openQuiz = openQuiz;
+})();
+</script>
+
 </body>
 </html>
