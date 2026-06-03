@@ -1354,6 +1354,234 @@ body.story-open { overflow: hidden; }
   #view-assoc .a-hero .a-wrap { padding: 64px 20px 50px; }
   #view-assoc .a-filters, #view-assoc .a-grid { padding-left: 20px; padding-right: 20px; }
 }
+
+/* ── Tinder : écran de fin ────────────────────────────────────────── */
+.tinder-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 48px 32px;
+  height: 100%;
+  min-height: 420px;
+  background: var(--surface);
+  border-radius: 20px;
+  box-shadow: 0 8px 40px -6px rgba(0,0,0,.14);
+  gap: 10px;
+}
+.tinder-empty-icon {
+  font-size: 3rem;
+  margin-bottom: 6px;
+  line-height: 1;
+}
+.tinder-empty-title {
+  font-family: var(--sans);
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -.025em;
+  color: var(--ink);
+  margin: 0;
+}
+.tinder-empty-text {
+  font-family: var(--serif);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--muted);
+  max-width: 340px;
+  margin: 0;
+}
+.tinder-empty-reset {
+  margin-top: 18px;
+  padding: 11px 24px;
+  border-radius: 100px;
+  border: 1.5px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: .88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .15s, border-color .15s, transform .15s;
+}
+.tinder-empty-reset:hover {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+  transform: translateY(-2px);
+}
+
+/* ── Modal de lecture d'article ────────────────────────────────── */
+.article-modal {
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(0,0,0,.7); backdrop-filter: blur(6px);
+  display: none; align-items: flex-start; justify-content: center;
+  padding: 24px 16px; overflow-y: auto;
+}
+.article-modal.open { display: flex; }
+body.modal-open { overflow: hidden; }
+
+.article-modal-box {
+  background: var(--surface);
+  border-radius: 22px;
+  width: 100%; max-width: 720px;
+  margin: auto;
+  box-shadow: 0 24px 64px rgba(0,0,0,.28);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Barre de progression lecture */
+.article-modal-progress {
+  position: sticky; top: 0; left: 0; right: 0;
+  height: 3px; z-index: 10;
+  background: var(--track);
+}
+.article-modal-progress-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--green), #26c4c4);
+  transition: width .1s linear;
+}
+
+/* Bouton fermer */
+.article-modal-close {
+  position: absolute; top: 16px; right: 16px; z-index: 20;
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--line); background: var(--surface);
+  color: var(--muted); font-size: 18px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background .15s, color .15s;
+}
+.article-modal-close:hover { background: var(--ink); color: var(--bg); }
+
+.article-modal-inner {
+  padding: 36px 40px 48px;
+}
+@media(max-width:600px){ .article-modal-inner { padding: 28px 22px 40px; } }
+
+/* En-tête article */
+.article-modal-meta {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 18px; flex-wrap: wrap;
+}
+.article-modal-tag {
+  font-size: 11px; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; padding: 5px 12px;
+  border-radius: 100px; color: #fff;
+}
+.article-modal-source {
+  font-size: 13px; color: var(--faint); font-weight: 500;
+}
+.article-modal-date {
+  font-size: 13px; color: var(--faint);
+  margin-left: auto;
+}
+
+.article-modal-headline {
+  font-family: var(--sans);
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 800; letter-spacing: -.03em;
+  line-height: 1.1; margin: 0 0 18px;
+  color: var(--ink); text-wrap: balance;
+}
+
+.article-modal-chapo {
+  font-family: var(--serif); font-style: italic;
+  font-size: clamp(17px, 2vw, 20px); line-height: 1.6;
+  color: var(--muted); margin: 0 0 28px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--line);
+  text-wrap: pretty;
+}
+
+/* Corps du texte */
+.article-modal-body { margin: 0 0 28px; }
+.article-modal-body p {
+  font-family: var(--serif);
+  font-size: clamp(16px, 1.8vw, 18px);
+  line-height: 1.75; color: var(--ink);
+  margin: 0 0 20px; text-wrap: pretty;
+}
+.article-modal-body p:last-child { margin-bottom: 0; }
+
+/* Faits vérifiés */
+.article-modal-facts {
+  background: var(--bg); border-radius: 16px;
+  padding: 20px 24px; margin: 28px 0;
+  border-left: 3px solid var(--green);
+}
+.article-modal-facts-title {
+  font-size: 11px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--green);
+  margin-bottom: 12px;
+}
+.article-modal-facts ul {
+  margin: 0; padding: 0; list-style: none;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.article-modal-facts li {
+  font-size: 14px; font-weight: 600; color: var(--ink);
+  padding-left: 18px; position: relative; line-height: 1.4;
+}
+.article-modal-facts li::before {
+  content: '✓'; position: absolute; left: 0;
+  color: var(--green); font-weight: 800;
+}
+
+/* Sources */
+.article-modal-sources {
+  display: flex; align-items: center; gap: 8px;
+  flex-wrap: wrap; margin-top: 24px;
+  padding-top: 20px; border-top: 1px solid var(--line);
+}
+.article-modal-sources-label {
+  font-size: 12px; font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--faint);
+}
+.article-modal-sources span {
+  font-size: 13px; font-weight: 600; color: var(--muted);
+  padding: 4px 10px; border-radius: 100px;
+  background: var(--bg); border: 1px solid var(--line);
+}
+
+/* Navigation entre articles */
+.article-modal-nav {
+  display: flex; justify-content: space-between; gap: 12px;
+  padding: 16px 40px; border-top: 1px solid var(--line);
+  background: var(--surface);
+  position: sticky; bottom: 0;
+}
+@media(max-width:600px){ .article-modal-nav { padding: 14px 20px; } }
+.article-modal-nav button {
+  font-family: var(--sans); font-size: 14px; font-weight: 700;
+  padding: 10px 20px; border-radius: 100px;
+  border: 1.5px solid var(--line); background: transparent;
+  color: var(--muted); cursor: pointer;
+  transition: all .15s;
+  display: flex; align-items: center; gap: 6px;
+}
+.article-modal-nav button:hover:not(:disabled) {
+  border-color: var(--ink); color: var(--ink);
+}
+.article-modal-nav button:disabled { opacity: .3; cursor: default; }
+.article-modal-nav .nav-count {
+  font-size: 13px; color: var(--faint); font-weight: 600;
+  display: flex; align-items: center;
+}
+
+/* Couleurs rubriques pour le tag */
+.tag-ecology  { background: var(--green); }
+.tag-climate  { background: var(--blue); }
+.tag-health   { background: var(--rose); }
+.tag-economy  { background: #f97316; }
+.tag-tech     { background: var(--violet); }
+.tag-science  { background: #26c4c4; color: #0a2020 !important; }
+.tag-society  { background: var(--amber); color: #1a1200 !important; }
+.tag-sport    { background: #ff6b35; }
+.tag-culture  { background: #e040fb; }
+.tag-education{ background: #00bcd4; }
+.tag-food     { background: #8bc34a; color: #1a2a00 !important; }
+.tag-ocean    { background: #0288d1; }
 </style>
 
 </style>
@@ -1635,6 +1863,24 @@ body.story-open { overflow: hidden; }
 
 
 <!-- ═══ QUIZ POPUP ════════════════════════════════════════════════════ -->
+<!-- ═══ MODAL LECTURE ARTICLE ════════════════════════════════════════ -->
+<div class="article-modal" id="article-modal" role="dialog" aria-modal="true" aria-label="Lire l'article">
+  <div class="article-modal-box" id="article-modal-box">
+    <div class="article-modal-progress">
+      <div class="article-modal-progress-fill" id="article-modal-progress-fill"></div>
+    </div>
+    <button class="article-modal-close" id="article-modal-close" aria-label="Fermer">✕</button>
+    <div class="article-modal-inner" id="article-modal-inner">
+      <!-- Contenu injecté dynamiquement -->
+    </div>
+    <nav class="article-modal-nav" id="article-modal-nav">
+      <button id="article-modal-prev">← Précédent</button>
+      <span class="nav-count" id="article-modal-count"></span>
+      <button id="article-modal-next">Suivant →</button>
+    </nav>
+  </div>
+</div>
+
 <div class="quiz-backdrop" id="quiz-backdrop" role="dialog" aria-modal="true" aria-label="Quiz mensuel" style="display:none;">
   <div class="quiz-box" id="quiz-box">
     <!-- Contenu injecté par JS -->
@@ -2631,6 +2877,13 @@ var CHIFFRES=[{"num": "154 M", "text": "de vies sauvées par les vaccins depuis 
 
 var QUOTES=[{"text": "L'optimisme est une forme de courage qui donne confiance aux autres.", "author": "Héléne Keller, auteure et militante"}, {"text": "Le monde va mieux qu'on ne le croit, à condition de regarder les bons indicateurs.", "author": "Hans Rosling, statisticien et médecin"}, {"text": "L'espoir n'est pas la conviction que tout ira bien, mais la certitude que cela a un sens.", "author": "Václav Havel, écrivain et président"}, {"text": "Ce ne sont pas les ressources qui manquent, c'est la volonté de les partager.", "author": "Wangari Maathai, prix Nobel de la paix"}, {"text": "La créativité humaine et la connaissance sont les ressources les plus importantes que nous possédons.", "author": "Julian Simon, économiste"}, {"text": "Chaque génération a la responsabilité de laisser le monde meilleur qu'elle ne l'a trouvé.", "author": "Jimmy Carter, 39ème président des États-Unis"}, {"text": "Ne doutez jamais qu'un petit groupe de citoyens réfléchis et engagés puisse changer le monde.", "author": "Margaret Mead, anthropologue"}, {"text": "Le progrès est impossible sans changement, et ceux qui ne peuvent pas changer d'avis ne peuvent rien changer.", "author": "George Bernard Shaw, dramaturge"}, {"text": "Nous sommes la première génération à ressentir l'impact du changement climatique, et la dernière à pouvoir faire quelque chose.", "author": "Barack Obama, 44ème président des États-Unis"}, {"text": "La science et la technologie révolutionnent notre vie, mais la mémoire, la tradition et le mythe nous encadrent.", "author": "Arthur Schlesinger Jr., historien"}, {"text": "Ce qui compte vraiment, c'est le nombre de personnes que vous aidez à s'épanouir.", "author": "Muhammad Yunus, prix Nobel de la paix, fondateur du microcrédit"}, {"text": "L'humanité survivra à toute catastrophe naturelle. C'est à nos propres folies que nous devons veiller.", "author": "Carl Sagan, astronome"}, {"text": "Prendre soin de notre planète, c'est prendre soin de nous-mêmes.", "author": "David Attenborough, naturaliste"}, {"text": "La santé est un droit fondamental de chaque être humain, sans distinction de race, de religion, de conviction politique ou de condition économique.", "author": "Constitution de l'OMS, 1946"}, {"text": "Les forêts précèdent les civilisations, les déserts les suivent.", "author": "François-René de Chateaubriand, écrivain"}, {"text": "Agissez comme si ce que vous faites faisait une différence. Ça en fait une.", "author": "William James, philosophe et psychologue"}, {"text": "La plus grande menace pour notre planète, c'est la croyance que quelqu'un d'autre la sauvera.", "author": "Robert Swan, explorateur polaire"}, {"text": "L'éducation est l'arme la plus puissante que vous puissiez utiliser pour changer le monde.", "author": "Nelson Mandela, prix Nobel de la paix"}, {"text": "Nous n'héritons pas de la Terre de nos ancêtres, nous l'empruntons à nos enfants.", "author": "Antoine de Saint-Exupéry, écrivain et aviateur"}, {"text": "Il n'y a pas de petits gestes, il n'y a que des gestes.", "author": "Simone Veil, juriste et femme d'État française"}];
 
+// Exposer sur window pour les autres scripts
+window._fallback = typeof FALLBACK !== 'undefined' ? FALLBACK : [];
+window.TODAY_ARTICLES = typeof TODAY_ARTICLES !== 'undefined' ? TODAY_ARTICLES : [];
+window._quotes = typeof QUOTES !== 'undefined' ? QUOTES : [];
+window.CHIFFRES = typeof CHIFFRES !== 'undefined' ? CHIFFRES : [];
+
+
 </script>
 
 <script>
@@ -2757,6 +3010,179 @@ var QUOTES=[{"text": "L'optimisme est une forme de courage qui donne confiance a
       sun.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' ') window._openQuiz(true); });
     }
   });
+})();
+</script>
+
+<script>
+// ── Modal de lecture d'article ────────────────────────────────────────
+(function(){
+  'use strict';
+
+  var TAG_LABELS = {
+    ecology:'Écologie', climate:'Climat', health:'Santé', economy:'Économie',
+    tech:'Tech', science:'Science', society:'Société', sport:'Sport',
+    culture:'Culture', education:'Éducation', food:'Alimentation', ocean:'Océans'
+  };
+
+  var modal       = null;
+  var modalBox    = null;
+  var modalInner  = null;
+  var modalPrev   = null;
+  var modalNext   = null;
+  var modalCount  = null;
+  var modalClose  = null;
+  var progressFill = null;
+
+  var currentArticles = [];
+  var currentIdx = 0;
+
+  function init(){
+    modal       = document.getElementById('article-modal');
+    modalBox    = document.getElementById('article-modal-box');
+    modalInner  = document.getElementById('article-modal-inner');
+    modalPrev   = document.getElementById('article-modal-prev');
+    modalNext   = document.getElementById('article-modal-next');
+    modalCount  = document.getElementById('article-modal-count');
+    modalClose  = document.getElementById('article-modal-close');
+    progressFill = document.getElementById('article-modal-progress-fill');
+    if(!modal) return;
+
+    // Fermer sur clic backdrop
+    modal.addEventListener('click', function(e){
+      if(e.target === modal) closeModal();
+    });
+
+    // Fermer bouton
+    modalClose.addEventListener('click', closeModal);
+
+    // Navigation
+    modalPrev.addEventListener('click', function(){ navigate(-1); });
+    modalNext.addEventListener('click', function(){ navigate(1); });
+
+    // Échap
+    document.addEventListener('keydown', function(e){
+      if(!modal.classList.contains('open')) return;
+      if(e.key === 'Escape') closeModal();
+      if(e.key === 'ArrowLeft') navigate(-1);
+      if(e.key === 'ArrowRight') navigate(1);
+    });
+
+    // Scroll progress
+    modalBox.addEventListener('scroll', updateProgress, {passive:true});
+  }
+
+  function updateProgress(){
+    if(!modalBox || !progressFill) return;
+    var scrolled = modalBox.scrollTop;
+    var total = modalBox.scrollHeight - modalBox.clientHeight;
+    var pct = total > 0 ? Math.min(100, (scrolled/total)*100) : 100;
+    progressFill.style.width = pct + '%';
+  }
+
+  function openModal(articles, idx){
+    if(!modal){ init(); }
+    currentArticles = articles || (window.TODAY_ARTICLES||[]).concat(window._fallback||[]);
+    currentIdx = idx || 0;
+    renderArticle();
+    modal.classList.add('open');
+    document.body.classList.add('modal-open');
+    modalBox.scrollTop = 0;
+    updateProgress();
+  }
+
+  function closeModal(){
+    if(!modal) return;
+    modal.classList.remove('open');
+    document.body.classList.remove('modal-open');
+  }
+
+  function navigate(dir){
+    var next = currentIdx + dir;
+    if(next < 0 || next >= currentArticles.length) return;
+    currentIdx = next;
+    renderArticle();
+    modalBox.scrollTop = 0;
+    updateProgress();
+  }
+
+  function esc(s){
+    return String(s||'')
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;');
+  }
+
+  function renderArticle(){
+    var a = currentArticles[currentIdx];
+    if(!a) return;
+
+    var label = TAG_LABELS[a.rubric] || a.rubric || '';
+
+    // Corps
+    var bodyHtml = '';
+    if(Array.isArray(a.body) && a.body.length){
+      bodyHtml = '<div class="article-modal-body">'
+        + a.body.map(function(p){ return '<p>'+esc(p)+'</p>'; }).join('')
+        + '</div>';
+    }
+
+    // Faits vérifiés
+    var factsHtml = '';
+    if(Array.isArray(a.facts) && a.facts.length){
+      factsHtml = '<div class="article-modal-facts">'
+        + '<div class="article-modal-facts-title">Faits vérifiés</div>'
+        + '<ul>'
+        + a.facts.map(function(f){ return '<li>'+esc(f)+'</li>'; }).join('')
+        + '</ul>'
+        + '</div>';
+    }
+
+    // Sources
+    var sourcesHtml = '';
+    if(Array.isArray(a.sources) && a.sources.length){
+      sourcesHtml = '<div class="article-modal-sources">'
+        + '<span class="article-modal-sources-label">Sources</span>'
+        + a.sources.map(function(s){ return '<span>'+esc(s)+'</span>'; }).join('')
+        + '</div>';
+    }
+
+    modalInner.innerHTML =
+      '<div class="article-modal-meta">'
+        + '<span class="article-modal-tag tag-'+esc(a.rubric)+'">'+esc(label)+'</span>'
+        + '<span class="article-modal-source">'+esc(a.source||'')+'</span>'
+        + '<span class="article-modal-date">'+esc(a.date||'')+'</span>'
+      + '</div>'
+      + '<h1 class="article-modal-headline">'+esc(a.headline)+'</h1>'
+      + '<p class="article-modal-chapo">'+esc(a.chapo||a.summary||'')+'</p>'
+      + bodyHtml
+      + factsHtml
+      + sourcesHtml;
+
+    // Navigation
+    modalPrev.disabled = currentIdx <= 0;
+    modalNext.disabled = currentIdx >= currentArticles.length - 1;
+    modalCount.textContent = (currentIdx+1) + ' / ' + currentArticles.length;
+  }
+
+  // Exposer
+  window.openDetail = function(idx){
+    var articles = window.currentArticles
+      || (window.TODAY_ARTICLES||[]).concat(window._fallback||[]);
+    if(!modal){ init(); }
+    openModal(articles, idx || 0);
+  };
+
+  window._openImmersive = function(article){
+    var articles = (window.TODAY_ARTICLES||[]).concat(window._fallback||[]);
+    var idx = articles.indexOf(article);
+    openModal(articles, idx >= 0 ? idx : 0);
+  };
+
+  // Init au chargement
+  document.addEventListener('DOMContentLoaded', init);
+  if(document.readyState !== 'loading') init();
+
 })();
 </script>
 
