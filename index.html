@@ -170,7 +170,16 @@
     .wrap{padding:0 22px;}
     nav.tabs{display:none;}
     .chiffre{flex-direction:column;align-items:flex-start;gap:18px;padding:34px 30px;}
-    .chiffre .cnum{font-size:80px;}
+    .chiffre .cnum {
+  font-size: clamp(72px, 9vw, 120px);
+  font-weight: 800;
+  letter-spacing: -.04em;
+  line-height: 1;
+  background: linear-gradient(135deg, #ffe27a 0%, #f5b81e 50%, #f97316 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+  white-space: nowrap;
+}
     .hero .grid{grid-template-columns:1fr;gap:26px;}
     .hero figure{height:300px;}
     .hero h1{font-size:40px;}
@@ -1795,6 +1804,17 @@ body.story-open { overflow: hidden; }
 #view-articles.grid-mode #articles-grid-view {
   overflow: visible;
   height: auto;
+}
+
+
+/* Chiffre du jour — texte amélioré */
+.chiffre h2 {
+  font-size: clamp(20px, 2.5vw, 30px);
+  font-weight: 700;
+  letter-spacing: -.02em;
+  line-height: 1.2;
+  color: rgba(255,255,255,.92);
+  margin: 0;
 }
 
 @media (max-width: 768px) {
