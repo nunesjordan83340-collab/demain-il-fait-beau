@@ -272,7 +272,9 @@ body.page-assoc footer { display: none; }
 .card.span-feature h3 { font-size: clamp(26px, 3.5vw, 44px); }
 .cards-empty, .cards-more { grid-column: span 2; }
 .cards-empty { text-align: center; padding: 48px 20px; color: var(--faint); font-size: 15px; font-weight: 600; }
-.cards-more { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 28px 20px; background: var(--bg); border-radius: var(--radius); border: 1.5px dashed var(--line); text-align: center; }
+.cards-more { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 28px 20px; background: var(--bg); border-radius: var(--radius); border: 1.5px dashed var(--line); text-align: center; transition: border-color .2s, background .2s, transform .15s; }
+.cards-more:hover { border-color: var(--violet); background: rgba(124,58,237,.04); transform: translateY(-3px); }
+.cards-more:hover .cards-more-count { color: var(--violet); }
 .cards-more-count { font-size: 18px; font-weight: 800; color: var(--ink); }
 .cards-more-hint { font-size: 13px; color: var(--muted); }
 
@@ -1639,6 +1641,149 @@ body.story-open { overflow: hidden; }
 }
 .reaction-btn.voted .rbtn-count { color: var(--violet); }
 
+
+/* ══════════════════════════════════════════════════════════════
+   ARTICLES — toolbar + mode grille paginée
+═══════════════════════════════════════════════════════════════ */
+.articles-toolbar {
+  position: sticky; top: 60px; z-index: 20;
+  background: rgba(var(--bg-rgb, 244,244,245), .92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+  padding: 0;
+}
+.articles-toolbar-inner {
+  display: flex; align-items: center; gap: 20px;
+  height: 54px;
+}
+.articles-mode-btns {
+  display: flex; gap: 6px; flex-shrink: 0;
+}
+.art-mode-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 16px; border-radius: 100px;
+  font-size: 14px; font-weight: 600; font-family: var(--sans);
+  border: 1.5px solid var(--line); background: transparent;
+  color: var(--muted); cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.art-mode-btn:hover { color: var(--ink); border-color: var(--ink); }
+.art-mode-btn.active {
+  background: var(--ink); color: var(--bg);
+  border-color: var(--ink);
+}
+.articles-filters {
+  display: flex; gap: 8px; overflow-x: auto; flex: 1;
+  scrollbar-width: none;
+}
+.articles-filters::-webkit-scrollbar { display: none; }
+.articles-filters .chip {
+  flex-shrink: 0;
+  padding: 6px 14px; font-size: 13px;
+}
+
+/* Mode grille */
+.articles-grid-view { padding: 28px 0 80px; }
+.ag-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  align-items: stretch;
+}
+
+/* Cartes grille — même style que .card journal */
+.ag-card {
+  border-radius: var(--radius); padding: 30px;
+  display: flex; flex-direction: column; overflow: hidden;
+  transition: transform .2s cubic-bezier(.2,.7,.2,1), box-shadow .2s;
+  cursor: pointer; position: relative;
+}
+.ag-card:hover { transform: translateY(-4px); box-shadow: 0 22px 46px rgba(24,24,40,.16); }
+.ag-card.solid { color: #fff; }
+.ag-card.photo { background: var(--surface); border: 1px solid var(--line); color: var(--ink); }
+.ag-card .ck {
+  font-size: 11px; font-weight: 800; letter-spacing: .1em;
+  text-transform: uppercase; margin-bottom: 14px;
+  display: flex; align-items: center; gap: 7px;
+}
+.ag-card.solid .ck { color: rgba(255,255,255,.75); }
+.ag-card h3 {
+  font-size: clamp(17px, 2vw, 22px); font-weight: 800;
+  letter-spacing: -.025em; line-height: 1.2; margin: 0 0 10px;
+}
+.ag-card .cs {
+  font-family: var(--serif); font-size: 15px; line-height: 1.55;
+  flex: 1; margin: 0 0 18px;
+}
+.ag-card.solid .cs { color: rgba(255,255,255,.75); }
+.ag-card.photo .cs { color: var(--muted); }
+.ag-card .more {
+  font-size: 13px; font-weight: 700; margin-top: auto;
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.ag-card.solid .more { color: rgba(255,255,255,.85); }
+.ag-card.photo .more { color: var(--violet); }
+
+/* Placeholder photo */
+.ag-card .pfig { width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; margin-bottom: 16px; }
+.ag-card .ph { width: 100%; height: 100%; display: flex; align-items: flex-end; padding: 12px;
+  background: linear-gradient(135deg, hsl(var(--c,270 60% 55%)) 0%, hsl(var(--c,270 60% 35%)) 100%); }
+.ag-card .ph span { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.7); }
+.ag-card .cdot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+
+/* Pagination */
+.ag-pagination {
+  display: flex; align-items: center; justify-content: center;
+  gap: 8px; padding: 36px 0 0;
+}
+.ag-page-btn {
+  width: 40px; height: 40px; border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 15px; font-weight: 700; font-family: var(--sans);
+  border: 1.5px solid var(--line); background: transparent;
+  color: var(--muted); cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.ag-page-btn:hover { border-color: var(--ink); color: var(--ink); }
+.ag-page-btn.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.ag-page-btn.prev-next {
+  width: auto; padding: 0 16px; border-radius: 100px;
+  font-size: 13px; gap: 4px;
+}
+
+@media (max-width: 768px) {
+  .articles-toolbar { top: 56px; }
+  .articles-toolbar-inner { gap: 10px; height: 48px; }
+  .art-mode-btn span, .art-mode-btn .mode-label { display: none; }
+  .ag-grid { grid-template-columns: 1fr; gap: 14px; }
+  .ag-card { padding: 22px; }
+}
+
+
+/* articles-tinder-view prend tout l'espace disponible */
+#articles-tinder-view {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+/* articles-grid-view défile normalement */
+#articles-grid-view {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+
+/* Cacher les filtres carousel internes (la toolbar en a sa propre copie) */
+#articles-tinder-view #carousel-filters {
+  display: none;
+}
+/* tcard-counter et tcard-hint ne prennent pas de flex */
+.tcard-counter { flex-shrink: 0; }
+.tcard-hint { flex-shrink: 0; }
+
 @media (max-width: 768px) {
 
   /* Nav mobile visible */
@@ -1673,7 +1818,7 @@ body.story-open { overflow: hidden; }
 
   /* Padding bas pour la nav fixe */
   #page-journal, #view-tendances, #view-assoc { padding-bottom: 72px; }
-  body.page-articles #view-articles { height: calc(100vh - var(--topbar-h) - 68px) !important; }
+  body.page-articles #view-articles { height: calc(100vh - var(--topbar-h) - 54px) !important; }
 
   /* Articles tinder */
   .tinder-arena { padding: 0 8px; }
@@ -1727,8 +1872,6 @@ body.story-open { overflow: hidden; }
   #view-assoc .a-filters { padding: 16px 0 4px !important; gap: 7px !important; }
   #view-assoc main { padding: 0 16px !important; }
 }
-</style>
-
 </style>
 
 </head>
@@ -1939,11 +2082,54 @@ body.story-open { overflow: hidden; }
 
 <!-- ═══ PAGE : ARTICLES (Tinder) ════════════════════════════════════ -->
 <div id="view-articles">
-  <div class="tinder-arena">
-    <div class="tinder-stack" id="tinder-stack"></div>
+  <!-- Barre de contrôle -->
+  <div class="articles-toolbar" id="articles-toolbar">
+    <div class="articles-toolbar-inner wrap">
+      <div class="articles-mode-btns">
+        <button class="art-mode-btn active" id="btn-tinder" title="Mode swipe">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M8 4v16M16 4v16"/></svg>
+          Swipe
+        </button>
+        <button class="art-mode-btn" id="btn-grid" title="Voir tous les articles">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Voir tout
+        </button>
+      </div>
+      <!-- Filtres catégorie (partagés) -->
+      <div class="articles-filters" id="articles-filters"></div>
+    </div>
   </div>
-  <div class="tcard-counter" id="tcard-counter"></div>
-  <div class="tcard-hint">← Passer · Lire → · Sauvegarder ↑</div>
+
+  <!-- Mode swipe (tinder) -->
+  <div class="articles-tinder-view" id="articles-tinder-view">
+    <!-- Filtres catégorie pour le mode swipe -->
+    <div class="carousel-filters" id="carousel-filters">
+      <button class="carousel-pill active" data-rubric="all">Tout</button>
+      <button class="carousel-pill" data-rubric="ecology">Écologie</button>
+      <button class="carousel-pill" data-rubric="climate">Climat</button>
+      <button class="carousel-pill" data-rubric="health">Santé</button>
+      <button class="carousel-pill" data-rubric="science">Science</button>
+      <button class="carousel-pill" data-rubric="economy">Économie</button>
+      <button class="carousel-pill" data-rubric="tech">Tech</button>
+      <button class="carousel-pill" data-rubric="society">Société</button>
+      <button class="carousel-pill" data-rubric="sport">Sport</button>
+      <button class="carousel-pill" data-rubric="culture">Culture</button>
+      <button class="carousel-pill" data-rubric="ocean">Océans</button>
+    </div>
+    <div class="tinder-arena">
+      <div class="tinder-stack" id="tinder-stack"></div>
+    </div>
+    <div class="tcard-counter" id="tcard-counter"></div>
+    <div class="tcard-hint">← Passer · Lire → · Sauvegarder ↑</div>
+  </div>
+
+  <!-- Mode grille (voir tout) -->
+  <div class="articles-grid-view" id="articles-grid-view" style="display:none">
+    <div class="wrap">
+      <div class="ag-grid" id="ag-grid"></div>
+      <div class="ag-pagination" id="ag-pagination"></div>
+    </div>
+  </div>
 </div>
 
 <!-- ═══ PAGE : TENDANCES ═════════════════════════════════════════════ -->
@@ -2783,6 +2969,7 @@ window.CHIFFRES        = typeof CHIFFRES        !== 'undefined' ? CHIFFRES      
       if(!seen[key]){ seen[key] = true; deduped.push(a); }
     });
     _allArticles = deduped;
+    window._allArticles = _allArticles; // exposé pour le mode grille Articles
     if(!_allArticles.length) return;
 
     var countEl = document.getElementById('articles-count');
@@ -2872,6 +3059,20 @@ window.CHIFFRES        = typeof CHIFFRES        !== 'undefined' ? CHIFFRES      
       card.addEventListener('click', openIt);
       card.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' ') openIt(); });
     });
+
+    // Bloc "+N articles disponibles" → navigue vers Articles
+    var moreEl = grid.querySelector('.cards-more');
+    if(moreEl){
+      moreEl.style.cursor = 'pointer';
+      moreEl.setAttribute('role', 'button');
+      moreEl.setAttribute('tabindex', '0');
+      moreEl.addEventListener('click', function(){
+        if(window.setPage) window.setPage('articles');
+      });
+      moreEl.addEventListener('keydown', function(e){
+        if(e.key==='Enter'||e.key===' ') if(window.setPage) window.setPage('articles');
+      });
+    }
     firstPass = false;
     revealNow();
   }
@@ -3478,6 +3679,10 @@ window.CHIFFRES        = typeof CHIFFRES        !== 'undefined' ? CHIFFRES      
     deckPos=Math.min(loadPos(), Math.max(0, deck.length-1));
     renderStack();
     initFilters();
+    // Brancher la toolbar mode grille
+    if(typeof initToolbar === 'function') initToolbar();
+    // Exposer _allArticles sur window pour le mode grille
+    window._allArticles = getAllArticles();
     // Toast
     setTimeout(function(){
       var seen=loadSeen().length;
@@ -3490,6 +3695,162 @@ window.CHIFFRES        = typeof CHIFFRES        !== 'undefined' ? CHIFFRES      
   document.addEventListener('DOMContentLoaded',function(){
     if(document.body.classList.contains('page-articles')) window._initTinder ? window._initTinder() : window._initCarousel();
   });
+
+
+  // ══════════════════════════════════════════════════════════════
+  //  MODE GRILLE PAGINÉE — "Voir tout"
+  // ══════════════════════════════════════════════════════════════
+  var AG_PER_PAGE = 12;
+  var agPage = 0;
+  var agCat  = 'tout';
+  var gridMode = false;
+
+  // Dictionnaires locaux pour buildCard (TAG_HSL n'est pas dans ce scope)
+  var TAG_HSL_LOCAL = {
+    ecology:'145 65% 45%', climate:'222 80% 56%', health:'332 75% 58%',
+    economy:'27 90% 52%',  tech:'270 70% 58%',    science:'185 70% 50%',
+    society:'42 85% 52%',  sport:'10 75% 55%',    culture:'290 60% 55%',
+    education:'195 70% 45%', food:'90 55% 45%',   ocean:'200 70% 45%'
+  };
+  var TAG_LABELS_LOCAL = {
+    ecology:'Écologie', climate:'Climat', health:'Santé', economy:'Économie',
+    tech:'Tech', science:'Science', society:'Société', sport:'Sport',
+    culture:'Culture', education:'Éducation', food:'Alimentation', ocean:'Océans'
+  };
+
+  function esc2(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function buildGridCard(a, idx){
+    var col   = TAG_COLORS[a.rubric]  || '#7b3ff2';
+    var label = TAG_LABELS_LOCAL[a.rubric] || TAG_LABELS[a.rubric] || a.rubric;
+    var hsl   = TAG_HSL_LOCAL[a.rubric]    || '270 60% 55%';
+    var isSolid = (idx % 2 === 0);
+
+    if(isSolid){
+      return '<article class="ag-card solid reveal" data-idx="'+idx+'" tabindex="0" role="button"'
+        +' style="background:'+col+'">'
+        +'<span class="ck">'+esc2(label)+'</span>'
+        +'<h3>'+esc2(a.headline)+'</h3>'
+        +'<p class="cs">'+esc2(a.chapo||a.summary||'')+'</p>'
+        +'<span class="more">Lire l’article →</span>'
+        +'</article>';
+    } else {
+      return '<article class="ag-card photo reveal" data-idx="'+idx+'" tabindex="0" role="button">'
+        +'<div class="pfig"><div class="ph" style="--c:'+esc2(hsl)+'"><span>'+esc2(label)+'</span></div></div>'
+        +'<span class="ck" style="color:'+col+'"><span class="cdot" style="background:'+col+'"></span>'+esc2(label)+'</span>'
+        +'<h3>'+esc2(a.headline)+'</h3>'
+        +'<p class="cs">'+esc2(a.chapo||a.summary||'')+'</p>'
+        +'<span class="more">Lire l’article →</span>'
+        +'</article>';
+    }
+  }
+
+  function renderGrid(){
+    var grid  = document.getElementById('ag-grid');
+    var pages = document.getElementById('ag-pagination');
+    if(!grid) return;
+
+    var all = window._allArticles || [];
+    var pool = agCat === 'tout' ? all : all.filter(function(a){ return a.rubric === agCat; });
+    var totalPages = Math.max(1, Math.ceil(pool.length / AG_PER_PAGE));
+    if(agPage >= totalPages) agPage = 0;
+
+    var slice = pool.slice(agPage * AG_PER_PAGE, (agPage + 1) * AG_PER_PAGE);
+    // Les index référencent _allArticles pour openDetail
+    var html = slice.map(function(a){
+      var realIdx = all.indexOf(a);
+      return buildGridCard(a, realIdx);
+    }).join('');
+
+    grid.innerHTML = html;
+
+    // Listeners clics
+    grid.querySelectorAll('.ag-card').forEach(function(card){
+      function openIt(){
+        var i2 = parseInt(card.dataset.idx, 10);
+        if(window.openDetail) window.openDetail(all, isNaN(i2) ? 0 : i2);
+      }
+      card.addEventListener('click', openIt);
+      card.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' ') openIt(); });
+    });
+
+    // Pagination
+    if(!pages) return;
+    if(totalPages <= 1){ pages.innerHTML = ''; return; }
+
+    var phtml = '';
+    if(agPage > 0){
+      phtml += '<button class="ag-page-btn prev-next" data-p="'+(agPage-1)+'">← Précédent</button>';
+    }
+    for(var p = 0; p < totalPages; p++){
+      phtml += '<button class="ag-page-btn'+(p===agPage?' active':'')+'" data-p="'+p+'">'+(p+1)+'</button>';
+    }
+    if(agPage < totalPages - 1){
+      phtml += '<button class="ag-page-btn prev-next" data-p="'+(agPage+1)+'">Suivant →</button>';
+    }
+    pages.innerHTML = phtml;
+
+    pages.querySelectorAll('.ag-page-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        agPage = parseInt(btn.dataset.p, 10);
+        renderGrid();
+        // Scroll haut de la grille
+        var gv = document.getElementById('articles-grid-view');
+        if(gv) gv.scrollIntoView({behavior:'smooth', block:'start'});
+      });
+    });
+
+    if(window._revealAll) window._revealAll();
+  }
+
+  function syncFiltersToToolbar(){
+    var bar = document.getElementById('articles-filters');
+    if(!bar) return;
+    var cats = ['tout','ecology','climate','health','science','economy','tech','society','sport','culture','ocean'];
+    var labels = {tout:'Tout', ecology:'Écologie', climate:'Climat', health:'Santé',
+      science:'Science', economy:'Économie', tech:'Tech', society:'Société',
+      sport:'Sport', culture:'Culture', ocean:'Océans'};
+    bar.innerHTML = cats.map(function(c){
+      return '<button class="chip'+(c===agCat?' active':'')+'" data-cat="'+c+'">'+labels[c]+'</button>';
+    }).join('');
+    bar.querySelectorAll('.chip').forEach(function(chip){
+      chip.addEventListener('click', function(){
+        agCat = chip.dataset.cat;
+        agPage = 0;
+        bar.querySelectorAll('.chip').forEach(function(b){ b.classList.toggle('active', b.dataset.cat === agCat); });
+        renderGrid();
+      });
+    });
+  }
+
+  function setGridMode(on){
+    gridMode = on;
+    var tinderView = document.getElementById('articles-tinder-view');
+    var gridView   = document.getElementById('articles-grid-view');
+    var btnTinder  = document.getElementById('btn-tinder');
+    var btnGrid    = document.getElementById('btn-grid');
+    var toolbar    = document.getElementById('articles-toolbar');
+
+    if(tinderView) tinderView.style.display = on ? 'none' : 'flex';
+    if(gridView)   gridView.style.display   = on ? 'block' : 'none';
+    if(btnTinder)  btnTinder.classList.toggle('active', !on);
+    if(btnGrid)    btnGrid.classList.toggle('active', on);
+    if(toolbar)    toolbar.style.display = 'block';
+
+    if(on){ syncFiltersToToolbar(); renderGrid(); }
+  }
+
+  function initToolbar(){
+    var btnTinder = document.getElementById('btn-tinder');
+    var btnGrid   = document.getElementById('btn-grid');
+    if(btnTinder) btnTinder.addEventListener('click', function(){ setGridMode(false); });
+    if(btnGrid)   btnGrid.addEventListener('click',   function(){ setGridMode(true);  });
+  }
+
+  // initToolbar est appelé depuis _initCarousel (voir ci-dessous)
+  // _allArticles exposé sur window depuis renderJournal (script init)
+
+
 })();
   window._initTinder = window._initCarousel;
 
