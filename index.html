@@ -1646,11 +1646,11 @@ body.story-open { overflow: hidden; }
    ARTICLES — toolbar + mode grille paginée
 ═══════════════════════════════════════════════════════════════ */
 .articles-toolbar {
-  position: sticky; top: 60px; z-index: 20;
-  background: rgba(var(--bg-rgb, 244,244,245), .92);
-  backdrop-filter: blur(12px);
+  position: relative; z-index: 20;
+  background: var(--bg);
   border-bottom: 1px solid var(--line);
   padding: 0;
+  flex-shrink: 0;
 }
 .articles-toolbar-inner {
   display: flex; align-items: center; gap: 20px;
@@ -1752,7 +1752,7 @@ body.story-open { overflow: hidden; }
 }
 
 @media (max-width: 768px) {
-  .articles-toolbar { top: 56px; }
+  /* toolbar no sticky */
   .articles-toolbar-inner { gap: 10px; height: 48px; }
   .art-mode-btn span, .art-mode-btn .mode-label { display: none; }
   .ag-grid { grid-template-columns: 1fr; gap: 14px; }
@@ -1783,6 +1783,18 @@ body.story-open { overflow: hidden; }
 /* tcard-counter et tcard-hint ne prennent pas de flex */
 .tcard-counter { flex-shrink: 0; }
 .tcard-hint { flex-shrink: 0; }
+
+
+/* Mode grille : view-articles laisse défiler */
+#view-articles.grid-mode {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: auto;
+  max-height: calc(100vh - var(--topbar-h));
+}
+#view-articles.grid-mode #articles-grid-view {
+  overflow: visible;
+}
 
 @media (max-width: 768px) {
 
@@ -3833,6 +3845,9 @@ window.CHIFFRES        = typeof CHIFFRES        !== 'undefined' ? CHIFFRES      
 
     if(tinderView) tinderView.style.display = on ? 'none' : 'flex';
     if(gridView)   gridView.style.display   = on ? 'block' : 'none';
+    // Mode grille : autoriser le scroll vertical sur view-articles
+    var va = document.getElementById('view-articles');
+    if(va) va.classList.toggle('grid-mode', on);
     if(btnTinder)  btnTinder.classList.toggle('active', !on);
     if(btnGrid)    btnGrid.classList.toggle('active', on);
     if(toolbar)    toolbar.style.display = 'block';
