@@ -1785,15 +1785,16 @@ body.story-open { overflow: hidden; }
 .tcard-hint { flex-shrink: 0; }
 
 
-/* Mode grille : view-articles laisse défiler */
+/* Mode grille : la page scrolle normalement */
 #view-articles.grid-mode {
-  overflow-y: auto;
-  overflow-x: hidden;
-  height: auto;
-  max-height: calc(100vh - var(--topbar-h));
+  overflow: visible !important;
+  height: auto !important;
+  max-height: none !important;
 }
+#view-articles.grid-mode #articles-tinder-view { display: none !important; }
 #view-articles.grid-mode #articles-grid-view {
   overflow: visible;
+  height: auto;
 }
 
 @media (max-width: 768px) {
@@ -3133,6 +3134,12 @@ window.CHIFFRES        = typeof CHIFFRES        !== 'undefined' ? CHIFFRES      
     if(page === 'assoc' && window._initAssoc) window._initAssoc();
     if(window._revealAll) window._revealAll();
     window.scrollTo({top:0,behavior:'instant'});
+    // Quitter le mode grille si on change de page
+    if(page !== 'articles'){
+      document.body.style.overflowY = '';
+      var va = document.getElementById('view-articles');
+      if(va) va.classList.remove('grid-mode');
+    }
   }
   window.setPage = setPage;
 
@@ -3845,9 +3852,12 @@ window.CHIFFRES        = typeof CHIFFRES        !== 'undefined' ? CHIFFRES      
 
     if(tinderView) tinderView.style.display = on ? 'none' : 'flex';
     if(gridView)   gridView.style.display   = on ? 'block' : 'none';
-    // Mode grille : autoriser le scroll vertical sur view-articles
+    // Mode grille : body scrolle normalement, pas view-articles
     var va = document.getElementById('view-articles');
     if(va) va.classList.toggle('grid-mode', on);
+    // Scroll body en mode grille (view-articles overflow:visible)
+    document.body.style.overflowY = on ? 'auto' : '';
+    if(!on) window.scrollTo({top: 0, behavior: 'instant'});
     if(btnTinder)  btnTinder.classList.toggle('active', !on);
     if(btnGrid)    btnGrid.classList.toggle('active', on);
     if(toolbar)    toolbar.style.display = 'block';
