@@ -1643,7 +1643,7 @@ body.story-open { overflow: hidden; }
 
   /* Nav mobile visible */
   .mobile-nav {
-    display: flex; position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+    display: none !important; position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
     background: var(--surface); border-top: 1px solid var(--line);
     padding: 6px 0 max(6px, env(safe-area-inset-bottom));
   }
@@ -3071,6 +3071,7 @@ window.CHIFFRES        = typeof CHIFFRES        !== 'undefined' ? CHIFFRES      
     if(!modal){ init(); }
     currentArticles = articles || (window.TODAY_ARTICLES||[]).concat(window._fallback||[]);
     currentIdx = idx || 0;
+    window._currentModalIdx = currentIdx; // exposé pour les réactions
     renderArticle();
     modal.classList.add('open');
     document.body.classList.add('modal-open');
@@ -3572,30 +3573,36 @@ window.CHIFFRES        = typeof CHIFFRES        !== 'undefined' ? CHIFFRES      
   }
 
   // ── Brancher sur l'ouverture de la modal ──────────────────────────
-  function tryHookModal(){
+  // Stratégie : wrapper openDetail + MutationObserver en fallback
+  function hookModal(){
     var modal = document.getElementById('article-modal');
     if(!modal){
-      setTimeout(tryHookModal, 200);
+      setTimeout(hookModal, 150);
       return;
     }
-    var lastOpen = false;
-    var obs = new MutationObserver(function(){
-      var isOpen = modal.classList.contains('open');
-      if(isOpen && !lastOpen){
-        lastOpen = true;
-        // Petit délai pour que _currentModalIdx et le DOM soient prêts
-        setTimeout(function(){
-          var idx = window._currentModalIdx;
-          var all = getAllArticles();
-          var a = all[idx];
-          if(!a) return;
-          initReactions(articleId(a));
-        }, 80);
-      } else if(!isOpen){
-        lastOpen = false;
-      }
-    });
-    obs.observe(modal, {attributes:true, attributeFilter:['class']});
+
+    // Wrapper openDetail : appelé à chaque ouverture d'article
+    var _origOpen = window.openDetail;
+    window.openDetail = function(articlesOrIdx, maybeIdx){
+      var result = _origOpen.apply(this, arguments);
+      // Déterminer l'article courant après l'appel
+      setTimeout(function(){
+        var modal2 = document.getElementById('article-modal');
+        if(!modal2 || !modal2.classList.contains('open')) return;
+        // Récupérer l'article depuis la modal via currentIdx exposé
+        var idx = window._currentModalIdx;
+        if(idx === undefined || idx === null) return;
+        var all = getAllArticles();
+        var a = all[idx];
+        if(!a) return;
+        initReactions(articleId(a));
+      }, 60);
+      return result;
+    };
+  }
+
+  function tryHookModal(){
+    hookModal();
   }
 
   // ── buildRankList : classement dynamique pour Tendances ───────────
