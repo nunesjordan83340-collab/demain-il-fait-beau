@@ -205,13 +205,13 @@
 }
 .brand {
   font-size: 21px; font-weight: 800; letter-spacing: -.025em;
-  white-space: nowrap; display: flex; align-items: center; gap: 10px;
+  white-space: nowrap; display: flex; align-items: center; gap: 4px;
   cursor: pointer; color: var(--ink); text-decoration: none;
   font-family: var(--sans);
 }
 .brand em {
-  font-family: var(--serif); font-style: italic; font-weight: 400;
-  letter-spacing: .01em; margin-right: 2px;
+  font-family: var(--sans); font-style: normal; font-weight: 700;
+  letter-spacing: -.025em; margin-right: 6px;
 }
 nav.tabs { display: flex; align-items: center; gap: 6px; margin: 0 auto; }
 .navr { display: flex; align-items: center; gap: 12px; margin-left: auto; }
@@ -1201,7 +1201,8 @@ body.story-open { overflow: hidden; }
   50%      { transform: scale(1.35); opacity: 0; }
 }
 .opt-state {
-  font-size: 16px; font-weight: 800; white-space: nowrap; color: var(--ink);
+  font-size: 17px; font-weight: 700; white-space: nowrap; color: var(--ink);
+  letter-spacing: -.01em;
 }
 .opt-track {
   width: 160px; height: 8px; border-radius: 100px;
@@ -1213,7 +1214,11 @@ body.story-open { overflow: hidden; }
   width: 0%; transition: width 1.4s cubic-bezier(.4,0,.2,1);
 }
 .opt-score {
-  font-size: 16px; font-weight: 800; color: var(--green); white-space: nowrap;
+  font-size: 28px; font-weight: 800; color: var(--green); white-space: nowrap;
+  line-height: 1; letter-spacing: -.03em;
+  background: var(--aurore);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
 }
 
 /* Panel déroulant */
@@ -1599,6 +1604,41 @@ body.story-open { overflow: hidden; }
   .manifeste-sun { width: 100px; height: 100px; top: -10px; right: -10px; }
 }
 
+
+/* ── Réactions articles ── */
+.reaction-bar {
+  display: flex; gap: 10px; margin-top: 24px; padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+.reaction-btn {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  gap: 5px; padding: 12px 8px; border-radius: 14px;
+  border: 1.5px solid var(--line); background: transparent;
+  cursor: pointer; transition: border-color .2s, background .2s, transform .15s;
+  font-family: var(--sans);
+}
+.reaction-btn:hover {
+  border-color: var(--violet); background: rgba(124,58,237,.06);
+  transform: translateY(-2px);
+}
+.reaction-btn.voted {
+  border-color: var(--violet); background: rgba(124,58,237,.1);
+}
+.reaction-btn.voted .rbtn-icon { transform: scale(1.2); }
+.rbtn-icon {
+  font-size: 22px; line-height: 1;
+  transition: transform .25s cubic-bezier(.2,.8,.25,1);
+  display: block;
+}
+.rbtn-label {
+  font-size: 11px; font-weight: 600; color: var(--muted); letter-spacing: .02em;
+}
+.rbtn-count {
+  font-size: 13px; font-weight: 800; color: var(--violet);
+  font-variant-numeric: tabular-nums;
+}
+.reaction-btn.voted .rbtn-count { color: var(--violet); }
+
 @media (max-width: 768px) {
 
   /* Nav mobile visible */
@@ -1624,7 +1664,7 @@ body.story-open { overflow: hidden; }
   /* Topbar mobile : logo + thème + hamburger */
   .topbar .wrap { padding: 0 16px !important; gap: 0 !important; }
   .brand { font-size: 16px !important; }
-  .brand em { font-size: 16px !important; }
+  .brand em { font-size: 16px !important; font-style: normal; font-family: var(--sans); }
   .navr { display: flex !important; align-items: center !important; gap: 6px !important; margin-left: auto; }
   #topbar-date { display: none !important; }
   nav.tabs { display: none !important; }
@@ -1697,7 +1737,7 @@ body.story-open { overflow: hidden; }
 <!-- ═══ TOPBAR ══════════════════════════════════════════════════════ -->
 <header class="topbar" id="topbar">
   <div class="wrap">
-    <div class="brand" id="brand-home">Demain,&nbsp;<em>il fait beau</em><span class="sun" id="quiz-sun" data-quiz-trigger role="button" tabindex="0" aria-label="Quiz du jour" title="Quiz du jour" style="cursor:pointer;"></span></div>
+    <div class="brand" id="brand-home">Demain,&#8202;<em>il fait beau</em><span class="sun" id="quiz-sun" data-quiz-trigger role="button" tabindex="0" aria-label="Quiz du jour" title="Quiz du jour" style="cursor:pointer;"></span></div>
     <nav class="tabs" role="navigation">
       <button class="tab-btn active" data-page="journal">Le journal</button>
       <button class="tab-btn" data-page="articles">Articles</button>
@@ -1847,17 +1887,6 @@ body.story-open { overflow: hidden; }
     </section>
 
     <!-- Bilan hebdo -->
-    <section class="bilan">
-      <div class="bh reveal">
-        <h2>Cette semaine, le monde a avancé</h2>
-        <p>Trois chiffres pour reprendre un peu d'élan.</p>
-      </div>
-      <div class="stats">
-        <div class="stat reveal"><div class="n" style="color:var(--green)">+1,2 M</div><p>d'hectares de forêt restaurés à travers la planète.</p></div>
-        <div class="stat reveal"><div class="n" style="color:var(--blue)">−14 %</div><p>d'émissions de CO₂ dans l'Union européenne ce trimestre.</p></div>
-        <div class="stat reveal"><div class="n" style="color:var(--violet)">8</div><p>nouveaux pays ont garanti l'accès à l'eau potable pour tous.</p></div>
-      </div>
-    </section>
 
     <!-- Manifeste -->
     <section class="manifeste">
@@ -3116,7 +3145,24 @@ window.CHIFFRES        = typeof CHIFFRES        !== 'undefined' ? CHIFFRES      
       + '<p class="article-modal-chapo">'+esc(a.chapo||a.summary||'')+'</p>'
       + bodyHtml
       + factsHtml
-      + sourcesHtml;
+      + sourcesHtml
+      + '<div class="reaction-bar" id="modal-reactions">'
+        + '<button class="reaction-btn" data-reaction="surprising">'
+          + '<span class="rbtn-icon">😮</span>'
+          + '<span class="rbtn-label">Surprenant</span>'
+          + '<span class="rbtn-count" id="react-surprising">0</span>'
+        + '</button>'
+        + '<button class="reaction-btn" data-reaction="important">'
+          + '<span class="rbtn-icon">🌍</span>'
+          + '<span class="rbtn-label">Important</span>'
+          + '<span class="rbtn-count" id="react-important">0</span>'
+        + '</button>'
+        + '<button class="reaction-btn" data-reaction="inspiring">'
+          + '<span class="rbtn-icon">💚</span>'
+          + '<span class="rbtn-label">Inspirant</span>'
+          + '<span class="rbtn-count" id="react-inspiring">0</span>'
+        + '</button>'
+      + '</div>';
 
     // Navigation
     modalPrev.disabled = currentIdx <= 0;
@@ -3448,6 +3494,178 @@ window.CHIFFRES        = typeof CHIFFRES        !== 'undefined' ? CHIFFRES      
 
 </script>
 
+
+<script>
+// ── Réactions articles + classement dynamique Tendances ─────────────────
+(function(){
+  'use strict';
+  var REACT_KEY = 'difb_reactions_v1';
+
+  function getAllArticles(){
+    return (window.TODAY_ARTICLES||[]).concat(window._fallback||[]);
+  }
+  function articleId(a){
+    return (a.headline||'').toLowerCase().replace(/[^a-z0-9]/g,'').substring(0,40);
+  }
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function loadReactions(){ try{ return JSON.parse(localStorage.getItem(REACT_KEY)||'{}'); }catch(e){ return {}; } }
+  function saveReactions(r){ try{ localStorage.setItem(REACT_KEY,JSON.stringify(r)); }catch(e){} }
+
+  // ── initReactions : brancher les 3 boutons pour un article donné ──
+  function initReactions(aid){
+    var bar = document.getElementById('modal-reactions');
+    if(!bar) return;
+    // Cloner pour vider les anciens listeners
+    var newBar = bar.cloneNode(true);
+    bar.parentNode.replaceChild(newBar, bar);
+
+    var r = loadReactions();
+    var ar = r[aid] || {surprising:0, important:0, inspiring:0};
+    var myVote = ar._myVote || null;
+
+    ['surprising','important','inspiring'].forEach(function(type){
+      var btn = newBar.querySelector('[data-reaction="'+type+'"]');
+      var cEl = newBar.querySelector('#react-'+type);
+      if(!btn || !cEl) return;
+      cEl.textContent = ar[type] || 0;
+      btn.classList.toggle('voted', myVote === type);
+
+      btn.addEventListener('click', function(){
+        var reactions = loadReactions();
+        var a2 = reactions[aid] || {surprising:0, important:0, inspiring:0};
+        var prev = a2._myVote || null;
+
+        if(prev === type){
+          // Annuler
+          a2[type] = Math.max(0, (a2[type]||0) - 1);
+          a2._myVote = null;
+          btn.classList.remove('voted');
+          cEl.textContent = a2[type];
+        } else {
+          // Retirer ancien vote
+          if(prev){
+            a2[prev] = Math.max(0, (a2[prev]||0) - 1);
+            var ob = newBar.querySelector('[data-reaction="'+prev+'"]');
+            var oc = newBar.querySelector('#react-'+prev);
+            if(ob) ob.classList.remove('voted');
+            if(oc) oc.textContent = a2[prev];
+          }
+          // Nouveau vote
+          a2[type] = (a2[type]||0) + 1;
+          a2._myVote = type;
+          btn.classList.add('voted');
+          cEl.textContent = a2[type];
+          // Animation
+          var icon = btn.querySelector('.rbtn-icon');
+          if(icon){
+            icon.style.transition = 'transform .25s cubic-bezier(.2,.8,.25,1)';
+            icon.style.transform = 'scale(1.5)';
+            setTimeout(function(){ icon.style.transform = 'scale(1.2)'; }, 250);
+          }
+        }
+        reactions[aid] = a2;
+        saveReactions(reactions);
+        // Mise à jour dynamique du classement dans Tendances
+        if(window._buildPopular) window._buildPopular();
+      });
+    });
+  }
+
+  // ── Brancher sur l'ouverture de la modal ──────────────────────────
+  function tryHookModal(){
+    var modal = document.getElementById('article-modal');
+    if(!modal){
+      setTimeout(tryHookModal, 200);
+      return;
+    }
+    var lastOpen = false;
+    var obs = new MutationObserver(function(){
+      var isOpen = modal.classList.contains('open');
+      if(isOpen && !lastOpen){
+        lastOpen = true;
+        // Petit délai pour que _currentModalIdx et le DOM soient prêts
+        setTimeout(function(){
+          var idx = window._currentModalIdx;
+          var all = getAllArticles();
+          var a = all[idx];
+          if(!a) return;
+          initReactions(articleId(a));
+        }, 80);
+      } else if(!isOpen){
+        lastOpen = false;
+      }
+    });
+    obs.observe(modal, {attributes:true, attributeFilter:['class']});
+  }
+
+  // ── buildRankList : classement dynamique pour Tendances ───────────
+  var TAG_COLORS = {
+    ecology:'var(--green)', climate:'var(--blue)', health:'var(--rose)',
+    economy:'var(--orange)', tech:'var(--violet)', science:'#26c4c4',
+    society:'var(--amber)', sport:'#ff6b35', culture:'#e040fb',
+    ocean:'#0288d1', education:'#00bcd4'
+  };
+  var TAG_LABELS = {
+    ecology:'Écologie', climate:'Climat', health:'Santé',
+    economy:'Économie', tech:'Tech', science:'Science',
+    society:'Société', sport:'Sport', culture:'Culture',
+    ocean:'Océans', education:'Éducation'
+  };
+
+  function buildRankList(){
+    var rl = document.getElementById('rank-list');
+    if(!rl) return;
+    // Supprimer le flag built pour permettre la mise à jour
+    delete rl.dataset.built;
+
+    var reactions = loadReactions();
+    var all = getAllArticles();
+
+    var scored = all.map(function(a){
+      var id = articleId(a);
+      var rv = reactions[id] || {};
+      var score = (rv.surprising||0) + (rv.important||0) + (rv.inspiring||0);
+      return {a:a, score:score, r:rv};
+    }).filter(function(x){ return x.score > 0; })
+      .sort(function(a,b){ return b.score - a.score; })
+      .slice(0, 5);
+
+    // Fallback : 5 premiers articles si pas encore de réactions
+    if(!scored.length){
+      scored = all.slice(0, 5).map(function(a){ return {a:a, score:0, r:{}}; });
+    }
+
+    rl.innerHTML = scored.map(function(item, i){
+      var a = item.a;
+      var c = TAG_COLORS[a.rubric] || 'var(--muted)';
+      var rStr = item.score > 0
+        ? '<span class="reacts">'
+          + '<span><span class="dot" style="background:var(--rose)"></span>'+(item.r.surprising||0)+'</span>'
+          + '<span><span class="dot" style="background:var(--blue)"></span>'+(item.r.important||0)+'</span>'
+          + '<span><span class="dot" style="background:var(--green)"></span>'+(item.r.inspiring||0)+'</span>'
+          + '</span>'
+        : '';
+      return '<div class="rrow" style="--c:'+c+'">'
+        + '<span class="pos">'+(i+1)+'</span>'
+        + '<span class="ti"><span class="cat">'+(TAG_LABELS[a.rubric]||'')+' </span>'+(a.headline||'')+'</span>'
+        + rStr
+        + '</div>';
+    }).join('');
+  }
+
+  // Exposer globalement
+  window._buildPopular = buildRankList;
+  window._initReactions = initReactions;
+
+  // Init au chargement
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', tryHookModal);
+  } else {
+    tryHookModal();
+  }
+})();
+</script>
+
 <script>// ── Tendances : compteurs animés + cases secrètes + charts ───────────
 (function(){
   var _built = false;
@@ -3530,17 +3748,8 @@ window.CHIFFRES        = typeof CHIFFRES        !== 'undefined' ? CHIFFRES      
     });
 
     /* ---------- classement ---------- */
-    const RANK=[
-      {c:'var(--green)', cat:'Écologie', t:'Les récifs coralliens renaissent aux Philippines', r:[['var(--rose)',128],['var(--blue)',94],['var(--green)',76]]},
-      {c:'var(--blue)',  cat:'Climat',   t:'L\'Inde franchit 300 GW de renouvelables installés', r:[['var(--rose)',88],['var(--blue)',71],['var(--green)',60]]},
-      {c:'var(--violet)',cat:'Science',  t:'Un implant cérébral rend la parole à des patients paralysés', r:[['var(--rose)',64],['var(--blue)',52],['var(--green)',48]]},
-    ];
-    document.getElementById('rank').innerHTML=RANK.map((x,i)=>`
-      <div class="rrow" style="--c:${x.c}">
-        <span class="pos">${i+1}</span>
-        <span class="ti"><span class="cat">${x.cat}</span>${x.t}</span>
-        <span class="reacts">${x.r.map(([col,n])=>`<span><span class="dot" style="background:${col}"></span>${n}</span>`).join('')}</span>
-      </div>`).join('');
+    /* ---------- classement dynamique depuis réactions localStorage ---------- */
+    if(window._buildPopular) window._buildPopular();
 
     /* ---------- reveal + count-up déclenchés (capture-safe) ---------- */
     let first=true; const counted=new Set();
