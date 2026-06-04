@@ -225,6 +225,16 @@ body.page-journal   #page-journal   { display: block; }
 body.page-articles  #view-articles  { display: flex; flex-direction: column; height: calc(100vh - var(--topbar-h)); overflow: hidden; }
 /* Tendances actif */
 body.page-tendances #view-tendances { display: block; padding-top: 0; }
+/* Tendances : le .hero n'a pas de .wrap → on le centre et on ajoute le padding */
+body.page-tendances #view-tendances section.hero,
+body.page-tendances #view-tendances .hero:not(.trends-hero) {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-left: 40px;
+  padding-right: 40px;
+  box-sizing: border-box;
+  width: 100%;
+}
 /* Associations actif */
 body.page-assoc     #view-assoc     { display: block; padding-top: 0; }
 
@@ -1075,206 +1085,234 @@ body.story-open { overflow: hidden; }
 
 
 
-/* ══════════════════════════════════════════════════════════════════
-   INDICE DU JOUR — Barre animée + panel de détail
-═══════════════════════════════════════════════════════════════════ */
-.indice {
-  border-bottom: 1px solid var(--line);
-  position: relative;
-}
+
 
 /* Bouton-ligne cliquable */
-.indice-inner {
-  display: flex !important; /* force flex même sur <button> */
-  align-items: center;
-  gap: 14px;
-  height: 54px;
-  background: none; border: none; cursor: pointer;
-  font-family: var(--sans); text-align: left; width: 100%;
-  padding: 0 40px;
-  transition: background .15s;
-  -webkit-tap-highlight-color: transparent;
-}
-.indice-inner:hover { background: var(--bg); }
 
-.indice-label {
-  font-size: 12px; font-weight: 700; letter-spacing: .14em;
-  text-transform: uppercase; color: var(--faint);
-  white-space: nowrap; flex-shrink: 0;
-}
-.indice-seal {
-  width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
-  background: radial-gradient(circle at 36% 32%,#ffe27a,#f5b81e 60%,#e89200);
-  box-shadow: 0 0 0 3px rgba(245,184,30,.18);
-  transition: transform .3s cubic-bezier(.34,1.56,.64,1);
-}
-.indice-inner:hover .indice-seal { transform: scale(1.12); }
-.indice-verdict {
-  font-size: 15px; font-weight: 800; letter-spacing: -.01em;
-  color: var(--ink); white-space: nowrap; flex-shrink: 0;
-}
-.indice-track {
-  flex: 1; max-width: 200px; height: 7px;
-  border-radius: 100px; background: var(--track);
-  overflow: hidden; flex-shrink: 0;
-}
-.indice-fill {
-  display: block; height: 100%; width: 100%;
-  border-radius: 100px;
-  background: linear-gradient(90deg, #13c06b 0%, #26c4c4 50%, #2d6bff 100%);
-  transform: scaleX(0); transform-origin: left;
-  will-change: transform;
-}
-.indice-pct {
-  font-size: 15px; font-weight: 800; color: var(--green);
-  white-space: nowrap; flex-shrink: 0;
-}
-.indice-chevron {
-  color: var(--faint); flex-shrink: 0;
-  transition: transform .25s cubic-bezier(.4,0,.2,1);
-}
-.indice-inner[aria-expanded="true"] .indice-chevron { transform: rotate(180deg); }
+
+
+
+
+.indice-inner:hover 
+
+
+
+
+
+.indice-inner[aria-expanded="true"] 
 
 /* Panel de détail */
-.indice-panel {
-  overflow: hidden;
-  max-height: 0;
-  transition: max-height .4s cubic-bezier(.4,0,.2,1);
-  border-top: 0 solid var(--line);
-}
-.indice-panel.open {
-  max-height: 400px;
-  border-top-width: 1px;
-}
-.indice-panel-inner {
-  padding: 20px 40px 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-.indice-panel-top {
-  display: flex; align-items: flex-start;
-  justify-content: space-between; gap: 24px;
-}
-.indice-panel-label {
-  font-size: 12px; font-weight: 700; letter-spacing: .1em;
-  text-transform: uppercase; color: var(--faint); margin-bottom: 6px;
-}
-.indice-panel-desc {
-  font-family: var(--serif); font-size: 15px; line-height: 1.6;
-  color: var(--muted); margin: 0; max-width: 520px;
-}
-.indice-panel-score-wrap {
-  display: flex; align-items: baseline; gap: 4px; flex-shrink: 0;
-}
-.indice-panel-score {
-  font-size: 52px; font-weight: 800; letter-spacing: -.04em;
-  line-height: 1; color: var(--green);
-}
-.indice-panel-score-label {
-  font-size: 18px; font-weight: 700; color: var(--faint);
-}
+
+
+
+
+
+
+
+
+
 
 /* Mini-barres par rubrique */
-.indice-panel-top {
-  display: flex; gap: 32px; align-items: flex-start;
-  padding-bottom: 24px; border-bottom: 1px solid var(--line);
-}
-.indice-panel-score-wrap { flex-shrink: 0; text-align: center; }
-.indice-panel-score-sub {
-  font-size: 16px; font-weight: 700; color: var(--faint);
-  margin-top: 2px;
-}
-.indice-panel-explain { flex: 1; }
-.indice-panel-explain-title {
-  font-size: 13px; font-weight: 700; letter-spacing: .08em;
-  text-transform: uppercase; color: var(--faint); margin-bottom: 10px;
-}
-.indice-panel-explain p {
-  font-family: var(--serif); font-size: 15px; line-height: 1.65;
-  color: var(--muted); margin: 0 0 8px;
-}
-.indice-panel-explain p:last-child { margin-bottom: 0; }
-.indice-panel-explain strong { color: var(--ink); font-style: normal; }
-.indice-panel-explain em { font-style: italic; }
+
+
+
+
+
+
+
+
+
 
 /* Légende des états */
-.indice-panel-states {
-  display: flex; flex-wrap: wrap; gap: 8px 20px;
-  padding: 16px 0; border-bottom: 1px solid var(--line);
-}
-.indice-state-item {
-  display: flex; align-items: center; gap: 7px;
-  font-size: 13px; font-weight: 600; color: var(--ink);
-}
-.indice-state-item.current { font-weight: 800; }
-.indice-state-dot {
-  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
-}
-.indice-state-item em {
-  font-style: normal; font-size: 11px;
-  color: var(--faint); font-weight: 500;
-}
+
+
+
+
+
 
 /* 2 colonnes positif / négatif */
-.indice-panel-cols {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 20px 36px; margin-top: 20px;
-}
+
 .indice-panel-col-wrap {}
-.indice-panel-col-title {
-  display: flex; align-items: center; gap: 7px;
-  font-size: 12px; font-weight: 800; letter-spacing: .08em;
-  text-transform: uppercase; margin-bottom: 8px;
-}
-.indice-col-pos { color: #13c06b; }
-.indice-col-neg { color: #ec2c8a; }
-.indice-panel-col-desc {
-  font-family: var(--serif); font-size: 13px; line-height: 1.55;
-  color: var(--faint); margin: 0 0 14px;
-}
-.indice-bar-item { margin-bottom: 10px; }
-.indice-bar-head {
-  display: flex; align-items: center;
-  justify-content: space-between; gap: 8px; margin-bottom: 4px;
-}
-.indice-bar-name { font-size: 13px; font-weight: 600; color: var(--ink); }
-.indice-bar-val { font-size: 12px; font-weight: 800; color: var(--ink); white-space: nowrap; }
-.indice-bar-neg { color: #ec2c8a !important; }
-.indice-bar-track { height: 5px; border-radius: 100px; background: var(--track); overflow: hidden; }
-.indice-bar-fill { height: 100%; border-radius: 100px; }
-.indice-bar-src { font-size: 11px; color: var(--faint); display: block; margin-top: 3px; }
+
+
+
+
+
+
+
+
+
+
+
+
 
 @media (max-width: 768px) {
-  .indice-panel-top { flex-direction: column; gap: 16px; }
-  .indice-panel-cols { grid-template-columns: 1fr; }
-  .indice-panel-states { gap: 8px 14px; }
+  
+  
+  
 }
-.indice-bar-item { display: flex; flex-direction: column; gap: 5px; }
-.indice-bar-name {
-  font-size: 11px; font-weight: 700; letter-spacing: .06em;
-  text-transform: uppercase; color: var(--faint);
+
+
+
+
+
+
+/* Mobile */
+@media (max-width: 768px) {
+  
+  
+  
+  
+  
+  
 }
-.indice-bar-track {
-  height: 4px; border-radius: 100px; background: var(--track); overflow: hidden;
+
+
+/* ══════════════════════════════════════════════════════════════════
+   INDICE DU JOUR — barre + panel (classes opt-*)
+═══════════════════════════════════════════════════════════════════ */
+.optimism-bar {
+  border-bottom: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: center;
+  gap: 16px; height: 60px; padding: 0 40px;
+  flex-wrap: wrap;
 }
-.indice-bar-fill {
-  height: 100%; border-radius: 100px; transition: width .8s cubic-bezier(.4,0,.2,1);
+.opt-label {
+  font-size: 13px; font-weight: 700; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--faint); white-space: nowrap;
 }
-.indice-bar-count {
-  font-size: 11px; font-weight: 700; color: var(--muted);
+.opt-icon-btn {
+  position: relative; background: none; border: none;
+  cursor: pointer; padding: 0; display: flex; align-items: center;
+  font-size: 22px; line-height: 1;
+  -webkit-tap-highlight-color: transparent;
+}
+.opt-pulse-ring {
+  position: absolute; inset: -6px; border-radius: 50%;
+  background: rgba(245,184,30,.18);
+  animation: optPulse 3s ease-in-out infinite;
+}
+@keyframes optPulse {
+  0%,100% { transform: scale(1); opacity: .7; }
+  50%      { transform: scale(1.35); opacity: 0; }
+}
+.opt-state {
+  font-size: 16px; font-weight: 800; white-space: nowrap; color: var(--ink);
+}
+.opt-track {
+  width: 160px; height: 8px; border-radius: 100px;
+  background: var(--track); overflow: hidden; flex-shrink: 0;
+}
+.opt-fill {
+  height: 100%; border-radius: 100px;
+  background: linear-gradient(90deg, #facc15 0%, #13c06b 60%, #2d6bff 100%);
+  width: 0%; transition: width 1.4s cubic-bezier(.4,0,.2,1);
+}
+.opt-score {
+  font-size: 16px; font-weight: 800; color: var(--green); white-space: nowrap;
+}
+
+/* Panel déroulant */
+.opt-panel {
+  display: none; border-bottom: 1px solid var(--line);
+  background: var(--surface);
+  box-shadow: 0 8px 24px rgba(24,24,40,.09);
+}
+.opt-panel.open { display: block; }
+.opt-panel-inner {
+  max-width: 1240px; margin: 0 auto; padding: 28px 40px 36px;
+}
+.opt-panel-title {
+  font-size: 22px; font-weight: 800; letter-spacing: -.025em; margin: 0 0 6px;
+}
+.opt-panel-sub {
+  font-family: var(--serif); font-size: 15px; color: var(--muted); margin: 0 0 24px;
+}
+
+/* Deux colonnes facteurs */
+.opt-panel-cols {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 24px;
+}
+.opt-col-head {
+  font-size: 12px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--faint); margin-bottom: 12px;
+}
+.opt-factor {
+  display: flex; gap: 12px; padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.opt-factor:last-child { border-bottom: none; }
+.opt-factor-icon { font-size: 20px; flex-shrink: 0; }
+.opt-factor-body { flex: 1; }
+.opt-factor-name {
+  font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 3px;
+}
+.opt-factor-desc {
+  font-size: 13px; line-height: 1.5; color: var(--muted);
+}
+.opt-factor-pts {
+  font-size: 15px; font-weight: 800; flex-shrink: 0; white-space: nowrap;
+  align-self: flex-start; padding-top: 2px;
+}
+.opt-factor-pos .opt-factor-pts { color: var(--green); }
+.opt-factor-neg .opt-factor-pts { color: var(--rose); }
+
+/* Barre de balance */
+.opt-balance-wrap { margin-top: 4px; }
+.opt-balance-label {
+  font-size: 12px; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--faint); margin-bottom: 8px;
+}
+.opt-balance-bar {
+  height: 8px; border-radius: 100px; overflow: hidden;
+  display: flex; background: var(--track);
+}
+.opt-balance-pos {
+  height: 100%; background: var(--green); transition: width .9s ease;
+}
+.opt-balance-neg {
+  height: 100%; background: var(--rose); transition: width .9s ease;
+}
+.opt-balance-legend {
+  display: flex; justify-content: space-between;
+  font-size: 12px; color: var(--faint); margin-top: 6px;
 }
 
 /* Mobile */
 @media (max-width: 768px) {
-  .indice-inner {
-    padding: 0 16px !important; gap: 8px !important; height: 46px !important;
-  }
-  .indice-label { display: none; }
-  .indice-track { max-width: 80px !important; }
-  .indice-panel-inner { padding: 14px 16px 18px; }
-  .indice-panel-top { flex-direction: column; gap: 10px; }
-  .indice-panel-bars { grid-template-columns: repeat(3, 1fr); }
+  .optimism-bar { padding: 0 16px; gap: 10px; height: 52px; }
+  .opt-label { display: none; }
+  .opt-track { width: 80px; }
+  .opt-panel-inner { padding: 18px 16px 24px; }
+  .opt-panel-cols { grid-template-columns: 1fr; gap: 20px; }
+}
+
+
+/* Associations : padding desktop corrigé */
+#view-assoc .a-wrap {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-left: 40px;
+  padding-right: 40px;
+  box-sizing: border-box;
+  width: 100%;
+}
+#view-assoc .a-hero {
+  position: relative;
+  overflow: hidden;
+}
+#view-assoc .a-grid {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 40px 40px 80px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+#view-assoc .a-filters-wrap {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 40px;
 }
 
 @media (max-width: 768px) {
@@ -1359,7 +1397,7 @@ body.story-open { overflow: hidden; }
   #view-tendances main.wrap { padding: 0 16px !important; }
 
   /* Associations */
-  #view-assoc .a-hero .a-wrap { padding: 48px 16px 32px !important; }
+  #view-assoc .a-hero /* .a-wrap padding géré par les breakpoints ci-dessous */
   #view-assoc .a-hero h1 { font-size: clamp(32px, 9vw, 56px) !important; }
   #view-assoc .a-grid { grid-template-columns: 1fr !important; padding: 12px 0 72px !important; gap: 14px !important; }
   #view-assoc .a-filters { padding: 16px 0 4px !important; gap: 7px !important; }
@@ -1437,67 +1475,42 @@ body.story-open { overflow: hidden; }
 
   <!-- Indice du jour -->
   <!-- Indice du jour -->
-  <section class="indice" id="indice-section">
-    <button class="indice-inner wrap" id="indice-btn" aria-haspopup="true" aria-expanded="false" aria-controls="indice-panel">
-      <span class="indice-label">Indice du jour</span>
-      <span class="indice-seal" id="indice-seal" aria-hidden="true"></span>
-      <span class="indice-verdict" id="indice-verdict">Beau fixe</span>
-      <span class="indice-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="63">
-        <i class="indice-fill" id="indiceBar"></i>
-      </span>
-      <span class="indice-pct" id="indice-pct">63&nbsp;%</span>
-      <svg class="indice-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 5l4 4 4-4"/></svg>
+  <div class="optimism-bar" id="optimism-bar">
+    <span class="opt-label">Indice du jour</span>
+    <button class="opt-icon-btn" id="opt-icon-btn" title="Cliquer pour le détail de l'indice" aria-expanded="false" aria-controls="opt-panel">
+      <span class="opt-pulse-ring"></span>
+      <span id="opt-weather">☀️</span>
     </button>
-    <!-- Panel de détail -->
-    <div class="indice-panel" id="indice-panel" aria-hidden="true">
-      <div class="indice-panel-inner wrap">
-
-        <!-- En-tête : score + méthode -->
-        <div class="indice-panel-top">
-          <div class="indice-panel-score-wrap">
-            <div class="indice-panel-score" id="indice-panel-score">63</div>
-            <div class="indice-panel-score-sub">/ 100</div>
-          </div>
-          <div class="indice-panel-explain">
-            <div class="indice-panel-explain-title">Comment est calculé cet indice&nbsp;?</div>
-            <p>Chaque jour, deux forces opposées entrent en tension. D'un côté, <strong>nos articles vérifiés</strong> — chaque bonne nouvelle publiée fait monter le score, surtout si elle couvre des domaines variés. De l'autre, <strong>des indicateurs mondiaux permanents</strong> comme les conflits, le climat ou la faim le font résister.</p>
-            <p>L'indice ne prétend pas mesurer l'état du monde objectivement&nbsp;: il reflète <em>l'équilibre entre l'optimisme documenté que nous trouvons et les réalités qui persistent</em>. Il ne peut jamais être parfait — et c'est intentionnel.</p>
-          </div>
+    <span class="opt-state" id="opt-state">Beau fixe</span>
+    <div class="opt-track"><div class="opt-fill" id="opt-fill" style="width:0%"></div></div>
+    <span class="opt-score" id="opt-score">—</span>
+  </div>
+  <div class="opt-panel" id="opt-panel" aria-hidden="true">
+    <div class="opt-panel-inner">
+      <div class="opt-panel-head">
+        <div class="opt-panel-title">Pourquoi <span id="opt-panel-score">—</span> aujourd'hui&nbsp;?</div>
+        <p class="opt-panel-sub">L'indice combine des tendances longues positives et les facteurs aggravants actuels du monde.</p>
+      </div>
+      <div class="opt-panel-cols">
+        <div class="opt-col opt-col-pos">
+          <div class="opt-col-head">✅ Ce qui hausse l'indice</div>
+          <div id="opt-pos-list"></div>
         </div>
-
-        <!-- Légende des états -->
-        <div class="indice-panel-states" id="indice-panel-states">
-          <div class="indice-state-item" data-min="88"><span class="indice-state-dot" style="background:#13c06b"></span><span>Rayonnant</span><em>88–100</em></div>
-          <div class="indice-state-item" data-min="78"><span class="indice-state-dot" style="background:#26c4c4"></span><span>Grande éclaircie</span><em>78–87</em></div>
-          <div class="indice-state-item" data-min="67"><span class="indice-state-dot" style="background:#2d6bff"></span><span>Beau fixe</span><em>67–77</em></div>
-          <div class="indice-state-item" data-min="54"><span class="indice-state-dot" style="background:#f5b81e"></span><span>Variable</span><em>54–66</em></div>
-          <div class="indice-state-item" data-min="42"><span class="indice-state-dot" style="background:#f97316"></span><span>Nuageux</span><em>42–53</em></div>
-          <div class="indice-state-item" data-min="0"><span class="indice-state-dot" style="background:#ec2c8a"></span><span>Perturbé</span><em>0–41</em></div>
+        <div class="opt-col opt-col-neg">
+          <div class="opt-col-head">⚠️ Ce qui le baisse</div>
+          <div id="opt-neg-list"></div>
         </div>
-
-        <!-- Barres : positif vs négatif -->
-        <div class="indice-panel-cols">
-          <div class="indice-panel-col-wrap">
-            <div class="indice-panel-col-title indice-col-pos">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="#13c06b" stroke-width="2" stroke-linecap="round"/></svg>
-              Signaux positifs aujourd'hui
-            </div>
-            <p class="indice-panel-col-desc">Chaque article publié est une bonne nouvelle vérifiée. Plus ils sont nombreux et diversifiés, plus le score monte.</p>
-            <div id="indice-panel-bars-pos"></div>
-          </div>
-          <div class="indice-panel-col-wrap">
-            <div class="indice-panel-col-title indice-col-neg">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12" stroke="#ec2c8a" stroke-width="2" stroke-linecap="round"/></svg>
-              Pressions mondiales persistantes
-            </div>
-            <p class="indice-panel-col-desc">Ces indicateurs reflètent des réalités que les bonnes nouvelles ne peuvent pas effacer d'un jour à l'autre. Ils ancrent l'indice dans la complexité du monde.</p>
-            <div id="indice-panel-bars-neg"></div>
-          </div>
+      </div>
+      <div class="opt-balance-wrap">
+        <div class="opt-balance-label">Balance des forces</div>
+        <div class="opt-balance-bar">
+          <div class="opt-balance-pos" id="opt-balance-pos" style="width:0%"></div>
+          <div class="opt-balance-neg" id="opt-balance-neg" style="width:0%"></div>
         </div>
-
+        <div class="opt-balance-legend"><span>Facteurs positifs</span><span>Facteurs aggravants</span></div>
       </div>
     </div>
-  </section>
+  </div>
 
   <main class="wrap">
 
@@ -2246,156 +2259,122 @@ window.CHIFFRES        = typeof CHIFFRES        !== 'undefined' ? CHIFFRES      
     if(cs) cs.textContent = 'Source\u00a0: ' + ch.source;
   }
 
-  // ── Indice du jour ──────────────────────────────────────────────
+  // ── Indice du jour (barre + panel opt-*) ────────────────────────
   (function initIndice(){
 
-    // Signaux négatifs permanents (pressions mondiales)
-    var NEGATIFS = [
-      { label:'Conflits actifs',      norm: 56/80,    source:'ACLED 2024',        poids:1.4 },
-      { label:'Espèces menacées',     norm: 44000/60000, source:'IUCN 2024',      poids:0.8 },
-      { label:'Émissions CO₂',        norm: 37.4/42,  source:'IEA 2023 (Gt/an)', poids:1.2 },
-      { label:'Personnes déplacées',  norm: 117/150,  source:'UNHCR 2024 (M)',   poids:1.0 },
-      { label:'Insécurité aliment.',  norm: 733/1000, source:'FAO 2024 (M)',      poids:1.1 },
+    // Facteurs positifs (tendances longues)
+    var FACTORS_POS = [
+      { icon:'📚', name:'Alphabétisation mondiale',
+        desc:'92 % des 15-24 ans savent lire — contre 12 % en 1820.',
+        pts: 18 },
+      { icon:'💉', name:'Vaccination & santé',
+        desc:'154 M de vies sauvées par les vaccins depuis 1974 (Lancet).',
+        pts: 16 },
+      { icon:'☀️', name:'Énergie solaire',
+        desc:'−90 % de coût en 13 ans. 31 % d’électricité verte en 2023.',
+        pts: 14 },
+      { icon:'🌱', name:'Recul de l’extrême pauvreté',
+        desc:'De 36 % à moins de 9 % de l’humanité en trente ans (Banque mondiale).',
+        pts: 13 },
+      { icon:'❤️', name:'Espérance de vie',
+        desc:'73 ans aujourd’hui contre 46 ans en 1950 — +27 ans en une génération.',
+        pts: 12 },
     ];
 
-    var scoreNeg = 0, poidsTotal = 0;
-    NEGATIFS.forEach(function(n){ scoreNeg += n.norm * n.poids; poidsTotal += n.poids; });
-    scoreNeg = scoreNeg / poidsTotal;
+    // Facteurs aggravants (pressions mondiales)
+    var FACTORS_NEG = [
+      { icon:'⚔️', name:'Conflits armés actifs',
+        desc:'56 conflits actifs dans le monde en 2024 (ACLED).',
+        pts: -14 },
+      { icon:'🌡️', name:'Émissions de CO₂',
+        desc:'37,4 Gt/an — stable mais loin des objectifs Paris (IEA 2023).',
+        pts: -12 },
+      { icon:'🦁', name:'Biodiversité menacée',
+        desc:'44 000 espèces menacées d’extinction (Liste Rouge IUCN).',
+        pts: -11 },
+      { icon:'🏃', name:'Déplacements forcés',
+        desc:'117 millions de personnes déplacées dans le monde (UNHCR 2024).',
+        pts: -10 },
+      { icon:'🌾', name:'Insécurité alimentaire',
+        desc:'733 millions de personnes souffrent de la faim (FAO 2024).',
+        pts: -9 },
+    ];
 
-    // Signaux positifs du jour (nos articles)
-    var articles   = (window.TODAY_ARTICLES||[]).concat(window._fallback||[]);
-    var rubriques  = {};
-    articles.forEach(function(a){ rubriques[a.rubric] = (rubriques[a.rubric]||0)+1; });
-    var nRub  = Object.keys(rubriques).length;
-    var nArt  = articles.length;
-    var scorePos = Math.min(1, (nArt/50)*0.5 + (nRub/10)*0.5);
+    // Score
+    var posTotal = FACTORS_POS.reduce(function(a,f){ return a + f.pts; }, 0);
+    var negTotal = Math.abs(FACTORS_NEG.reduce(function(a,f){ return a + f.pts; }, 0));
+    var totalAll = posTotal + negTotal;
+    var dayJitter = [2, 4, -1, 3, -2, 5, 1][new Date().getDay()];
+    var SCORE = Math.max(38, Math.min(93, Math.round(35 + (posTotal/totalAll) * 57) + dayJitter));
 
-    // Score final 35→93 : 60% positif, 40% résistance au négatif
-    var raw   = scorePos * 0.60 + (1 - scoreNeg) * 0.40;
-    var jit   = [2,4,-1,3,-2,5,1][new Date().getDay()];
-    var SCORE = Math.max(38, Math.min(93, Math.round(35 + raw * 57) + jit));
-
+    // STATES
     var STATES = [
-      { min:88, label:'Rayonnant',        color:'#13c06b' },
-      { min:78, label:'Grande éclaircie', color:'#26c4c4' },
-      { min:67, label:'Beau fixe',        color:'#2d6bff' },
-      { min:54, label:'Variable',         color:'#f5b81e' },
-      { min:42, label:'Nuageux',          color:'#f97316' },
-      { min:0,  label:'Perturbé',         color:'#ec2c8a' },
+      { min:88, label:'Rayonnant',        emoji:'☀️', color:'#13c06b' },
+      { min:78, label:'Grande éclaircie', emoji:'🌤', color:'#26c4c4' },
+      { min:67, label:'Beau fixe',        emoji:'⛅', color:'#2d6bff' },
+      { min:54, label:'Variable',         emoji:'🌥', color:'#f5b81e' },
+      { min:42, label:'Nuageux',          emoji:'☁️', color:'#f97316' },
+      { min:0,  label:'Perturbé',        emoji:'🌧', color:'#ec2c8a' },
     ];
     var state = STATES[STATES.length-1];
-    for(var s=0; s<STATES.length; s++){ if(SCORE >= STATES[s].min){ state=STATES[s]; break; } }
-
-    // Mettre à jour l'UI
-    var vEl = document.getElementById('indice-verdict');
-    var pEl = document.getElementById('indice-pct');
-    var sEl = document.getElementById('indice-seal');
-    var sc2 = document.getElementById('indice-panel-score');
-    if(vEl){ vEl.textContent = state.label; vEl.style.color = state.color; }
-    if(pEl){ pEl.textContent = SCORE+' %'; pEl.style.color = state.color; }
-    if(sEl)  sEl.title = state.label + ' — ' + SCORE + ' / 100';
-    if(sc2){ sc2.textContent = String(SCORE); sc2.style.color = state.color; }
-
-    // Animer la barre
-    var bar = document.getElementById('indiceBar');
-    if(bar){
-      var reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
-      if(reduce){ bar.style.transform = 'scaleX('+(SCORE/100)+')'; }
-      else {
-        bar.style.transform = 'scaleX(0)';
-        requestAnimationFrame(function(){ requestAnimationFrame(function(){
-          bar.style.transition = 'transform 1.4s cubic-bezier(.4,0,.2,1)';
-          bar.style.transform  = 'scaleX('+(SCORE/100)+')';
-        }); });
-      }
+    for(var s=0; s<STATES.length; s++){
+      if(SCORE >= STATES[s].min){ state=STATES[s]; break; }
     }
 
-    // Panel accordéon
-    var btn = document.getElementById('indice-btn');
-    if(btn) btn.addEventListener('click', function(){
-      var panel  = document.getElementById('indice-panel');
-      var isOpen = panel && panel.classList.contains('open');
-      if(!isOpen) buildPanel(SCORE, state, rubriques, NEGATIFS);
-      if(panel)  panel.classList.toggle('open', !isOpen);
-      btn.setAttribute('aria-expanded', String(!isOpen));
-    });
+    // Mettre à jour l'UI
+    var elW  = document.getElementById('opt-weather');
+    var elSt = document.getElementById('opt-state');
+    var elSc = document.getElementById('opt-score');
+    var elPS = document.getElementById('opt-panel-score');
+    var elFl = document.getElementById('opt-fill');
 
-    function buildPanel(score, state, rubriques, negatifs){
-      // Mettre à jour le score affiché
-      var sc3 = document.getElementById('indice-panel-score');
-      if(sc3){ sc3.textContent = String(score); sc3.style.color = state.color; }
+    if(elW)  elW.textContent = state.emoji;
+    if(elSt){ elSt.textContent = state.label; elSt.style.color = state.color; }
+    if(elSc){ elSc.textContent = SCORE+' %'; elSc.style.color = state.color; }
+    if(elPS)  elPS.textContent = SCORE+' %';
+    if(elFl){
+      var reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+      setTimeout(function(){ elFl.style.width = SCORE+'%'; }, reduce ? 0 : 300);
+    }
 
-      // Surligner l'état actif dans la légende
-      var stateItems = document.querySelectorAll('.indice-state-item');
-      stateItems.forEach(function(el){
-        var min = parseInt(el.dataset.min, 10);
-        el.classList.toggle('current', min === state.min);
-        if(min === state.min) el.style.color = state.color;
+    // Toggle panel
+    var btn = document.getElementById('opt-icon-btn');
+    var panel = document.getElementById('opt-panel');
+    var built = false;
+    if(btn && panel){
+      btn.addEventListener('click', function(){
+        var isOpen = panel.classList.contains('open');
+        panel.classList.toggle('open', !isOpen);
+        panel.setAttribute('aria-hidden', String(isOpen));
+        btn.setAttribute('aria-expanded', String(!isOpen));
+        if(!built && !isOpen){ buildPanel(); built=true; }
       });
+    }
 
-      var RUB_L = {
-        ecology:'Écologie', climate:'Climat', health:'Santé', economy:'Économie',
-        tech:'Tech', science:'Science', society:'Société', sport:'Sport',
-        culture:'Culture', education:'Éducation', ocean:'Océans'
-      };
-      var RUB_C = {
-        ecology:'#13c06b', climate:'#2d6bff', health:'#ec2c8a', economy:'#f97316',
-        tech:'#7c3aed', science:'#26c4c4', society:'#f5b81e', sport:'#ff6b35',
-        culture:'#e040fb', education:'#00bcd4', ocean:'#0288d1'
-      };
-      var maxPos = Math.max.apply(null, Object.values(rubriques).concat([1]));
+    function buildFactorEl(f){
+      var pos = f.pts > 0;
+      var sign = pos ? '+' : '';
+      return '<div class="opt-factor '+(pos?'opt-factor-pos':'opt-factor-neg')+'">'
+        +'<div class="opt-factor-icon">'+f.icon+'</div>'
+        +'<div class="opt-factor-body">'
+          +'<div class="opt-factor-name">'+f.name+'</div>'
+          +'<div class="opt-factor-desc">'+f.desc+'</div>'
+        +'</div>'
+        +'<div class="opt-factor-pts">'+sign+f.pts+'</div>'
+      +'</div>';
+    }
 
-      // Colonne positive
-      var posEl = document.getElementById('indice-panel-bars-pos');
-      if(posEl){
-        var htmlPos = '';
-        Object.keys(rubriques).sort(function(a,b){ return rubriques[b]-rubriques[a]; })
-          .forEach(function(rub){
-            var n   = rubriques[rub];
-            var pct = Math.round((n/maxPos)*100);
-            var c   = RUB_C[rub]||'#a1a1aa';
-            htmlPos += '<div class="indice-bar-item">'
-              +'<div class="indice-bar-head">'
-                +'<span class="indice-bar-name">'+(RUB_L[rub]||rub)+'</span>'
-                +'<span class="indice-bar-val">+'+n+' article'+(n>1?'s':'')+'</span>'
-              +'</div>'
-              +'<div class="indice-bar-track">'
-                +'<div class="indice-bar-fill" data-pct="'+pct+'" style="background:'+c+';width:0"></div>'
-              +'</div>'
-            +'</div>';
-          });
-        posEl.innerHTML = htmlPos;
-      }
-
-      // Colonne négative
-      var negEl = document.getElementById('indice-panel-bars-neg');
-      if(negEl){
-        var htmlNeg = '';
-        negatifs.forEach(function(n){
-          var pct = Math.round(n.norm * 100);
-          htmlNeg += '<div class="indice-bar-item">'
-            +'<div class="indice-bar-head">'
-              +'<span class="indice-bar-name">'+n.label+'</span>'
-              +'<span class="indice-bar-val indice-bar-neg">'+pct+' % du max</span>'
-            +'</div>'
-            +'<div class="indice-bar-track">'
-              +'<div class="indice-bar-fill" data-pct="'+pct+'" style="background:#ec2c8a;width:0"></div>'
-            +'</div>'
-            +'<span class="indice-bar-src">'+n.source+'</span>'
-          +'</div>';
-        });
-        negEl.innerHTML = htmlNeg;
-      }
-
-      // Animer toutes les barres
-      var allBars = document.querySelectorAll('#indice-panel-bars-pos .indice-bar-fill, #indice-panel-bars-neg .indice-bar-fill');
+    function buildPanel(){
+      var pl = document.getElementById('opt-pos-list');
+      var nl = document.getElementById('opt-neg-list');
+      var bp = document.getElementById('opt-balance-pos');
+      var bn = document.getElementById('opt-balance-neg');
+      if(pl) pl.innerHTML = FACTORS_POS.map(buildFactorEl).join('');
+      if(nl) nl.innerHTML = FACTORS_NEG.map(buildFactorEl).join('');
       setTimeout(function(){
-        allBars.forEach(function(el, i){
-          var pct = el.dataset.pct;
-          el.style.transition = 'width .7s cubic-bezier(.4,0,.2,1) '+(i*40)+'ms';
-          el.style.width = pct + '%';
-        });
-      }, 30);
+        if(bp) bp.style.width = (posTotal/totalAll*100).toFixed(1)+'%';
+        if(bn) bn.style.width = (negTotal/totalAll*100).toFixed(1)+'%';
+      }, 60);
     }
   })();
 
@@ -4566,11 +4545,7 @@ window.CHIFFRES        = typeof CHIFFRES        !== 'undefined' ? CHIFFRES      
     function getTheme(){ try{ return localStorage.getItem('mp-theme'); }catch(e){ return null; } }
     function setTheme(t){ try{ localStorage.setItem('mp-theme',t); }catch(e){} }
     var saved = getTheme(); if(saved) root.setAttribute('data-theme',saved);
-    var btn = document.getElementById('themeBtn');
-    if(btn) btn.addEventListener('click',function(){
-      var next = root.getAttribute('data-theme')==='dark'?'light':'dark';
-      root.setAttribute('data-theme',next); setTheme(next);
-    });
+    // thème géré par le script init (pas de doublon)
     // Indice barre
     if(!reduce){
       var bar = document.getElementById('opt-fill');
