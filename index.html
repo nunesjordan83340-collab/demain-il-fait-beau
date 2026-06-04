@@ -1315,6 +1315,152 @@ body.story-open { overflow: hidden; }
   padding: 0 40px;
 }
 
+
+/* ── Cartes association (classes générées par le JS) ── */
+#view-assoc .acard {
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  transition: transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .25s, border-color .25s;
+  cursor: pointer;
+}
+#view-assoc .acard:hover {
+  transform: translateY(-6px);
+  border-color: rgba(255,255,255,.24);
+  box-shadow: 0 26px 60px rgba(0,0,0,.5);
+}
+#view-assoc .acard .a-media {
+  position: relative; aspect-ratio: 16/10; overflow: hidden;
+  background: rgba(255,255,255,.05);
+}
+#view-assoc .acard .a-ph {
+  width: 100%; height: 100%;
+  min-height: 160px;
+}
+#view-assoc .acard .a-tag {
+  position: absolute; top: 14px; left: 14px; z-index: 2;
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  color: rgba(255,255,255,.85);
+  background: rgba(0,0,0,.35); backdrop-filter: blur(8px);
+  padding: 5px 10px; border-radius: 100px;
+}
+#view-assoc .acard .a-tag-dot {
+  width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+}
+#view-assoc .acard .a-body {
+  padding: 22px 22px 24px;
+  display: flex; flex-direction: column; flex: 1;
+}
+#view-assoc .acard h3 {
+  font-size: 22px; font-weight: 800; letter-spacing: -.02em;
+  margin: 0; color: #f4f4f5;
+}
+#view-assoc .acard .a-mission {
+  font-family: var(--serif); font-size: 15px; line-height: 1.5;
+  color: rgba(255,255,255,.6); margin: 10px 0 0; flex: 1;
+}
+#view-assoc .acard .a-foot {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 18px; padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,.1);
+}
+#view-assoc .acard .a-stat {
+  font-size: 12px; color: rgba(255,255,255,.45); font-weight: 600; letter-spacing: .01em;
+}
+#view-assoc .acard .a-go {
+  font-size: 14px; font-weight: 700; color: #f4f4f5;
+  display: inline-flex; align-items: center; gap: 6px;
+  background: none; border: none; cursor: pointer; font-family: inherit;
+  padding: 0;
+}
+#view-assoc .acard .a-go-ar { transition: transform .2s; }
+#view-assoc .acard:hover .a-go-ar { transform: translateX(4px); }
+
+/* Espacement grille journal après les filtres */
+.cards { margin-top: 28px; }
+.cards.grid { margin-top: 28px; }
+
+/* Manifeste — grande section de clôture */
+.manifeste {
+  margin: 60px 0 0;
+  text-align: center;
+  padding: 100px 40px 120px;
+  position: relative;
+  overflow: hidden;
+}
+.manifeste h2 {
+  font-size: clamp(72px, 12vw, 160px);
+  font-weight: 800;
+  letter-spacing: -.045em;
+  margin: 0;
+  line-height: .9;
+  color: var(--ink);
+  position: relative; z-index: 1;
+}
+.manifeste .grad {
+  background: var(--aurore);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+}
+.manifeste p {
+  font-family: var(--sans); font-weight: 500;
+  font-size: clamp(17px, 2vw, 22px);
+  line-height: 1.6; color: var(--muted);
+  max-width: 520px; margin: 28px auto 0;
+  position: relative; z-index: 1;
+}
+/* Demi-soleil décoratif en haut à droite */
+.manifeste-sun {
+  position: absolute;
+  top: -80px; right: -60px;
+  width: clamp(200px, 28vw, 360px);
+  height: clamp(200px, 28vw, 360px);
+  border-radius: 50%;
+  background: radial-gradient(circle at 36% 32%, #ffe27a, #f5b81e 55%, #e89200);
+  opacity: .18;
+  animation: manifesteSunSpin 24s linear infinite;
+  z-index: 0;
+}
+.manifeste-sun::before {
+  content: '';
+  position: absolute; inset: -16px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(245,184,30,.35), transparent 72%);
+  animation: manifesteSunPulse 4s ease-in-out infinite;
+}
+@keyframes manifesteSunSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes manifesteSunPulse {
+  0%,100% { transform: scale(1); opacity: .5; }
+  50%      { transform: scale(1.15); opacity: 1; }
+}
+
+/* Apparition au scroll */
+@media (prefers-reduced-motion: no-preference) {
+  .manifeste h2.reveal-manifeste { opacity: 0; transform: translateY(32px); }
+  .manifeste h2.reveal-manifeste.in {
+    animation: manifesteRise .9s cubic-bezier(.2,.7,.2,1) both;
+  }
+  .manifeste p.reveal-manifeste { opacity: 0; transform: translateY(20px); }
+  .manifeste p.reveal-manifeste.in {
+    animation: manifesteRise .7s cubic-bezier(.2,.7,.2,1) .15s both;
+  }
+}
+@keyframes manifesteRise {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (max-width: 768px) {
+  .manifeste { padding: 64px 20px 80px; }
+  .manifeste h2 { font-size: clamp(52px, 14vw, 80px); }
+  .manifeste-sun { width: 180px; height: 180px; top: -50px; right: -40px; }
+}
+
 @media (max-width: 768px) {
 
   /* Nav mobile visible */
@@ -1576,9 +1722,11 @@ body.story-open { overflow: hidden; }
     </section>
 
     <!-- Manifeste -->
-    <section class="manifeste reveal">
-      <h2>Demain,<br><span class="grad">il fait beau.</span></h2>
-      <p>Chaque jour, nous parcourons le monde pour ne garder que les progrès, les avancées et les vraies raisons d'être optimiste.</p>
+    <section class="manifeste">
+      <!-- Demi-soleil décoratif -->
+      <div class="manifeste-sun" aria-hidden="true"></div>
+      <h2 class="reveal-manifeste">Demain,<br><span class="grad">il fait beau.</span></h2>
+      <p class="reveal-manifeste">Chaque jour, nous parcourons le monde pour ne garder que les progrès, les avancées et les vraies raisons d'être optimiste.</p>
     </section>
 
   </main>
@@ -2381,10 +2529,18 @@ window.CHIFFRES        = typeof CHIFFRES        !== 'undefined' ? CHIFFRES      
   // ── Reveal au scroll ─────────────────────────────────────────────
   var firstPass = true;
   function revealNow(){
+    // Éléments .reveal standards
     document.querySelectorAll('.reveal:not(.seen)').forEach(function(el){
       if(el.getBoundingClientRect().top < window.innerHeight * 0.92){
         el.classList.add('seen');
         if(!firstPass) el.classList.add('in');
+      }
+    });
+    // Manifeste : apparition avec délai staggeré
+    document.querySelectorAll('.reveal-manifeste:not(.seen)').forEach(function(el){
+      if(el.getBoundingClientRect().top < window.innerHeight * 0.88){
+        el.classList.add('seen');
+        el.classList.add('in');
       }
     });
     firstPass = false;
