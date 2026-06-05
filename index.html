@@ -24,6 +24,8 @@
 
   :root{
     color-scheme: light;
+    --surface-deep: #1a1a22;
+    --bg-rgb: 244,244,245;
     --bg:#f4f4f5; --surface:#ffffff; --ink:#18181b; --muted:#6b6b72; --faint:#a1a1aa;
     --line:#e7e7ea; --track:#e4e4e8; --topbar:rgba(244,244,245,.82);
     --green:#13c06b; --blue:#2d6bff; --violet:#7c3aed; --rose:#ec2c8a; --amber:#f5b81e;
@@ -34,6 +36,8 @@
   }
   [data-theme="dark"]{
     color-scheme: dark;
+    --surface-deep: #0c0c0f;
+    --bg-rgb: 14,14,18;
     --bg:#0e0e12; --surface:#17171d; --ink:#f5f5f6; --muted:#a6a6b0; --faint:#6c6c78;
     --line:#262630; --track:#2a2a34; --topbar:rgba(14,14,18,.78);
     --shadow:0 14px 40px rgba(0,0,0,.4); --shadow-sm:0 4px 16px rgba(0,0,0,.35); --aura:.18;
@@ -70,7 +74,7 @@
 
   /* ---------- chiffre du jour (sombre) ---------- */
   .chiffre{display:flex;align-items:center;gap:48px;margin:30px 0 8px;padding:44px 56px;border-radius:var(--radius);color:#fff;
-    background:linear-gradient(100deg,#211d0c 0%,#15131c 52%,#2c0f20 100%);box-shadow:0 16px 40px rgba(20,15,20,.18);}
+    background:var(--chiffre-bg, linear-gradient(100deg,#211d0c 0%,#15131c 52%,#2c0f20 100%));box-shadow:0 16px 40px rgba(20,15,20,.18);}
 
   .chiffre .clabel{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);}
 
@@ -89,8 +93,8 @@
 
   /* ---------- placeholder photo ---------- */
   .ph{width:100%;height:100%;display:flex;align-items:flex-end;
-    background-color:hsl(var(--c,220 10% 50%) / .08);
-    background-image:repeating-linear-gradient(135deg, hsl(var(--c,220 10% 50%) / .16) 0 12px, hsl(var(--c,220 10% 50%) / .05) 12px 24px);}
+    background-color: var(--ph-base);
+    background-image: repeating-linear-gradient(135deg, var(--ph-stripe-a) 0 12px, var(--ph-stripe-b) 12px 24px);}
   .ph span{margin:12px;font-family:ui-monospace,Menlo,monospace;font-size:11px;color:hsl(var(--c,220 10% 50%) / .95);
     background:rgba(255,255,255,.78);padding:3px 8px;border-radius:5px;}
 
@@ -295,7 +299,9 @@ body.page-assoc footer { display: none; }
 }
 
 /* ── Associations : fond sombre ── */
-#view-assoc { background: #0a0a0d; color: #f4f4f5; }
+#view-assoc { background: var(--assoc-bg, #0a0a0d); color: #f4f4f5; }
+:root { --assoc-bg: #111116; }
+[data-theme="dark"] { --assoc-bg: #0a0a0d; }
 
 /* ── Tinder ── */
 .tinder-arena { flex: 1; min-height: 0; position: relative; display: flex; align-items: center; justify-content: center; }
@@ -614,8 +620,8 @@ body.modal-open { overflow: hidden; }
 #view-assoc .hero .bg {position:absolute;inset:0;z-index:0;}
 #view-assoc .hero image-slot {width:100%;height:100%;display:block;}
 #view-assoc .hero .veil {position:absolute;inset:0;z-index:1;background:
-     radial-gradient(120% 90% at 50% -10%, rgba(124,58,237,.22), transparent 55%),
-     linear-gradient(180deg, rgba(10,10,13,.62) 0%, rgba(10,10,13,.82) 55%, var(--bg) 100%);}
+     radial-gradient(120% 90% at 50% -10%, rgba(124,58,237,.15), transparent 55%),
+     linear-gradient(180deg, var(--veil-start) 0%, var(--veil-mid) 55%, var(--bg) 100%);}
 #view-assoc .hero 
   .eyebrow {font-size:13px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--faint);}
 #view-assoc .hero h1 {font-size:clamp(50px,7.4vw,104px);line-height:.96;font-weight:800;letter-spacing:-.045em;margin:22px 0 0;text-wrap:balance;}
@@ -685,7 +691,7 @@ body.modal-open { overflow: hidden; }
   /* hero */
   .hero {position:relative;height:100vh;min-height:640px;overflow:hidden;display:flex;align-items:center;justify-content:center;}
 #assoc-story .hero .medi
-  .hero .veil {position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(7,7,8,.5) 0%,rgba(7,7,8,.25) 38%,rgba(7,7,8,.7) 78%,var(--bg) 100%);}
+  .hero .veil {position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,var(--veil-start) 0%,rgba(120,120,130,.2) 38%,var(--veil-mid) 78%,var(--bg) 100%);}
 #assoc-story .hero .inner {position:relative;z-index:2;text-align:center;padding:0 24px;will-change:transform,opacity;}
 #assoc-story .hero .kick {font-size:13px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);}
 #assoc-story .hero h1 {font-size:clamp(76px,16vw,220px);line-height:.86;font-weight:800;letter-spacing:-.05em;margin:18px 0 0;}
@@ -916,7 +922,7 @@ body.story-open { overflow: hidden; }
 #assoc-story .s-step p { font-family: var(--serif); font-size: 18px; line-height: 1.6; color: #a3a3ad; margin: 14px 0 0; }
 
 /* Chiffres */
-#assoc-story .s-stats { background: #0c0c0f; border-top: 1px solid rgba(255,255,255,.1); border-bottom: 1px solid rgba(255,255,255,.1); }
+#assoc-story .s-stats { background: var(--surface-deep, #0c0c0f); border-top: 1px solid rgba(255,255,255,.1); border-bottom: 1px solid rgba(255,255,255,.1); }
 #assoc-story .s-stats-in { max-width: 1180px; margin: 0 auto; padding: 100px 40px; }
 #assoc-story .s-stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 40px; margin-top: 44px; }
 #assoc-story .s-stat-n { font-size: clamp(48px, 5.5vw, 80px); font-weight: 800; letter-spacing: -.04em; line-height: 1; color: #fff; }
@@ -945,7 +951,7 @@ body.story-open { overflow: hidden; }
 #assoc-story .s-ev p { font-family: var(--serif); font-size: 16px; line-height: 1.55; color: #a3a3ad; margin: 8px 0 0; }
 
 /* Controverses */
-#assoc-story .s-nuance { background: #0c0c0f; border-top: 1px solid rgba(255,255,255,.1); }
+#assoc-story .s-nuance { background: var(--surface-deep, #0c0c0f); border-top: 1px solid rgba(255,255,255,.1); }
 #assoc-story .s-nuance-in { max-width: 800px; margin: 0 auto; padding: 100px 40px; }
 #assoc-story .s-nuance h2 { font-size: clamp(28px, 3.8vw, 50px); font-weight: 800; letter-spacing: -.03em; margin: 16px 0 0; color: #f4f4f5; }
 #assoc-story .s-nuance p { font-family: var(--serif); font-size: 19px; line-height: 1.7; color: #cfcfd6; margin: 20px 0 0; }
@@ -1817,6 +1823,280 @@ body.story-open { overflow: hidden; }
   margin: 0;
 }
 
+
+/* ══════════════════════════════════════════════════════════════════
+   HOME PAGE — page d'accueil éditoriale
+═══════════════════════════════════════════════════════════════════ */
+
+/* Affichage via routeur SPA */
+#page-home { display: none; }
+body.page-home #page-home { display: block; }
+body.page-home footer { display: none; }
+/* Sur home, cacher "Le journal" actif dans la nav */
+
+/* ── Héro ── */
+.home-hero {
+  position: relative; overflow: hidden;
+  min-height: calc(100vh - var(--topbar-h));
+  display: flex; align-items: center;
+  padding: 80px 0 60px;
+}
+.home-hero-inner {
+  position: relative; z-index: 2;
+  max-width: 820px; margin: 0 auto;
+  padding: 0 40px; text-align: center;
+}
+.home-eyebrow {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 13px; font-weight: 700; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--green);
+  margin-bottom: 32px;
+}
+.home-eyebrow-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 4px rgba(19,192,107,.2);
+  animation: pulse 3s ease-in-out infinite;
+}
+.home-title {
+  font-size: clamp(44px, 7.5vw, 96px);
+  font-weight: 800; letter-spacing: -.04em;
+  line-height: .96; margin: 0 0 28px;
+  color: var(--ink);
+}
+.home-title-grad {
+  background: var(--aurore);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.home-chapo {
+  font-family: var(--serif); font-size: clamp(18px, 2vw, 22px);
+  line-height: 1.65; color: var(--muted);
+  max-width: 600px; margin: 0 auto 40px;
+}
+.home-chapo strong { color: var(--ink); font-style: normal; }
+.home-cta {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 16px 32px; border-radius: 100px;
+  font-size: 17px; font-weight: 700; font-family: var(--sans);
+  background: var(--ink); color: var(--bg);
+  border: none; cursor: pointer;
+  transition: transform .2s, box-shadow .2s;
+  box-shadow: 0 8px 24px rgba(24,24,40,.2);
+}
+.home-cta:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(24,24,40,.25); }
+.home-cta-outline {
+  background: transparent;
+  border: 2px solid var(--ink);
+  color: var(--ink);
+  box-shadow: none;
+  margin-top: 32px;
+}
+.home-cta-outline:hover { background: var(--ink); color: var(--bg); }
+
+/* Orbes décoratifs */
+.home-hero-deco { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.home-orb {
+  position: absolute; border-radius: 50%;
+  filter: blur(60px); opacity: .5;
+}
+.home-orb-1 {
+  width: 500px; height: 500px; top: -100px; left: -100px;
+  background: radial-gradient(circle, rgba(236,44,138,.18), transparent 70%);
+}
+.home-orb-2 {
+  width: 600px; height: 600px; top: -50px; right: -150px;
+  background: radial-gradient(circle, rgba(124,58,237,.15), transparent 70%);
+}
+.home-orb-3 {
+  width: 400px; height: 400px; bottom: -100px; left: 30%;
+  background: radial-gradient(circle, rgba(45,107,255,.12), transparent 70%);
+}
+
+/* ── Stats ── */
+.home-stats {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 48px 0;
+  background: var(--surface);
+}
+.home-stats-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 32px; text-align: center;
+}
+.home-stat { display: flex; flex-direction: column; gap: 8px; }
+.home-stat-n {
+  font-size: clamp(40px, 5vw, 64px); font-weight: 800;
+  letter-spacing: -.04em; line-height: 1;
+  background: var(--aurore);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.home-stat-unit { font-size: .6em; }
+.home-stat-lbl {
+  font-size: 14px; font-weight: 600; color: var(--muted);
+  line-height: 1.3; max-width: 140px; margin: 0 auto;
+}
+
+/* ── Manifeste ── */
+.home-manifeste {
+  padding: 100px 0;
+  background: var(--bg);
+}
+.home-manifeste .wrap {
+  display: flex; flex-direction: column; gap: 80px;
+  max-width: 760px;
+}
+.home-manifeste-block { }
+.home-m-eyebrow {
+  font-size: 12px; font-weight: 700; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--green);
+  margin-bottom: 14px;
+}
+.home-m-title {
+  font-size: clamp(26px, 3.5vw, 40px); font-weight: 800;
+  letter-spacing: -.03em; line-height: 1.1;
+  margin: 0 0 20px; color: var(--ink);
+}
+.home-m-body {
+  font-family: var(--serif); font-size: clamp(16px, 1.8vw, 19px);
+  line-height: 1.75; color: var(--ink);
+  opacity: .72;
+  margin: 0 0 14px;
+}
+.home-m-body em { font-style: italic; color: var(--ink); }
+.home-m-body strong { color: var(--ink); font-style: normal; }
+
+/* ── Aperçu rubriques ── */
+.home-preview {
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+  padding: 80px 0;
+  text-align: center;
+}
+.home-preview-title {
+  font-size: clamp(28px, 4vw, 44px); font-weight: 800;
+  letter-spacing: -.03em; margin: 0 0 12px;
+}
+.home-preview-sub {
+  font-family: var(--serif); font-size: 18px;
+  color: var(--muted); margin: 0 0 40px;
+}
+.home-preview-cats {
+  display: flex; flex-wrap: wrap; gap: 12px;
+  justify-content: center; margin-bottom: 48px;
+}
+.home-cat-pill {
+  padding: 10px 20px; border-radius: 100px;
+  font-size: 15px; font-weight: 700;
+  border: 2px solid var(--cc, var(--violet));
+  color: var(--cc, var(--violet));
+  background: transparent;
+  transition: background .2s, color .2s;
+  cursor: default;
+}
+.home-cat-pill:hover {
+  background: var(--cc, var(--violet));
+  color: #fff;
+}
+
+/* ── Footer home ── */
+.home-footer {
+  border-top: 1px solid var(--line);
+  padding: 60px 0 48px;
+  text-align: center;
+}
+.home-footer-brand {
+  font-size: 24px; font-weight: 800; letter-spacing: -.025em;
+  color: var(--ink); margin-bottom: 10px;
+}
+.home-footer-brand em {
+  font-family: var(--sans); font-style: normal;
+}
+.home-footer-sub {
+  font-family: var(--serif); font-size: 16px;
+  color: var(--muted); margin: 0 0 28px;
+}
+.home-footer-nav {
+  display: flex; gap: 8px; justify-content: center;
+  flex-wrap: wrap; margin-bottom: 28px;
+}
+.home-footer-link {
+  padding: 8px 16px; border-radius: 100px;
+  font-size: 14px; font-weight: 600;
+  color: var(--muted); background: none;
+  border: 1px solid var(--line); cursor: pointer;
+  font-family: var(--sans);
+  transition: color .15s, border-color .15s;
+}
+.home-footer-link:hover { color: var(--ink); border-color: var(--ink); }
+.home-footer-legal {
+  font-size: 13px; color: var(--faint); margin: 0;
+}
+
+/* ── Mobile home ── */
+@media (max-width: 768px) {
+  .home-hero { padding: 48px 0 40px; min-height: auto; }
+  .home-hero-inner { padding: 0 20px; }
+  .home-title { font-size: clamp(36px, 10vw, 56px); }
+  .home-stats-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .home-manifeste { padding: 60px 0; }
+  .home-manifeste .wrap { gap: 52px; }
+  .home-preview { padding: 52px 0; }
+}
+
+
+/* Home — contraste garanti light + dark */
+#page-home {
+  background: var(--bg);
+  color: var(--ink);
+}
+/* Stats : fond surface légèrement différencié */
+.home-stats {
+  background: var(--surface);
+}
+/* Manifeste : alterné pour le rythme visuel */
+.home-manifeste {
+  background: var(--bg);
+}
+/* Preview : fond surface */
+.home-preview {
+  background: var(--surface);
+}
+/* Footer home */
+.home-footer {
+  background: var(--bg);
+}
+/* Textes lisibles dans les deux modes */
+.home-chapo, .home-preview-sub, .home-footer-sub {
+  color: var(--muted);
+}
+.home-stat-lbl {
+  color: var(--muted);
+}
+
+
+:root { --chiffre-bg: linear-gradient(100deg, #1a1030 0%, #150c28 52%, #200c1a 100%); }
+[data-theme="dark"] { --chiffre-bg: linear-gradient(100deg,#211d0c 0%,#15131c 52%,#2c0f20 100%); }
+
+
+/* Veil hero adaptatif light/dark */
+:root { --veil-start: rgba(180,180,190,.6); --veil-mid: rgba(160,160,170,.8); }
+[data-theme="dark"] { --veil-start: rgba(10,10,13,.62); --veil-mid: rgba(10,10,13,.82); }
+
+
+/* Placeholder adaptatif light/dark */
+:root {
+  --ph-base: hsl(var(--c, 215 30% 65%) / .12);
+  --ph-stripe-a: hsl(var(--c, 215 30% 65%) / .18);
+  --ph-stripe-b: hsl(var(--c, 215 30% 65%) / .06);
+}
+[data-theme="dark"] {
+  --ph-base: hsl(var(--c, 220 20% 30%) / .25);
+  --ph-stripe-a: hsl(var(--c, 220 20% 30%) / .35);
+  --ph-stripe-b: hsl(var(--c, 220 20% 30%) / .1);
+}
+
 @media (max-width: 768px) {
 
   /* Nav mobile visible */
@@ -1905,10 +2185,12 @@ body.story-open { overflow: hidden; }
   #view-assoc .a-filters { padding: 16px 0 4px !important; gap: 7px !important; }
   #view-assoc main { padding: 0 16px !important; }
 }
+
+body.page-home nav.tabs .tab-btn { color: var(--muted); background: transparent; box-shadow: none; }
 </style>
 
 </head>
-<body class="page-journal">
+<body class="page-home">
 
 <!-- ═══ TOPBAR ══════════════════════════════════════════════════════ -->
 <header class="topbar" id="topbar">
@@ -1971,6 +2253,107 @@ body.story-open { overflow: hidden; }
 </nav>
 
 <!-- ═══ PAGE : LE JOURNAL ════════════════════════════════════════════ -->
+<!-- ═══ PAGE : HOME ════════════════════════════════════════════════ -->
+<div id="page-home">
+
+  <!-- HÉRO -->
+  <section class="home-hero">
+    <div class="home-hero-inner">
+      <div class="home-eyebrow">
+        <span class="home-eyebrow-dot"></span>
+        Un nouveau média indépendant
+      </div>
+      <h1 class="home-title">
+        Le monde va mieux<br>
+        <span class="home-title-grad">qu'on ne vous le dit.</span>
+      </h1>
+      <p class="home-chapo">
+        Chaque jour, des avancées scientifiques, des victoires écologiques,
+        des vies transformées — et personne n'en parle vraiment.
+        <strong>Demain, il fait beau</strong> est là pour ça.
+      </p>
+      <button class="home-cta" data-page="journal">
+        Lire le journal d'aujourd'hui →
+      </button>
+    </div>
+    <div class="home-hero-deco" aria-hidden="true">
+      <div class="home-orb home-orb-1"></div>
+      <div class="home-orb home-orb-2"></div>
+      <div class="home-orb home-orb-3"></div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="home-stats reveal">
+    <div class="wrap">
+      <div class="home-stats-grid">
+        <div class="home-stat"><span class="home-stat-n">53</span><span class="home-stat-lbl">articles publiés</span></div>
+        <div class="home-stat"><span class="home-stat-n">10</span><span class="home-stat-lbl">rubriques couvertes</span></div>
+        <div class="home-stat"><span class="home-stat-n">100<span class="home-stat-unit">%</span></span><span class="home-stat-lbl">de bonnes nouvelles</span></div>
+        <div class="home-stat"><span class="home-stat-n">1</span><span class="home-stat-lbl">étudiant derrière tout ça</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MANIFESTE -->
+  <section class="home-manifeste">
+    <div class="wrap">
+      <div class="home-manifeste-block reveal">
+        <div class="home-m-eyebrow">Pourquoi ce média</div>
+        <h2 class="home-m-title">On en a assez des mauvaises nouvelles.</h2>
+        <p class="home-m-body">Pas parce que les problèmes n'existent pas — ils existent. Mais parce qu'on nous parle des crises et rarement des solutions. Des catastrophes et jamais des reconstructions. Des reculs et presque jamais des avancées.</p>
+        <p class="home-m-body">Pourtant, chaque jour, des chercheurs trouvent. Des militants gagnent. Des forêts repoussent. Des maladies reculent. Des gens inventent. C'est ça, la vraie actualité — celle qu'on ne vous montre pas assez.</p>
+      </div>
+      <div class="home-manifeste-block reveal">
+        <div class="home-m-eyebrow">Notre ligne éditoriale</div>
+        <h2 class="home-m-title">L'optimisme n'est pas de la naïveté.</h2>
+        <p class="home-m-body">On ne cache pas les zones d'ombre. On ne fait pas semblant que tout va bien. On choisit de braquer le projecteur sur ce qui avance — parce que c'est documenté, sourcé, réel. Parce qu'on croit que l'information peut rendre les gens plus forts, pas plus anxieux.</p>
+      </div>
+      <div class="home-manifeste-block reveal">
+        <div class="home-m-eyebrow">Qui nous sommes</div>
+        <h2 class="home-m-title">Un étudiant, une idée, un journal.</h2>
+        <p class="home-m-body"><em>Demain, il fait beau</em> est né d'un constat simple : j'étudiais les médias et je voyais ce qu'ils faisaient au moral des gens. J'ai voulu construire l'antidote — seul, en Master, depuis mon bureau. Ce site est un prototype ambitieux et le début de quelque chose de plus grand.</p>
+        <p class="home-m-body">Si vous croyez, comme moi, qu'informer peut rendre optimiste sans mentir — bienvenue.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- APERÇU RUBRIQUES -->
+  <section class="home-preview reveal">
+    <div class="wrap">
+      <h2 class="home-preview-title">Ce qu'on publie</h2>
+      <p class="home-preview-sub">Écologie, science, santé, société — les avancées qui comptent vraiment.</p>
+      <div class="home-preview-cats">
+        <div class="home-cat-pill" style="--cc:#13c06b">🌱 Écologie</div>
+        <div class="home-cat-pill" style="--cc:#2d6bff">🌍 Climat</div>
+        <div class="home-cat-pill" style="--cc:#ec2c8a">💚 Santé</div>
+        <div class="home-cat-pill" style="--cc:#26c4c4">🔬 Science</div>
+        <div class="home-cat-pill" style="--cc:#f97316">📈 Économie</div>
+        <div class="home-cat-pill" style="--cc:#7c3aed">⚡ Tech</div>
+        <div class="home-cat-pill" style="--cc:#f5b81e">🤝 Société</div>
+        <div class="home-cat-pill" style="--cc:#ff6b35">🏆 Sport</div>
+      </div>
+      <button class="home-cta home-cta-outline" data-page="journal">Découvrir le journal →</button>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="home-footer">
+    <div class="wrap">
+      <div class="home-footer-brand">Demain,&#8202;<em>il fait beau</em> ☀️</div>
+      <p class="home-footer-sub">Un média de bonnes nouvelles. Fait avec conviction.</p>
+      <nav class="home-footer-nav">
+        <button class="home-footer-link" data-page="journal">Le journal</button>
+        <button class="home-footer-link" data-page="articles">Articles</button>
+        <button class="home-footer-link" data-page="tendances">Tendances</button>
+        <button class="home-footer-link" data-page="assoc">Associations</button>
+      </nav>
+      <p class="home-footer-legal">© 2026 Demain, il fait beau · Fait en France</p>
+    </div>
+  </footer>
+
+</div>
+
 <div id="page-journal">
 
   <!-- Indice du jour -->
@@ -2780,12 +3163,22 @@ window.CHIFFRES        = typeof CHIFFRES        !== 'undefined' ? CHIFFRES      
 </script>
 
 <script>
+//
 // ── Init thème + date + indice + reveal + journal ─────────────────────
 (function(){
   var root = document.documentElement;
   var reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
 
   // ── Thème ────────────────────────────────────────────────────────
+  // Logo → retour home
+  var brandBtn = document.getElementById('brand-home');
+  if(brandBtn){
+    brandBtn.style.cursor = 'pointer';
+    brandBtn.addEventListener('click', function(){
+      if(window.setPage) window.setPage('home');
+    });
+  }
+
   var themeBtn = document.getElementById('themeBtn');
   // Mettre à jour l'icône selon le thème courant
   function updateThemeBtn(){
@@ -3161,6 +3554,17 @@ window.CHIFFRES        = typeof CHIFFRES        !== 'undefined' ? CHIFFRES      
       if(va) va.classList.remove('grid-mode');
     }
   }
+  // Boutons data-page dans la home (CTAs et footer)
+  document.addEventListener('click', function(e){
+    var btn = e.target.closest('[data-page]');
+    if(!btn) return;
+    // Seulement les boutons dans #page-home ou .home-footer-link
+    if(btn.closest('#page-home') || btn.classList.contains('home-footer-link')){
+      var page = btn.dataset.page;
+      if(page && window.setPage) window.setPage(page);
+    }
+  });
+
   window.setPage = setPage;
 
   // ── Connecter tab-btn desktop ──
@@ -3238,7 +3642,6 @@ window.CHIFFRES        = typeof CHIFFRES        !== 'undefined' ? CHIFFRES      
   });
 })();
 </script>
-
 
 
 <script>
